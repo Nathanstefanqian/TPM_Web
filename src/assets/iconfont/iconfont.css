@@ -1,0 +1,115 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 2905126 */
+  src: url('iconfont.woff2?t=1657087434304') format('woff2'),
+       url('iconfont.woff?t=1657087434304') format('woff'),
+       url('iconfont.ttf?t=1657087434304') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.vue-icon-captcha:before {
+  content: "\e61a";
+}
+
+.vue-icon-historyData:before {
+  content: "\e604";
+}
+
+.vue-icon-eye-close:before {
+  content: "\e606";
+}
+
+.vue-icon-eye-open:before {
+  content: "\e600";
+}
+
+.vue-icon-user:before {
+  content: "\e626";
+}
+
+.vue-icon-keys:before {
+  content: "\e601";
+}
+
+.vue-icon-fullscreen:before {
+  content: "\e731";
+}
+
+.vue-icon-fullscreen-exit:before {
+  content: "\e732";
+}
+
+.vue-icon-user2:before {
+  content: "\e700";
+}
+
+.vue-icon-nav-unfold:before {
+  content: "\e629";
+}
+
+.vue-icon-location:before {
+  content: "\e78e";
+}
+
+.vue-icon-arrow-up:before {
+  content: "\e68f";
+}
+
+.vue-icon-delete:before {
+  content: "\e61b";
+}
+
+.vue-icon-detail:before {
+  content: "\e6c6";
+}
+
+.vue-icon-excel:before {
+  content: "\e71f";
+}
+
+.vue-icon-update:before {
+  content: "\e602";
+}
+
+.vue-icon-create:before {
+  content: "\e752";
+}
+
+.vue-icon-export:before {
+  content: "\e63a";
+}
+
+.vue-icon-import:before {
+  content: "\e603";
+}
+
+.vue-icon-rankup:before {
+  content: "\e6f2";
+}
+
+.vue-icon-route1:before {
+  content: "\e634";
+}
+
+.vue-icon-data:before {
+  content: "\e618";
+}
+
+.vue-icon-task2:before {
+  content: "\e611";
+}
+
+.vue-icon-fubiaobuoy:before {
+  content: "\e674";
+}
+
+.vue-icon-fubiao:before {
+  content: "\e6c7";
+}
+
