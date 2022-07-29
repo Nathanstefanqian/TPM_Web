@@ -9,12 +9,12 @@ import Layout from '@/layout'
 /* Router Modules */
 
 // 导入路由
-import realtimeData from './modules/realtimeData'
-import historyData from './modules/historyData'
-import track from './modules/track'
-import task from './modules/task'
-import buoy from './modules/buoy'
-import company from './modules/company'
+import equipmentManagement from './modules/equipmentManagement'
+import repair from './modules/repair'
+import maintain from './modules/maintain'
+import fileManagement from './modules/fileManagement'
+import measureFixture from './modules/measureFixture'
+// import company from './modules/company'
 import system from './modules/system'
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -96,12 +96,12 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  realtimeData,
-  historyData,
-  track,
-  task,
-  buoy,
-  company,
+  equipmentManagement,
+  repair,
+  maintain,
+  fileManagement,
+  measureFixture,
+  // company,
   system,
   // 404 page must be placed at the end !!!
   { access: '*', path: '*', redirect: '/404', hidden: true }

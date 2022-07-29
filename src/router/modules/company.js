@@ -9,7 +9,7 @@ export default {
       path: 'index',
       component: () => import('@/views/company/index'),
       name: 'Company',
-      meta: { title: '企业管理', icon: 'building' }
+      meta: { title: '部门管理', icon: 'building' }
     }
   ]
 }
