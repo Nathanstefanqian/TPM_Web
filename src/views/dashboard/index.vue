@@ -145,7 +145,7 @@ export default {
     ...mapGetters(['enums', 'user'])
   },
   mounted() {
-    this.initMap()
+    // this.initMap()
   },
   destroyed() {
     this.destroyed = true
