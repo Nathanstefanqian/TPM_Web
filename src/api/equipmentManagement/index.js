@@ -1,8 +1,8 @@
 
-import * as role from './modules/search'
-import * as user from './modules/user'
+import * as search from './modules/search'
+import * as transfer from './modules/transfer'
 
 export default {
-  role,
-  user
+  search,
+  transfer
 }

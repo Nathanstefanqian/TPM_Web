@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取列表数据（查询、翻页）
 export function getList(query, page, sort) {
   return request({
-    url: '/system/user/list',
+    url: '/eqTransfer/list',
     method: 'post',
     data: {
       page: { current: page.current, size: page.size },
@@ -16,7 +16,7 @@ export function getList(query, page, sort) {
 // 根据id获取数据
 export function get(id) {
   return request({
-    url: `/system/user/${id}/detail`,
+    url: `/eqTransfer/${id}/detail`,
     method: 'get'
   })
 }
@@ -24,7 +24,7 @@ export function get(id) {
 // 获得下拉列表的数据
 export function getSelectlist() {
   return request({
-    url: '/system/user/selectlist',
+    url: '/eqTransfer/selectlist',
     method: 'get'
   })
 }
@@ -32,7 +32,7 @@ export function getSelectlist() {
 // 添加数据
 export function create(data) {
   return request({
-    url: '/system/user/create',
+    url: '/eqTransfer/create',
     method: 'post',
     data
   })
@@ -41,7 +41,7 @@ export function create(data) {
 // 更新数据
 export function update(data) {
   return request({
-    url: '/system/user/update',
+    url: '/eqTransfer/update',
     method: 'put',
     data
   })
@@ -50,17 +50,9 @@ export function update(data) {
 // 删除、批量删除数据
 export function del(data) {
   return request({
-    url: '/system/user/delete',
+    url: '/eqTransfer/delete',
     method: 'delete',
     data: data
   })
 }
 
-// 密码重置
-export function resetPassword(data) {
-  return request({
-    url: '/system/user/resetPassword',
-    method: 'patch',
-    data: data
-  })
-}

@@ -2,29 +2,33 @@ import _ from 'lodash'
 
 const base = {
   id: null,
-  roleId: null,
-  roleType: null,
-  userName: null,
-  companyId: null,
-  name: null,
-  password: null,
-  state: null,
-  stateText: null,
-  remark: null,
-  createTime: null,
-  role: {
-    id: null,
-    name: null,
-    type: null,
-    typeText: null,
-    company: {
-      id: null,
-      name: null
-    }
-  }
+  transferNo: null,
+  applyDeptId: null,
+  applyDeptName: null,
+  productCode: null,
+  deviceNo: null,
+  opInfo: null,
+  zhixi: null,
+  factory: null,
+  processDeptId: null,
+  processDeptName: null,
+  opDescription: null,
+  applyPersonId: null,
+  applyPersonName: null,
+  appplyTime: null,
+  checkStatus: null,
+  checkStatusName: null
+
 }
 
-const queryEmpty = { userName: null, 'role.type': null, 'user.name': null, 'company.name': null, state: null }
+const queryEmpty = {
+  applyDeptId: null,
+  productCode: null,
+  deviceNo: null,
+  transferNo: null,
+  factory: null,
+  processDept: null
+}
 
 const query = _.cloneDeep(queryEmpty)
 

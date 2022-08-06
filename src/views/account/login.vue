@@ -76,7 +76,7 @@ export default {
     return {
       title,
       loginAccount: {
-        username: process.env.NODE_ENV === 'development' ? 'admin' : null,
+        username: process.env.NODE_ENV === 'development' ? 'superadmin' : null,
         password: process.env.NODE_ENV === 'development' ? '111111' : null,
         captcha: null,
         captchaToken: null

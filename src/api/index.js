@@ -5,7 +5,14 @@ import * as historyData from './historyData/index'
 import * as task from './task/index'
 import * as buoy from './buoy/index'
 import * as company from './company/index'
+import * as depart from './dept/index'
+import * as zhixi from './zhixi/index'
+import * as processDept from './processDept/index'
+import * as factory from './factory/index'
+
 import system from './system'
+
+import equipmentManagement from './equipmentManagement'
 
 export default {
   enumerate,
@@ -15,5 +22,10 @@ export default {
   task,
   buoy,
   company,
-  system
+  depart,
+  zhixi,
+  processDept,
+  factory,
+  system,
+  equipmentManagement
 }

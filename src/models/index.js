@@ -5,11 +5,22 @@ import buoy from './buoy'
 import company from './company'
 import system from './system'
 
+import equipmentManagement from './equipmentManagement'
+import fileManagement from './fileManagement'
+import maintian from './maintian'
+import repair from './repair'
+import measureFixture from './measureFixture'
+
 export default {
   realtimeData,
   historyData,
   task,
   buoy,
   company,
-  system
+  system,
+  equipmentManagement,
+  fileManagement,
+  maintian,
+  repair,
+  measureFixture
 }
