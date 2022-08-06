@@ -13,6 +13,7 @@ import * as factory from './factory/index'
 import system from './system'
 
 import equipmentManagement from './equipmentManagement'
+import repair from './repair'
 
 export default {
   enumerate,
@@ -26,6 +27,7 @@ export default {
   zhixi,
   processDept,
   factory,
+  repair,
   system,
   equipmentManagement
 }

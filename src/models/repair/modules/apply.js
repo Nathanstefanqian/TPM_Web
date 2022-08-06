@@ -2,14 +2,34 @@ import _ from 'lodash'
 
 const base = {
   id: null,
-  companyId: null,
-  type: null,
-  typeText: null,
-  name: null,
-  remark: null
+  repairNum: null,
+  applyPersonId: null,
+  applyPersonName: null,
+  section: null,
+  deptId: null,
+  deptName: null,
+  productCode: null,
+  productDate: null,
+  deviceNum: null,
+  deviceType: null,
+  propertyCode: null,
+  level: null,
+  category: null,
+  content: null,
+  repairTime: null,
+  status: null,
+  outsource: null
+
 }
 
-const queryEmpty = { type: null, name: null, 'company.name': null }
+const queryEmpty = {
+  repairNum: null, // 报修单号
+  productCode: null, // 制造编号
+  deviceNo: null,
+  transferNo: null,
+  factory: null,
+  processDept: null
+}
 
 const query = _.cloneDeep(queryEmpty)
 
