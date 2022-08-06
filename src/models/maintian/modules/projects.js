@@ -2,15 +2,33 @@ import _ from 'lodash'
 
 const base = {
   id: null,
-  companyId: null,
-  type: null,
-  typeText: null,
-  name: null,
-  remark: null
+  transferNo: null,
+  deptId: null,
+  deptName: null,
+  maintainType: null,
+  deviceType: null,
+  deviceName: null,
+  productCode: null,
+  productTime: null,
+  zhixi: null,
+  factory: null,
+  processDeptId: null,
+  processDeptName: null,
+  maintainPersonId: null,
+  maintainPersonName: null,
+  maintainTime: null,
+  planTime: null,
+  status: null
 }
 
-const queryEmpty = { type: null, name: null, 'company.name': null }
-
+const queryEmpty = {
+  deptId: null,
+  productCode: null,
+  // deviceNo: null,
+  zhixi: null,
+  factory: null,
+  processDept: null
+}
 const query = _.cloneDeep(queryEmpty)
 
 // 查询提交数据，查询前进行同步
