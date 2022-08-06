@@ -19,10 +19,10 @@ export default {
       meta: { title: '设备报修' }
     },
     {
-      path: 'operate',
-      component: () => import('@/views/repair/operate/index'),
-      name: 'operate',
-      access: 'operate',
+      path: 'outsource',
+      component: () => import('@/views/repair/outsource/index'),
+      name: 'outsource',
+      access: 'outsource',
       meta: { title: '维修/委外' }
     }
   ]
