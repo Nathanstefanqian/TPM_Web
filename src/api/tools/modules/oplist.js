@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取列表数据（查询、翻页）
 export function getList(query, page, sort) {
   return request({
-    url: '/eqMeasureTransfer/list',
+    url: '/eqMeasureVerification/list',
     method: 'post',
     data: {
       page: { current: page.current, size: page.size },
@@ -16,7 +16,7 @@ export function getList(query, page, sort) {
 // 根据id获取数据
 export function get(id) {
   return request({
-    url: `/eqMeasureTransfer/${id}/detail`,
+    url: `/eqMeasureVerification/${id}/detail`,
     method: 'get'
   })
 }
@@ -24,7 +24,7 @@ export function get(id) {
 // 根据当前用户所有权限对应的功能列表
 export function getFunctionsFromAccess(roleType) {
   return request({
-    url: '/eqMeasureTransfer/functionsFromAccess?roleType=' + roleType,
+    url: '/eqMeasureVerification/functionsFromAccess?roleType=' + roleType,
     method: 'get'
   })
 }
@@ -32,7 +32,7 @@ export function getFunctionsFromAccess(roleType) {
 // 获得下拉列表的数据
 export function getSelectlist(type, companyId) {
   return request({
-    url: '/eqMeasureTransfer/selectlist?type=' + (type || '') + '&companyId=' + (companyId || ''),
+    url: '/eqMeasureVerification/selectlist?type=' + (type || '') + '&companyId=' + (companyId || ''),
     method: 'get'
   })
 }
@@ -40,7 +40,7 @@ export function getSelectlist(type, companyId) {
 // 添加数据
 export function create(data) {
   return request({
-    url: '/eqMeasureTransfer/create',
+    url: '/eqMeasureVerification/create',
     method: 'post',
     data
   })
@@ -49,7 +49,7 @@ export function create(data) {
 // 更新数据
 export function update(data) {
   return request({
-    url: '/eqMeasureTransfer/update',
+    url: '/eqMeasureVerification/update',
     method: 'put',
     data
   })
@@ -58,7 +58,7 @@ export function update(data) {
 // 删除、批量删除数据
 export function del(data) {
   return request({
-    url: '/eqMeasureTransfer/delete',
+    url: '/eqMeasureVerification/delete',
     method: 'delete',
     data: data
   })
@@ -67,7 +67,7 @@ export function del(data) {
 // 获取角色类型
 export function getRoleTypes() {
   return request({
-    url: `/eqMeasureTransfer/roleTypes`,
+    url: `/eqMeasureVerification/roleTypes`,
     method: 'get'
   })
 }
