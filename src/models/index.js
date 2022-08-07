@@ -10,6 +10,7 @@ import fileManagement from './fileManagement'
 import maintian from './maintian'
 import repair from './repair'
 import measureFixture from './measureFixture'
+import tools from './tools'
 
 export default {
   realtimeData,
@@ -21,6 +22,7 @@ export default {
   equipmentManagement,
   fileManagement,
   maintian,
+  tools,
   repair,
   measureFixture
 }

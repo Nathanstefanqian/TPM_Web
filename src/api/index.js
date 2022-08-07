@@ -16,6 +16,7 @@ import equipmentManagement from './equipmentManagement'
 import repair from './repair'
 import maintain from './maintain'
 import fileManagement from './fileManagement'
+import tools from './tools'
 
 export default {
   enumerate,
@@ -30,6 +31,7 @@ export default {
   processDept,
   factory,
   repair,
+  tools,
   maintain,
   system,
   fileManagement,
