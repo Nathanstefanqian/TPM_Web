@@ -44,10 +44,10 @@
       <el-table-column label="生产编号" prop="eproductCode" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="设备名称" prop="ename" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="品牌型号" prop="ebrand" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="制造日期" prop="eproductdate" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="验收日期" prop="echeckdate" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="存放位置" prop="estoragearea" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="加工部" prop="eprocessdept" align="left" show-overflow-tooltip />
+      <el-table-column label="制造日期" prop="eproductDate" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="验收日期" prop="eacceptanceDate" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="存放位置" prop="estorageArea" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="加工部" prop="eprocessDept" align="left" show-overflow-tooltip />
       <el-table-column label="使用状况" prop="statusName" align="center" width="120" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
@@ -57,9 +57,9 @@
           <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">
             <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>
           </el-tooltip>
-          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
-            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
-          </el-tooltip>
+          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">-->
+          <!--            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>-->
+          <!--          </el-tooltip>-->
           <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">
             <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>
           </el-tooltip>

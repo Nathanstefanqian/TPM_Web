@@ -1,51 +1,300 @@
 <template>
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
-      <el-row v-if="user.roleType<=2">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="角色类型" prop="type">
-            <el-select v-model="model.type" clearable @change="changeRoleTypeHandle()">
-              <el-option v-for="item in roleTypes" :key="item.key" :label="item.text" :value="item.key" />
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="职系" prop="ezhixi">
+            <el-select v-model="model.ezhixi" filterable clearable @change="changeRoleTypeHandle()">
+              <el-option v-for="item in zhixis" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row v-if="user.roleType>=3">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="角色类型">
-            {{ (rt = roleTypes.find(s => s.key === 4)) == null ? null : rt.text }}
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备编号" prop="edeviceNo">
+            <el-input v-model="model.edeviceNo" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="验收日期" prop="eacceptanceDate">
+            <el-date-picker v-model="model.eacceptanceDate" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="公司(法人)" prop="ecompany">
+            <el-input v-model="model.ecompany" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="U行程(mm)" prop="eustroke">
+            <el-input v-model="model.eustroke" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="model.type>=3&&user.roleType<=2">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="所属企业" prop="companyId">
-            <el-select v-model="model.companyId" clearable>
-              <el-option v-for="item in companies" :key="item.key" :label="item.text" :value="item.key" />
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="所属工段" prop="esection">
+            <el-select v-model="model.esection" class="query-item" style="width: 150px" placeholder="所属工段" clearable @clear="handleQuery">
+              <el-option v-for="item in Sections" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="角色名称" prop="name">
-            <el-input v-model="model.name" />
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="保养人员" prop="emaintianPersonId">
+            <el-select v-model="model.emaintianPersonId" class="query-item" style="width: 150px" placeholder="保养人员" clearable @clear="handleQuery">
+              <el-option v-for="item in MaintianPersons" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备功率" prop="epower">
+            <el-input v-model="model.epower" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="是否联网" prop="eisonline">
+            <el-input v-model="model.eisonline" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="V行程" prop="evstroke">
+            <el-input v-model="model.evstroke" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :sm="24">
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="model.remark" type="textarea" :rows="2" />
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备名称" prop="ename">
+            <el-input v-model="model.ename" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="责任人" prop="eresponsiblePersonId">
+            <el-select v-model="model.eresponsiblePersonId" class="query-item" style="width: 150px" placeholder="请选择" clearable @clear="handleQuery">
+              <el-option v-for="item in ResponsiblePersons" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="创建日期" prop="createTime">
+            <el-date-picker v-model="model.createTime" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="是否数控" prop="eisdigit">
+            <el-input v-model="model.eisdigit" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="主轴最高转速" prop="erotateSpeed">
+            <el-input v-model="model.erotateSpeed" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :sm="24">
-          <el-form-item label="权限配置">
-            <div v-for="(func,index) in functions" :key="index" :class="`function-level-${func.level}`">
-              <span class="item"><el-checkbox v-model="func.checked" :indeterminate="func.indeterminate" :label="func.id" @change="checked=>functionCheckedChangeHandle(checked,func)">{{ func.title }}</el-checkbox></span>
-            </div>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备品牌" prop="ebrand">
+            <el-input v-model="model.ebrand" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="责任单位" prop="eresponsibleDept">
+            <el-select v-model="model.eresponsibleDept" class="query-item" style="width: 150px" placeholder="请选择" clearable @clear="handleQuery">
+              <el-option v-for="item in responsibleDepts" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="创建用户" prop="createBy">
+            <el-select v-model="model.createBy" class="query-item" style="width: 150px" placeholder="请选择" clearable @clear="handleQuery">
+              <el-option v-for="item in CreatePersons" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="ip" prop="enetworkAddress">
+            <el-input v-model="model.enetworkAddress" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="最大给进速度" prop="epushSpeed">
+            <el-input v-model="model.epushSpeed" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备型号" prop="">
+            <!--            todo-->
+            <el-input />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="加工部" prop="eprocessDept">
+            <el-select v-model="model.eprocessDept" class="query-item" style="width: 150px" placeholder="请选择" clearable @clear="handleQuery">
+              <el-option v-for="item in processDepts" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="维修课" prop="erepairDept">
+            <el-select v-model="model.erepairDept" class="query-item" style="width: 150px" placeholder="请选择" clearable @clear="handleQuery">
+              <el-option v-for="item in repairDepts" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="加工精度" prop="eprecision">
+            <el-input v-model="model.eprecision" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="机台重量(T)" prop="eweight">
+            <el-input v-model="model.eweight" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备类型" prop="emachineType">
+            <el-input v-model="model.emachineType" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="制造处" prop="eproductDept">
+            <el-select v-model="model.eproductDept" class="query-item" style="width: 150px" placeholder="请选择" clearable @clear="handleQuery">
+              <el-option v-for="item in productDepts" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="维修主管" prop="erepairManagerId">
+            <el-select v-model="model.erepairManagerId" class="query-item" style="width: 150px" placeholder="请选择" clearable @clear="handleQuery">
+              <el-option v-for="item in repairManagers" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="机台尺寸" prop="esize">
+            <el-input v-model="model.esize" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="电压 (V)" prop="epower">
+            <el-input v-model="model.epower" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备编码" prop="edeviceCode">
+            <el-input v-model="model.edeviceCode" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="制造编号" prop="eproductCode">
+            <el-input v-model="model.eproductCode" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="存放区域" prop="estorageArea">
+            <el-input v-model="model.estorageArea" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="X行程" prop="exstroke">
+            <el-input v-model="model.exstroke" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="气压" prop="eairPressure">
+            <el-input v-model="model.eairPressure" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="厂区" prop="efactory">
+            <el-select v-model="model.efactory" filterable clearable @change="changeRoleTypeHandle()">
+              <el-option v-for="item in factories" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="制造日期" prop="eproductDate">
+            <el-date-picker v-model="model.eproductDate" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="存放地点" prop="estoragePosition">
+            <el-input v-model="model.estoragePosition" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="Y行程(mm)" prop="eystroke">
+            <el-input v-model="model.eystroke" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="刀库容量" prop="eknifeCapacity">
+            <el-input v-model="model.eknifeCapacity" />
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="园区" prop="edistrict">
+            <el-select v-model="model.edistrict" filterable clearable @change="changeRoleTypeHandle()">
+              <el-option v-for="item in districts" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="入厂日期" prop="eenterDate">
+            <el-date-picker v-model="model.eenterDate" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="资产编号" prop="eassetNumber">
+            <el-input v-model="model.eassetNumber" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="Z行程(mm)" prop="ezstroke">
+            <el-input v-model="model.ezstroke" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="控制器" prop="econtroller">
+            <el-input v-model="model.econtroller" />
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="版本" prop="edition">
+            <el-input v-model="model.edition" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="冰机品牌" prop="eiceMachineBrand">
+            <el-input v-model="model.eiceMachineBrand" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="冰机序号" prop="eiceMachineNumber">
+            <el-input v-model="model.eiceMachineNumber" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="冰机型号" prop="eiceMachineModel">
+            <el-input v-model="model.eiceMachineModel" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="冰机功率" prop="eiceMachinePower">
+            <el-input v-model="model.eiceMachinePower" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -68,16 +317,28 @@ import api from '@/api'
 
 export default {
   data() {
-    const curModels = models.system.role
-    const curApi = api.system.role
+    const curModels = models.equipmentManagement.search
+    const curApi = api.equipmentManagement.search
     return {
       ...getDefaultUpdateViewData(), ...curModels, curApi, rules,
       ...{
-        dialogTitle: '编辑角色权限',
+        dialogTitle: '编辑设备信息',
         model: curModels.update,
         roleTypes: [],
         functions: [],
-        companies: []
+        departs: [],
+        zhixis: [],
+        factories: [],
+        processDepts: [],
+        Sections: [], // todo 补
+        ResponsiblePersons: [], // todo 补
+        MaintianPersons: [], // todo 补
+        responsibleDepts: [], // todo 补
+        repairDepts: [], // todo 补
+        CreatePersons: [], // todo
+        productDepts: [], // todo 制造处
+        repairManagers: [], // todo 维修主管
+        districts: [] // TODO 园区
       }
     }
   },
@@ -89,92 +350,50 @@ export default {
     // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
       this.roleTypes = this.$parent.roleTypes
-      this.companies = this.$parent.companies
-      if (this.user.roleType === 3) {
-        this.model.type = 4
-        this.model.companyId = this.user.companyId
-      }
+      this.departs = this.$parent.departs
+      this.zhixis = this.$parent.zhixis
+      this.factories = this.$parent.factories
+      this.processDepts = this.$parent.processDepts
+
+      // if (this.user.roleType === 3) {
+      //   this.model.type = 4
+      //   this.model.companyId = this.user.companyId
+      // }
     },
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
     async initUpdateAfter(row, data) {
-      this.model = data.role
-      const accesses = data.accesses
-      await this.changeRoleTypeHandle()
-      this.initAccess(accesses)
+      console.log(data)
+      this.model = data
+      // const accesses = data.accesses
+      // await this.changeRoleTypeHandle()
+      // this.initAccess(accesses)
     },
-    // 获取当前用户权限的所有系统功能
-    getFunctions(roleType) {
-      this.loading = true
-      return api.system.role.getFunctionsFromAccess(roleType).then(response => {
-        this.functions = response.data
-        this.loading = false
+    // 根据登录用户角色获取企业列表
+    getDeparts() {
+      api.depart.getSelectlist().then(response => {
+        this.departs = response.data || []
       }).catch(reject => {
-        this.loading = false
       })
     },
-    // 切换角色类型
-    async changeRoleTypeHandle() {
-      // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
-      this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.type >= 3
-      // 获取系统功能
-      if (this.model.type) {
-        await this.getFunctions(this.model.type)
-      }
-    },
-    // 权限选中以及级联选中初始化
-    initAccess(accesses) {
-      const functions = this.functions
-      const functionsClone = Object.assign([], functions)
-      functionsClone.sort((a, b) => b.level - a.level)
-      functionsClone.forEach(t => {
-        const current = functions.find(f => f.id === t.id)
-        const checked = accesses.includes(current.id)
-        if (checked) {
-          const children = functions.filter(f => f.parentId === current.id)
-          const childrenCount = children.length
-          if (childrenCount === 0) {
-            current.checked = true
-            current.indeterminate = false
-          } else {
-            const childrenCheckedCount = children.filter(f => f.checked).length
-            const childrenIndeterminateCount = children.filter(f => f.indeterminate).length
-            current.checked = childrenCheckedCount > 0
-            current.indeterminate = childrenIndeterminateCount > 0 || (childrenCheckedCount > 0 && childrenCheckedCount < childrenCount)
-          }
-        }
+    // 根据登录用户角色获取企业列表
+    getZhixis() {
+      api.zhixi.getSelectlist().then(response => {
+        this.zhixis = response.data || []
+      }).catch(reject => {
       })
     },
-    // 处理权限复选框的级联选中效果
-    functionCheckedChangeHandle(value, data) {
-      const that = this
-      childrenHandle(data.id)
-
-      // 子级递归
-      function childrenHandle(id) {
-        data.indeterminate = false
-        that.functions.forEach(item => {
-          if (item.parentId === id) {
-            item.checked = value
-            item.indeterminate = false
-            childrenHandle(item.id)
-          }
-        })
-      }
-
-      parentsHandle(data.parentId)
-
-      // 父级递归
-      function parentsHandle(id) {
-        if (!id) return
-        const current = that.functions.find(item => item.id === id)
-        const children = that.functions.filter(item => item.parentId === id)
-        const childrenCount = children.length
-        const childrenCheckedCount = children.filter(item => item.checked).length
-        const childrenIndeterminateCount = children.filter(item => item.indeterminate).length
-        current.checked = childrenCheckedCount > 0
-        current.indeterminate = childrenIndeterminateCount > 0 || (childrenCheckedCount > 0 && childrenCheckedCount < childrenCount)
-        parentsHandle(current.parentId)
-      }
+    // 根据登录用户角色获取企业列表
+    getFactories() {
+      api.factory.getSelectlist().then(response => {
+        this.factories = response.data || []
+      }).catch(reject => {
+      })
+    },
+    getProcessDepts() {
+      api.processDept.getSelectlist().then(response => {
+        this.processDepts = response.data || []
+      }).catch(reject => {
+      })
     },
     // 提交前处理
     submitUpdateBefore() {
