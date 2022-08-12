@@ -1,15 +1,24 @@
 <template>
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
-      <!--      <el-row v-if="user.roleType<=2">-->
-      <!--        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">-->
-      <!--          <el-form-item label="角色类型" prop="roleType">-->
-      <!--            <el-select v-model="model.roleType" filterable clearable >-->
-      <!--              <el-option v-for="item in roleTypes" :key="item.key" :label="item.text" :value="item.key" />-->
-      <!--            </el-select>-->
-      <!--          </el-form-item>-->
-      <!--        </el-col>-->
-      <!--      </el-row>-->
+      <el-row v-if="user.roleType<=2">
+        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="角色类型" prop="roleType">
+            <el-select v-model="model.roleType" filterable clearable @change="changeRoleTypeHandle()">
+              <el-option v-for="item in roleTypes" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-if="model.roleType>=3&&user.roleType<=2">
+        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="所属企业" prop="companyId">
+            <el-select v-model="model.companyId" filterable clearable @change="changeCompanyHandle()">
+              <el-option v-for="item in companies" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-row>
         <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="用户角色" prop="roleId">
@@ -84,9 +93,6 @@ export default {
   computed: {
     ...mapGetters(['enums', 'user'])
   },
-  created() {
-    this.getRoles()
-  },
   methods: {
     ...crud,
     // 初始化数据之前 row：行绑定数据
@@ -108,27 +114,27 @@ export default {
     // 切换角色类型
     changeRoleTypeHandle() {
       // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
-      // this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.roleType >= 3
-      // // 重置模型类
-      // this.model.companyId = null
-      // this.roles = []
-      // this.model.roleId = null
-      // // 重新获取角色
-      // if (this.model.roleType === 2) {
-      //   this.getRoles(2, null)
-      // }
+      this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.roleType >= 3
+      // 重置模型类
+      this.model.companyId = null
+      this.roles = []
+      this.model.roleId = null
+      // 重新获取角色
+      if (this.model.roleType === 2) {
+        this.getRoles(2, null)
+      }
     },
     // 切换企业
     changeCompanyHandle() {
-      // this.roles = []
-      // this.model.roleId = null
-      // if (this.model.roleType && this.model.companyId) {
-      //   this.getRoles(this.model.roleType, this.model.companyId)
-      // }
+      this.roles = []
+      this.model.roleId = null
+      if (this.model.roleType && this.model.companyId) {
+        this.getRoles(this.model.roleType, this.model.companyId)
+      }
     },
     // 获取角色列表
     getRoles(roleType, companyId) {
-      return api.system.role.getSelectlist().then(response => {
+      return api.system.role.getSelectlist(roleType, companyId).then(response => {
         this.roles = response.data || []
       })
     }

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取列表数据（查询、翻页）
 export function getList(query, page, sort) {
   return request({
-    url: '/system/role/list',
+    url: '/section/list',
     method: 'post',
     data: {
       page: { current: page.current, size: page.size },
@@ -16,23 +16,15 @@ export function getList(query, page, sort) {
 // 根据id获取数据
 export function get(id) {
   return request({
-    url: `/system/role/${id}/detail`,
-    method: 'get'
-  })
-}
-
-// 根据当前用户所有权限对应的功能列表
-export function getFunctionsFromAccess(roleType) {
-  return request({
-    url: '/system/role/functionsFromAccess?roleType=' + roleType,
+    url: `/section/${id}/detail`,
     method: 'get'
   })
 }
 
 // 获得下拉列表的数据
-export function getSelectlist(type, companyId) {
+export function getSelectlist() {
   return request({
-    url: '/system/role/selectlist',
+    url: '/section/selectlist',
     method: 'get'
   })
 }
@@ -40,7 +32,7 @@ export function getSelectlist(type, companyId) {
 // 添加数据
 export function create(data) {
   return request({
-    url: '/system/role/create',
+    url: '/section/create',
     method: 'post',
     data
   })
@@ -49,7 +41,7 @@ export function create(data) {
 // 更新数据
 export function update(data) {
   return request({
-    url: '/system/role/update',
+    url: '/section/update',
     method: 'put',
     data
   })
@@ -58,16 +50,8 @@ export function update(data) {
 // 删除、批量删除数据
 export function del(data) {
   return request({
-    url: '/system/role/delete',
+    url: '/section/delete',
     method: 'delete',
     data: data
-  })
-}
-
-// 获取角色类型
-export function getRoleTypes() {
-  return request({
-    url: `/system/role/roleTypes`,
-    method: 'get'
   })
 }

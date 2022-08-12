@@ -9,7 +9,7 @@ import * as depart from './dept/index'
 import * as zhixi from './zhixi/index'
 import * as processDept from './processDept/index'
 import * as factory from './factory/index'
-
+import * as section from './section/index'
 import system from './system'
 
 import equipmentManagement from './equipmentManagement'
@@ -30,6 +30,7 @@ export default {
   zhixi,
   processDept,
   factory,
+  section,
   repair,
   tools,
   maintain,

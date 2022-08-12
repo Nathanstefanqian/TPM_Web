@@ -29,12 +29,12 @@ export default {
       name: 'User',
       access: 'user',
       meta: { title: '用户管理' }
-    },
-    {
-      path: 'index',
-      component: () => import('@/views/company/index'),
-      name: 'Company',
-      meta: { title: '部门管理' }
     }
+    // {
+    //   path: 'index',
+    //   component: () => import('@/views/company/index'),
+    //   name: 'Company',
+    //   meta: { title: '部门管理' }
+    // }
   ]
 }

@@ -1,67 +1,51 @@
 <template>
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
-      <el-row v-if="user.roleType<=2">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="角色类型" prop="roleType">
-            <el-select v-model="model.roleType" filterable clearable @change="changeRoleTypeHandle()">
-              <el-option v-for="item in roleTypes" :key="item.key" :label="item.text" :value="item.key" />
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="申请部门" prop="applyDeptId">
+            <el-select v-model="model.applyDeptId" class="query-item" style="width: 150px" placeholder="申请部门" clearable @clear="handleQuery">
+              <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeDepart(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="制造编号" prop="productCode">
+            <el-input v-model="model.productCode" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备编号" prop="deviceNo">
+            <el-input v-model="model.deviceNo" />
+          </el-form-item>
+        </el-col>
+
       </el-row>
-      <el-row v-if="model.roleType>=3&&user.roleType<=2">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="所属企业" prop="companyId">
-            <el-select v-model="model.companyId" filterable clearable @change="changeCompanyHandle()">
-              <el-option v-for="item in companies" :key="item.key" :label="item.text" :value="item.key" />
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="职系" prop="ezhixi">
+            <el-select v-model="model.zhixiId" filterable clearable @change="changeRoleTypeHandle()">
+              <el-option v-for="item in zhixis" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeZhixi(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="用户角色" prop="roleId">
-            <el-select v-model="model.roleId" filterable clearable>
-              <el-option v-for="item in roles" :key="item.key" :label="item.text" :value="item.key" />
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="厂区" prop="factory">
+            <el-select v-model="model.factoryId" filterable clearable @change="changeRoleTypeHandle()">
+              <el-option v-for="item in factories" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeFactory(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="用户名" prop="userName">
-            <el-input v-model="model.userName" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="姓名" prop="name">
-            <el-input v-model="model.name" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="初始密码" prop="password">
-            <el-input v-model="model.password" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="用户状态" prop="state">
-            <el-select v-model="model.state" clearable>
-              <el-option v-for="item in enums.userState" :key="item.key" :label="item.text" :value="item.key" />
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="加工部" prop="eprocessDept">
+            <el-select v-model="model.processDeptId" class="query-item" style="width: 150px" placeholder="请选择" clearable @clear="handleQuery">
+              <el-option v-for="item in processDepts" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangePrecessDept(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :sl="24">
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="model.remark" type="textarea" />
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="作业说明" prop="opDescription">
+            <el-input v-model="model.opDescription" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -83,16 +67,20 @@ import api from '@/api'
 
 export default {
   data() {
-    const curModels = models.system.user
-    const curApi = api.system.user
+    const curModels = models.equipmentManagement.transfer
+    const curApi = api.equipmentManagement.transfer
     return {
       ...getDefaultCreateViewData(), ...curModels, curApi, rules,
       ...{
-        dialogTitle: '添加用户',
+        dialogTitle: '设备报废转移申请',
         model: curModels.create,
         roleTypes: [],
         companies: [],
-        roles: []
+        roles: [],
+        departs: [],
+        zhixis: [],
+        factories: [],
+        processDepts: []
       }
     }
   },
@@ -103,13 +91,24 @@ export default {
     ...crud,
     async initCreateBefore() {
       this.roleTypes = this.$parent.roleTypes
-      this.companies = this.$parent.companies
-      if (this.user.roleType === 3) {
-        this.model.roleType = 4
-        this.model.companyId = this.user.companyId
-      }
+      this.departs = this.$parent.departs
+      this.zhixis = this.$parent.zhixis
+      this.factories = this.$parent.factories
+      this.processDepts = this.$parent.processDepts
       // 页面刷新，丢失数据
-      this.getRoles(this.model.roleType, this.model.companyId)
+      // this.getRoles(this.model.roleType, this.model.companyId)
+    },
+    onChangeDepart(val) {
+      this.model.applyDeptName = val
+    },
+    onChangeZhixi(val) {
+      this.model.zhixi = val
+    },
+    onChangeFactory(val) {
+      this.model.factory = val
+    },
+    onChangePrecessDept(val) {
+      this.model.processDeptName = val
     },
     // 切换角色类型
     changeRoleTypeHandle() {
@@ -138,9 +137,17 @@ export default {
         this.roles = response.data || []
       })
     },
+    // submitCreateBefore() {
+    //   this.model.applyPersonId = this.user.id // 绑定当前用户
+    //   this.model.applyPersonName = this.user.name // 绑定当前用户
+    //   console.log('userid' + this.user.id)
+    //   console.log('name' + this.user.name + '|' + this.user.displayName)
+    // },
     submitCreateAfter() {
       // 清空部分数据
-      this.model.userName = null
+      this.model.productCode = null
+      this.model.deviceNo = null
+      this.model.opDescription = null
     }
   }
 }

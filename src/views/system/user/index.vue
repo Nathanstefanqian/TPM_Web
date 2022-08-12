@@ -23,7 +23,7 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="user.roleType<=2" label="所属企业" prop="role.company.name" align="left" width="200" show-overflow-tooltip />
+      <el-table-column v-if="user.roleType<=2" label="所属部门" prop="dept.name" align="left" width="200" show-overflow-tooltip />
       <el-table-column label="角色" prop="role.name" align="left" width="200" show-overflow-tooltip />
       <el-table-column label="用户名" prop="userName" align="center" width="100" show-overflow-tooltip />
       <el-table-column label="姓名" prop="name" align="center" width="100" show-overflow-tooltip />

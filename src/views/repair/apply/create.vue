@@ -2,50 +2,79 @@
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
       <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="角色类型" prop="type">
-            <el-select v-model="model.type" clearable @change="changeRoleTypeHandle()">
-              <el-option v-for="item in roleTypes" :key="item.key" :label="item.text" :value="item.key" />
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="所属部门" prop="applyDeptId">
+            <el-select v-model="model.deptId" class="query-item" style="width: 150px" placeholder="申请部门" clearable @clear="handleQuery">
+              <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeDepart(item.text)" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="所属工段" prop="applyDeptId">
+            <el-select v-model="model.section" class="query-item" style="width: 150px" placeholder="所属工段" clearable @clear="handleQuery">
+              <el-option v-for="item in sections" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeDepart(item.text)" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+        <el-col :xl="8" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="制造编号" prop="productCode">
+            <el-input v-model="model.productCode" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="制造日期" prop="productCode">
+            <el-date-picker v-model="model.productDate" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备编号" prop="propertyCode">
+            <el-input v-model="model.deviceNum" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="设备型号" prop="propertyCode">
+            <el-input v-model="model.deviceType" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="资产编号" prop="propertyCode">
+            <el-input v-model="model.propertyCode" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="报修等级" prop="level">
+            <el-select v-model="model.level" filterable clearable @change="changeRoleTypeHandle()">
+              <el-option v-for="item in levels" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeZhixi(item.text)" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="报修类别" prop="factory">
+            <el-select v-model="model.category" filterable clearable @change="changeRoleTypeHandle()">
+              <el-option v-for="item in categories" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeFactory(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="user.roleType>=3">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="角色类型">
-            {{ (rt = roleTypes.find(s => s.key === 4)) == null ? null : rt.text }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-if="model.type>=3&&user.roleType<=2">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="所属企业" prop="companyId">
-            <el-select v-model="model.companyId" clearable>
-              <el-option v-for="item in companies" :key="item.key" :label="item.text" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
       <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="角色名称" prop="name">
-            <el-input v-model="model.name" />
+        <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
+          <el-form-item label="报修内容" prop="content">
+            <el-input
+              v-model="model.content"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+            />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :sm="24">
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="model.remark" type="textarea" :rows="2" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :sm="24">
-          <el-form-item label="权限配置">
-            <div v-for="(func,index) in functions" :key="index" :class="`function-level-${func.level}`">
-              <span class="item"><el-checkbox v-model="func.checked" :indeterminate="func.indeterminate" :label="func.id" @change="checked=>functionCheckedChangeHandle(checked,func)">{{ func.title }}</el-checkbox></span>
-            </div>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label=" " prop="opDescription">
+            <el-button type="primary" @click="submitCreate">添加附件</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -67,16 +96,38 @@ import api from '@/api'
 
 export default {
   data() {
-    const curModels = models.system.role
-    const curApi = api.system.role
+    const curModels = models.repair.apply
+    const curApi = api.repair.apply
     return {
       ...getDefaultCreateViewData(), ...curModels, curApi, rules,
       ...{
-        dialogTitle: '添加角色',
+        dialogTitle: '设备报废转移申请',
         model: curModels.create,
         roleTypes: [],
-        functions: [],
-        companies: []
+        companies: [],
+        roles: [],
+        departs: [],
+        zhixis: [],
+        factories: [],
+        processDepts: [],
+        sections: [],
+        levels: [{
+          key: '一般',
+          text: '一般'
+        }, {
+          key: '加急',
+          text: '加急'
+        }],
+        categories: [{
+          key: '设备维修',
+          text: '设备维修'
+        }, {
+          key: '量测设备维修',
+          text: '量测设备维修'
+        }, {
+          key: '辅助治具维修',
+          text: '辅助治具维修'
+        }]
       }
     }
   },
@@ -87,130 +138,69 @@ export default {
     ...crud,
     async initCreateBefore() {
       this.roleTypes = this.$parent.roleTypes
-      this.companies = this.$parent.companies
-      if (this.user.roleType === 3) {
-        this.model.type = 4
-        this.model.companyId = this.user.companyId
-        await this.getFunctions(this.model.type)
-      }
+      this.departs = this.$parent.departs
+      this.zhixis = this.$parent.zhixis
+      this.factories = this.$parent.factories
+      this.processDepts = this.$parent.processDepts
+      this.sections = this.$parent.sections
+      // 页面刷新，丢失数据
+      // this.getRoles(this.model.roleType, this.model.companyId)
     },
-    // 获取当前用户权限的所有系统功能
-    getFunctions(roleType) {
-      this.loading = true
-      return api.system.role.getFunctionsFromAccess(roleType).then(response => {
-        this.functions = response.data
-        this.loading = false
-      }).catch(reject => {
-        this.loading = false
-      })
+    onChangeDepart(val) {
+      this.model.deptName = val
+    },
+    onChangeZhixi(val) {
+      this.model.zhixi = val
+    },
+    onChangeFactory(val) {
+      this.model.factory = val
+    },
+    onChangePrecessDept(val) {
+      this.model.processDeptName = val
     },
     // 切换角色类型
-    async changeRoleTypeHandle() {
+    changeRoleTypeHandle() {
       // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
-      this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.type >= 3
-      // 获取系统功能
-      if (this.model.type) {
-        await this.getFunctions(this.model.type)
+      this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.roleType >= 3
+      // 重置模型类
+      this.model.companyId = null
+      this.roles = []
+      this.model.roleId = null
+      // 重新获取角色
+      if (this.model.roleType === 2) {
+        this.getRoles(2, null)
       }
     },
-    // 处理权限复选框的级联选中效果
-    functionCheckedChangeHandle(value, data) {
-      const that = this
-      childrenHandle(data.id)
-
-      // 子级递归
-      function childrenHandle(id) {
-        data.indeterminate = false
-        that.functions.forEach(item => {
-          if (item.parentId === id) {
-            item.checked = value
-            item.indeterminate = false
-            childrenHandle(item.id)
-          }
-        })
-      }
-
-      parentsHandle(data.parentId)
-
-      // 父级递归
-      function parentsHandle(id) {
-        if (!id) return
-        const current = that.functions.find(item => item.id === id)
-        const children = that.functions.filter(item => item.parentId === id)
-        const childrenCount = children.length
-        const childrenCheckedCount = children.filter(item => item.checked).length
-        const childrenIndeterminateCount = children.filter(item => item.indeterminate).length
-        current.checked = childrenCheckedCount > 0
-        current.indeterminate = childrenIndeterminateCount > 0 || (childrenCheckedCount > 0 && childrenCheckedCount < childrenCount)
-        parentsHandle(current.parentId)
+    // 切换企业
+    async changeCompanyHandle() {
+      this.roles = []
+      this.model.roleId = null
+      if (this.model.roleType && this.model.companyId) {
+        this.getRoles(this.model.roleType, this.model.companyId)
       }
     },
-    // 提交前处理
-    submitCreateBefore() {
-      this.model.accesses = (this.functions || []).filter(s => s.checked).map(f => {
-        return { functionId: f.id, allow: f.checked ? 1 : 0 }
+    // 获取角色列表
+    getRoles(roleType, companyId) {
+      return api.system.role.getSelectlist(roleType, companyId).then(response => {
+        this.roles = response.data || []
       })
-      return true
     },
+    // submitCreateBefore() {
+    //   this.model.applyPersonId = this.user.id // 绑定当前用户
+    //   this.model.applyPersonName = this.user.name // 绑定当前用户
+    //   console.log('userid' + this.user.id)
+    //   console.log('name' + this.user.name + '|' + this.user.displayName)
+    // },
     submitCreateAfter() {
       // 清空部分数据
-      this.model.name = null
+      this.model.productCode = null
+      this.model.deviceNo = null
+      this.model.opDescription = null
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.function-level-1 {
-  padding-left: 5px;
-  background-color: #e8e8e8;
-
-  + .function-level-2 {
-    border-top: none
-  }
-
-  + .function-level-3 {
-    padding-left: 30px;
-  }
-}
-
-.function-level-2 {
-  margin-left: 30px;
-  border-top: dashed 1px #a0a0a0;
-
-  + .function-level-3 {
-    padding-left: 55px;
-  }
-}
-
-.function-level-3 {
-  display: inline-block;
-
-  .item {
-    padding-right: 20px;
-  }
-}
-
-/deep/ .disabled-checkbox {
-  cursor: not-allowed !important;
-}
-
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
-  background-color: #409EFF !important;
-  border-color: #409EFF !important;
-  cursor: not-allowed !important;
-
-  &::after {
-    border-color: #FFF !important;
-  }
-}
-
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked + span.el-checkbox__label {
-  color: #409EFF !important;
-}
-
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner::before {
-  background-color: #FFF;
-}
 </style>
 

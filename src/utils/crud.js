@@ -81,6 +81,7 @@ function handleCreate() {
  * 提交添加数据
  */
 function submitCreate() {
+  console.log('submitCreate')
   this.$refs.form.validate((valid) => {
     if (!valid) return false
     this.loading = true
@@ -96,6 +97,37 @@ function submitCreate() {
     this.curApi.create(data).then(() => {
       // 钩子，添加提交后执行。无返回值
       if (this.submitCreateAfter) this.submitCreateAfter()
+      // 重新加载列表页
+      this.$parent.getDatas()
+      this.loading = false
+    }).catch(() => {
+      this.loading = false
+    })
+  })
+}
+
+/**
+ * 提交添加数据带返回id
+ */
+function submitCreateWithNewID() {
+  console.log('submitCreateWithNewID')
+  this.$refs.form.validate((valid) => {
+    if (!valid) return false
+    this.loading = true
+    // 钩子，添加提交前执行。返回true，执行删除；返回false，退出
+    if (this.submitCreateBefore) {
+      if (!this.submitCreateBefore()) {
+        this.loading = false
+        return false
+      }
+    }
+    // 拷贝数据提交
+    const data = _.pick(this.model, Object.keys(this.createReal))
+    this.curApi.create(data).then((response) => {
+      // that.curModels.id = response.data
+      console.log(response)
+      // 钩子，添加提交后执行。无返回值
+      if (this.submitCreateAfter) this.submitCreateAfter(response.data)
       // 重新加载列表页
       this.$parent.getDatas()
       this.loading = false
@@ -349,5 +381,6 @@ export default {
   handleDetail,
   initDetail,
   handleExport,
-  handleExportCsv
+  handleExportCsv,
+  submitCreateWithNewID
 }

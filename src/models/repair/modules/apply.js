@@ -17,8 +17,8 @@ const base = {
   category: null,
   content: null,
   repairTime: null,
-  status: null,
-  outsource: null
+  status: '0',
+  outsource: '0'
 
 }
 
@@ -40,7 +40,26 @@ const queryReal = _.cloneDeep(queryEmpty)
 const create = _.cloneDeep(base)
 
 // create提交数据，属性值务必准确，多余属性不会提交
-const createReal = { companyId: null, type: null, name: null, remark: null, accesses: null }
+const createReal = {
+  id: null,
+  repairNum: null,
+  applyPersonId: null,
+  applyPersonName: null,
+  section: null,
+  deptId: null,
+  deptName: null,
+  productCode: null,
+  productDate: null,
+  deviceNum: null,
+  deviceType: null,
+  propertyCode: null,
+  level: null,
+  category: null,
+  content: null,
+  repairTime: null,
+  status: '0',
+  outsource: '0'
+}
 
 const update = _.cloneDeep(base)
 

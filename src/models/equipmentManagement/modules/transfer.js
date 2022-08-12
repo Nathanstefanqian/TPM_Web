@@ -8,6 +8,8 @@ const base = {
   productCode: null,
   deviceNo: null,
   opInfo: null,
+  zhixiId: null,
+  factoryId: null,
   zhixi: null,
   factory: null,
   processDeptId: null,
@@ -38,7 +40,27 @@ const queryReal = _.cloneDeep(queryEmpty)
 const create = _.cloneDeep(base)
 
 // create提交数据，属性值务必准确，多余属性不会提交
-const createReal = { roleId: null, userName: null, name: null, password: null, state: null, remark: null }
+const createReal = {
+  id: null,
+  transferNo: null,
+  applyDeptId: null,
+  applyDeptName: null,
+  productCode: null,
+  deviceNo: null,
+  opInfo: null,
+  zhixiId: null,
+  factoryId: null,
+  zhixi: null,
+  factory: null,
+  processDeptId: null,
+  processDeptName: null,
+  opDescription: null,
+  applyPersonId: null,
+  applyPersonName: null,
+  appplyTime: null,
+  checkStatus: null,
+  checkStatusName: null
+}
 
 const update = _.cloneDeep(base)
 
