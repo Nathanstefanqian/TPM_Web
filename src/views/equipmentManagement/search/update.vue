@@ -4,7 +4,7 @@
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="职系" prop="ezhixi">
-            <el-select v-model="model.ezhixi" filterable clearable @change="changeRoleTypeHandle()">
+            <el-select v-model="model.ezhixi" filterable clearable>
               <el-option v-for="item in zhixis" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
@@ -16,7 +16,7 @@
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="验收日期" prop="eacceptanceDate">
-            <el-date-picker v-model="model.eacceptanceDate" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+            <el-date-picker v-model="model.eacceptanceDate" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
@@ -76,7 +76,7 @@
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="创建日期" prop="createTime">
-            <el-date-picker v-model="model.createTime" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+            <el-date-picker v-model="model.createTime" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
@@ -214,14 +214,14 @@
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="厂区" prop="efactory">
-            <el-select v-model="model.efactory" filterable clearable @change="changeRoleTypeHandle()">
+            <el-select v-model="model.efactory" filterable clearable>
               <el-option v-for="item in factories" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="制造日期" prop="eproductDate">
-            <el-date-picker v-model="model.eproductDate" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+            <el-date-picker v-model="model.eproductDate" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" class="query-item" style="width: 200px" />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
@@ -244,7 +244,7 @@
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="园区" prop="edistrict">
-            <el-select v-model="model.edistrict" filterable clearable @change="changeRoleTypeHandle()">
+            <el-select v-model="model.edistrict" filterable clearable>
               <el-option v-for="item in districts" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
@@ -314,6 +314,7 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import { deepClone } from '@/utils'
 
 export default {
   data() {
@@ -330,20 +331,34 @@ export default {
         zhixis: [],
         factories: [],
         processDepts: [],
-        Sections: [], // todo 补
-        ResponsiblePersons: [], // todo 补
-        MaintianPersons: [], // todo 补
-        responsibleDepts: [], // todo 补
-        repairDepts: [], // todo 补
-        CreatePersons: [], // todo
-        productDepts: [], // todo 制造处
-        repairManagers: [], // todo 维修主管
-        districts: [] // TODO 园区
+        Sections: [],
+        ResponsiblePersons: [],
+        MaintianPersons: [],
+        responsibleDepts: [],
+        repairDepts: [],
+        CreatePersons: [],
+        productDepts: [],
+        repairManagers: [],
+        districts: [{
+          key: 'A区',
+          text: 'A区'
+        }, {
+          key: 'B区',
+          text: 'B区'
+        }, {
+          key: 'C区',
+          text: 'C区'
+        }] // TODO 园区
       }
     }
   },
   computed: {
     ...mapGetters(['enums', 'user'])
+  },
+  created() {
+    this.getDeparts()
+    this.getSections()
+    this.getPersons()
   },
   methods: {
     ...crud,
@@ -351,9 +366,15 @@ export default {
     async initUpdateBefore(row) {
       this.roleTypes = this.$parent.roleTypes
       this.departs = this.$parent.departs
+      this.responsibleDepts = deepClone(this.departs)
       this.zhixis = this.$parent.zhixis
       this.factories = this.$parent.factories
       this.processDepts = this.$parent.processDepts
+      this.repairDepts = deepClone(this.departs)
+      this.productDepts = deepClone(this.departs)
+      this.MaintianPersons = deepClone(this.ResponsiblePersons)
+      this.CreatePersons = deepClone(this.ResponsiblePersons)
+      this.repairManagers = deepClone(this.ResponsiblePersons)
 
       // if (this.user.roleType === 3) {
       //   this.model.type = 4
@@ -372,6 +393,19 @@ export default {
     getDeparts() {
       api.depart.getSelectlist().then(response => {
         this.departs = response.data || []
+      }).catch(reject => {
+      })
+    },
+    getSections() {
+      api.section.getSelectlist().then(response => {
+        this.Sections = response.data || []
+      }).catch(reject => {
+      })
+    },
+    // 根据登录用户角色获取企业列表
+    getPersons() {
+      api.system.user.getSelectlist().then(response => {
+        this.ResponsiblePersons = response.data || []
       }).catch(reject => {
       })
     },

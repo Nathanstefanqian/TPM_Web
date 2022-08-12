@@ -7,7 +7,7 @@ export default {
   name: 'tools',
   access: 'tools',
   meta: {
-    title: '量测设备与辅助治具管理',
+    title: '量治具管理',
     icon: 'historyData'
   },
   children: [
@@ -37,14 +37,14 @@ export default {
       component: () => import('@/views/tools/measuretransfer/index'),
       name: 'measuretransfer',
       access: 'measuretransfer',
-      meta: { title: '量测设备与量具具报废、移转申请' }
+      meta: { title: '量具设备报废移转申请' }
     },
     {
       path: 'fixturetransfer',
       component: () => import('@/views/tools/fixturetransfer/index'),
       name: 'fixturetransfer',
       access: 'fixturetransfer',
-      meta: { title: '辅助治具报废、移转申请' }
+      meta: { title: '辅助治具报废移转申请' }
     }
   ]
 }

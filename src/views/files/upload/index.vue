@@ -27,8 +27,8 @@
         </el-select>
         <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除</el-button>
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
-        <el-button class="tool tool-create" type="primary" icon="vue-icon-create" @click="handleCreate">批量上传</el-button>
-        <a href="http://localhost:9002/#/src/assets/equipment.xlsx">上传格式下载</a>
+        <el-button class="tool tool-create" type="primary" icon="vue-icon-create">上传</el-button>
+        <!--        <a href="http://localhost:9002/#/src/assets/equipment.xlsx">上传格式下载</a>-->
 
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
       </div>

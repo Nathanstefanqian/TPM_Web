@@ -10,6 +10,8 @@
 
         <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除</el-button>
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
+        <el-button class="tool tool-create" type="danger" icon="vue-icon-create">量具报废转移申请</el-button>
+
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
       </div>
     </div>
@@ -33,15 +35,15 @@
           <!--          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
           <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
           <!--          </el-tooltip>-->
-          <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">
-            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>
-          </el-tooltip>
+          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
+          <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
+          <!--          </el-tooltip>-->
           <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
             <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
           </el-tooltip>
-          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">
-            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>
-          </el-tooltip>
+          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">-->
+          <!--            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>-->
+          <!--          </el-tooltip>-->
         </template>
       </el-table-column>
     </el-table>
