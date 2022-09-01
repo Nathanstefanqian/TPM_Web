@@ -24,6 +24,13 @@ export default {
       name: 'transfer',
       access: 'transfer',
       meta: { title: '报废/转移' }
+    },
+    {
+      path: 'transferSign',
+      component: () => import('@/views/equipmentManagement/transferSign/index'),
+      name: 'transferSign',
+      access: 'transferSign',
+      meta: { title: '报废/转移签核' }
     }
   ]
 }

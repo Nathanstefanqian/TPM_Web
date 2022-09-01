@@ -33,6 +33,13 @@ export default {
       meta: { title: '定期校验申请' }
     },
     {
+      path: 'opapplySign',
+      component: () => import('@/views/tools/opapplySign/index'),
+      name: 'opapplySign',
+      access: 'opapplySign',
+      meta: { title: '定期校验签核' }
+    },
+    {
       path: 'measuretransfer',
       component: () => import('@/views/tools/measuretransfer/index'),
       name: 'measuretransfer',
@@ -40,11 +47,25 @@ export default {
       meta: { title: '量具设备报废移转申请' }
     },
     {
+      path: 'measuretransferSign',
+      component: () => import('@/views/tools/measuretransferSign/index'),
+      name: 'measuretransferSign',
+      access: 'measuretransferSign',
+      meta: { title: '量具设备报废移转签核' }
+    },
+    {
       path: 'fixturetransfer',
       component: () => import('@/views/tools/fixturetransfer/index'),
       name: 'fixturetransfer',
       access: 'fixturetransfer',
       meta: { title: '辅助治具报废移转申请' }
+    },
+    {
+      path: 'fixturetransferSign',
+      component: () => import('@/views/tools/fixturetransferSign/index'),
+      name: 'fixturetransferSign',
+      access: 'fixturetransferSign',
+      meta: { title: '辅助治具报废移转签核' }
     }
   ]
 }

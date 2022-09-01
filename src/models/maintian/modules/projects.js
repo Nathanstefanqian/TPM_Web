@@ -25,7 +25,7 @@ const queryEmpty = {
   deptId: null,
   productCode: null,
   // deviceNo: null,
-  zhixi: null,
+  maintainType: null, // 日 月 周
   factory: null,
   processDept: null
 }
