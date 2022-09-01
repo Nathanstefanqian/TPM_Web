@@ -121,6 +121,9 @@ export default {
   },
   created() {
     this.clearAndInitQuery()
+    this.query.applyPersonId = this.user.userId
+
+    console.log(this.user)
     this.getDatas()
     this.getRoleTypes()
     this.getDeparts()

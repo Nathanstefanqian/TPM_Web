@@ -29,7 +29,10 @@ const queryEmpty = {
   transferNo: null,
   factory: null,
   processDept: null,
-  outsource: '0' // 是否委外 0否1 是
+  outsource: '0', // 是否委外 0否1 是
+  applyPersonId: null,
+  applyPersonName: null
+
 }
 
 const query = _.cloneDeep(queryEmpty)
