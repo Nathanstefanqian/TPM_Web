@@ -14,7 +14,8 @@
           <span class="el-dropdown-link">
             <i class="iconfont vue-icon-user2" />
             <span>{{ user?user.roleName:'' }}</span>
-            <span>{{ user?user.userName:'' }}</span>
+            <!--            todo 加用户姓名-->
+            <span>{{ user?user.name+'('+user.userName + ')':'' }}</span>
             <i class="el-icon-caret-bottom" />
           </span>
           <el-dropdown-menu slot="dropdown">
