@@ -7,7 +7,7 @@
           <el-option v-for="item in roleTypes" :key="item.key" :label="item.text" :value="item.key" />
         </el-select>
         <el-input v-if="user.roleType <=2" v-model.trim="query['company.name']" class="query-item" style="width: 150px" placeholder="所属企业" clearable @clear="handleQuery" />
-        <el-input v-model.trim="query['user.name']" class="query-item" style="width: 120px" placeholder="姓名" clearable @clear="handleQuery" />
+        <el-input v-model.trim="query['name']" class="query-item" style="width: 120px" placeholder="姓名" clearable @clear="handleQuery" />
         <el-select v-model="query.state" class="query-item" style="width:120px" placeholder="用户状态" clearable @clear="handleQuery">
           <el-option v-for="item in enums.userState" :key="item.key" :label="item.text" :value="item.key" />
         </el-select>
