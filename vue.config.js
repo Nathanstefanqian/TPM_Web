@@ -43,8 +43,8 @@ module.exports = {
     // it can be accessed in index.html to inject the correct title.
     name: name,
     externals: {
-      'AMap': 'AMap',
-      'AMapUI': 'AMapUI'
+      // 'AMap': 'AMap',
+      // 'AMapUI': 'AMapUI'
     },
     resolve: {
       alias: {

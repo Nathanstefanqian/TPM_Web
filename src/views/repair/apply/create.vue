@@ -143,6 +143,7 @@ export default {
       this.factories = this.$parent.factories
       this.processDepts = this.$parent.processDepts
       this.sections = this.$parent.sections
+      this.model.flowId = '1'
       // 页面刷新，丢失数据
       // this.getRoles(this.model.roleType, this.model.companyId)
     },

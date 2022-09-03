@@ -87,8 +87,8 @@ export default {
   },
   directives: { adaptive },
   data() {
-    const curModels = models.repair.apply
-    const curApi = api.repair.apply
+    const curModels = models.repair.applySign
+    const curApi = api.repair.applySign
     const curPermission = this.$store.getters.access.repair.apply
     return {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
@@ -121,6 +121,11 @@ export default {
   },
   created() {
     this.clearAndInitQuery()
+    this.query.deptId = this.user.deptId
+    this.query.myRoleId = this.user.roleId
+    this.query.myUserId = this.user.userId
+    console.log('roleid：' + this.user.roleId)
+    console.log('userid：' + this.user.userId)
     this.getDatas()
     this.getRoleTypes()
     this.getDeparts()

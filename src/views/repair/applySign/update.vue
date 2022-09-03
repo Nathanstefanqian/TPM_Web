@@ -71,6 +71,16 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row v-if="appointPersonShow">
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="维修人员" prop="repairPerson">
+            <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择" clearable @change="selectPersonChanged">
+              <el-option v-for="item in repairPersons" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitUpdatePass">通过</el-button>
@@ -91,8 +101,8 @@ import api from '@/api'
 
 export default {
   data() {
-    const curModels = models.repair.apply
-    const curApi = api.repair.apply
+    const curModels = models.repair.applySign
+    const curApi = api.repair.applySign
     return {
       ...getDefaultUpdateViewData(), ...curModels, curApi, rules,
       ...{
@@ -100,31 +110,49 @@ export default {
         model: curModels.update,
         roleTypes: [],
         companies: [],
-        roles: []
+        roles: [],
+        repairPersons: [],
+        appointPersonShow: false
       }
     }
   },
   computed: {
     ...mapGetters(['enums', 'user'])
   },
+  created() {
+    this.getPersons()
+  },
   methods: {
     ...crud,
-    // 初始化数据之前 row：行绑定数据
+    // 通过
     submitUpdatePass() {
-      if (this.user.roleType === 1) {
-        this.model.status = this.user.roleType + '1'
-      }
+      this.model.status = '3'
       this.submitUpdate()
     },
+    //  驳回
     submitUpdateBack() {
-      if (this.user.roleType === 1) {
-        this.model.status = this.user.roleType + '0'
-      }
+      this.model.status = '2'
       this.submitUpdate()
     },
     sentEmail() {
       this.submitUpdate()
     },
+    getPersons() {
+      api.system.user.getSelectlist().then(response => {
+        this.repairPersons = response.data || []
+      }).catch(reject => {
+      })
+    },
+    selectPersonChanged(value) {
+      for (var i = 0; i < this.repairPersons.length; i++) {
+        // console.log('i:' + this.repairPersons[i].text)
+        if (value === this.repairPersons[i].key) {
+          this.model.repairPersonName = this.repairPersons[i].text
+        }
+      }
+      console.log(this.model)
+    },
+    // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
       // this.rules.password[0].required = false
       // this.roleTypes = this.$parent.roleTypes
@@ -136,37 +164,39 @@ export default {
     },
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
     initUpdateAfter(row, data) {
-      this.model.roleType = data.role.type
-      this.model.companyId = data.role.company.id
-      return this.getRoles(this.model.roleType, this.model.companyId)
-    },
-    // 切换角色类型
-    changeRoleTypeHandle() {
-      // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
-      this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.roleType >= 3
-      // 重置模型类
-      this.model.companyId = null
-      this.roles = []
-      this.model.roleId = null
-      // 重新获取角色
-      if (this.model.roleType === 2) {
-        this.getRoles(2, null)
+      console.log(data)
+      this.model = data
+      if (this.model.checkNextName === '维保主管审核') {
+        this.appointPersonShow = true
       }
-    },
-    // 切换企业
-    changeCompanyHandle() {
-      this.roles = []
-      this.model.roleId = null
-      if (this.model.roleType && this.model.companyId) {
-        this.getRoles(this.model.roleType, this.model.companyId)
-      }
-    },
-    // 获取角色列表
-    getRoles(roleType, companyId) {
-      return api.system.role.getSelectlist(roleType, companyId).then(response => {
-        this.roles = response.data || []
-      })
     }
+    // // 切换角色类型
+    // changeRoleTypeHandle() {
+    //   // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
+    //   this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.roleType >= 3
+    //   // 重置模型类
+    //   this.model.companyId = null
+    //   this.roles = []
+    //   this.model.roleId = null
+    //   // 重新获取角色
+    //   if (this.model.roleType === 2) {
+    //     this.getRoles(2, null)
+    //   }
+    // },
+    // // 切换企业
+    // changeCompanyHandle() {
+    //   this.roles = []
+    //   this.model.roleId = null
+    //   if (this.model.roleType && this.model.companyId) {
+    //     this.getRoles(this.model.roleType, this.model.companyId)
+    //   }
+    // },
+    // // 获取角色列表
+    // getRoles(roleType, companyId) {
+    //   return api.system.role.getSelectlist(roleType, companyId).then(response => {
+    //     this.roles = response.data || []
+    //   })
+    // }
   }
 }
 </script>

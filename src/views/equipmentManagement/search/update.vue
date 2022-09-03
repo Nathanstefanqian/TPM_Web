@@ -402,7 +402,7 @@ export default {
       }).catch(reject => {
       })
     },
-    // 根据登录用户角色获取企业列表
+    // 用户列表
     getPersons() {
       api.system.user.getSelectlist().then(response => {
         this.ResponsiblePersons = response.data || []
