@@ -10,8 +10,6 @@
         <el-input v-model.trim="query.productCode" class="query-item" style="width: 120px" placeholder="制造编号" clearable @clear="handleQuery" />
         <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除</el-button>
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
-        <!--        <el-button class="tool tool-create" type="danger" icon="vue-icon-create" @click="handleCreate">报修申请</el-button>-->
-
       </div>
       <!--      <div class="tool-group">-->
       <!--        &lt;!&ndash;        <el-input v-model.trim="query.name" class="query-item" style="width: 120px" placeholder="角色名" clearable @clear="handleQuery" />&ndash;&gt;-->
@@ -45,17 +43,17 @@
       <el-table-column label="报修类别" prop="category" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="报修等级" prop="level" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="状态" prop="checkStatusName" align="left" show-overflow-tooltip />
-      <el-table-column fixed="right" label="签核" align="center" width="180">
+      <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
           <!--          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
           <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
           <!--          </el-tooltip>-->
-          <el-tooltip transition="false" :hide-after="1000" class="item" content="签核" placement="top-end">
-            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>
-          </el-tooltip>
-          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">-->
-          <!--            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>-->
+          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
+          <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
           <!--          </el-tooltip>-->
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
+            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
+          </el-tooltip>
           <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">-->
           <!--            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>-->
           <!--          </el-tooltip>-->
@@ -87,21 +85,19 @@ export default {
   },
   directives: { adaptive },
   data() {
-    const curModels = models.repair.applySign
-    const curApi = api.repair.applySign
+    const curModels = models.repair.apply
+    const curApi = api.repair.apply
     const curPermission = this.$store.getters.access.repair.apply
     return {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
       ...{
-        page: { total: 0, current: 1, size: 10 },
         sort: { prop: 'repairTime', order: 'descending' },
         roleTypes: [],
         companies: [],
         departs: [],
         zhixis: [],
         factories: [],
-        processDepts: [],
-        sections: []
+        processDepts: []
       },
       queryInfos: [{
         key: '1',
@@ -121,18 +117,13 @@ export default {
   },
   created() {
     this.clearAndInitQuery()
-    this.query.deptId = this.user.deptId
-    this.query.myRoleId = this.user.roleId
-    this.query.myUserId = this.user.userId
-    console.log('roleid：' + this.user.roleId)
-    console.log('userid：' + this.user.userId)
+    this.query.outsource = '1'
     this.getDatas()
-    // this.getRoleTypes()
-    // this.getDeparts()
-    // this.getZhixis()
-    // this.getFactories()
-    // this.getProcessDepts()
-    // this.getSections()
+    this.getRoleTypes()
+    this.getDeparts()
+    this.getZhixis()
+    this.getFactories()
+    this.getProcessDepts()
   },
   methods: {
     ...crud,
@@ -147,12 +138,6 @@ export default {
     getDeparts() {
       api.depart.getSelectlist().then(response => {
         this.departs = response.data || []
-      }).catch(reject => {
-      })
-    },
-    getSections() {
-      api.section.getSelectlist().then(response => {
-        this.sections = response.data || []
       }).catch(reject => {
       })
     },

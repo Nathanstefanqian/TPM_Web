@@ -106,7 +106,7 @@ export default {
     return {
       ...getDefaultUpdateViewData(), ...curModels, curApi, rules,
       ...{
-        dialogTitle: '报废/转移签核',
+        dialogTitle: '报修签核',
         model: curModels.update,
         roleTypes: [],
         companies: [],
