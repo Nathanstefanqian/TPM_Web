@@ -41,23 +41,23 @@
           </span>
         </el-form-item>
       </el-tooltip>
-      <el-form-item prop="captcha" class="captcha-input-container">
-        <span class="input-left-icon">
-          <i class="iconfont vue-icon-captcha" />
-        </span>
-        <el-input
-          ref="captcha"
-          v-model="loginAccount.captcha"
-          placeholder="验证码"
-          name="captcha"
-          type="text"
-          tabindex="3"
-          autocomplete="off"
-        />
-      </el-form-item>
-      <div class="captcha-image-container">
-        <img class="captcha" :src="captchaImage" alt="点击更换" height="46" width="120" @click="handleGetCaptcha">
-      </div>
+      <!--      <el-form-item prop="captcha" class="captcha-input-container">-->
+      <!--        <span class="input-left-icon">-->
+      <!--          <i class="iconfont vue-icon-captcha" />-->
+      <!--        </span>-->
+      <!--        <el-input-->
+      <!--          ref="captcha"-->
+      <!--          v-model="loginAccount.captcha"-->
+      <!--          placeholder="验证码"-->
+      <!--          name="captcha"-->
+      <!--          type="text"-->
+      <!--          tabindex="3"-->
+      <!--          autocomplete="off"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
+      <!--      <div class="captcha-image-container">-->
+      <!--        <img class="captcha" :src="captchaImage" alt="点击更换" height="46" width="120" @click="handleGetCaptcha">-->
+      <!--      </div>-->
       <el-button :loading="loading" type="primary" @click.native.prevent="handleLogin">登 录</el-button>
     </el-form>
   </div>
@@ -83,8 +83,8 @@ export default {
       },
       rules: {
         username: setRule('账号', [{ required: true, trigger: 'change' }]),
-        password: setRule('密码', [{ required: true, trigger: 'change' }]),
-        captcha: setRule('验证码', [{ required: true, trigger: 'change' }, { fixedLength: 4 }])
+        password: setRule('密码', [{ required: true, trigger: 'change' }])
+        // captcha: setRule('验证码', [{ required: true, trigger: 'change' }, { fixedLength: 4 }])
       },
       passwordVisible: false,
       capslockTooltip: false,
@@ -116,7 +116,7 @@ export default {
     }
   },
   created() {
-    this.handleGetCaptcha()
+    // this.handleGetCaptcha()
   },
   mounted() {
     if (this.loginAccount.username === '') {
@@ -152,7 +152,7 @@ export default {
               this.loading = false
             })
             .catch(() => {
-              this.handleGetCaptcha()
+              // this.handleGetCaptcha()
               this.loading = false
             })
         } else {
