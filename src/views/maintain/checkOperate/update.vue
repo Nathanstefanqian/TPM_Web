@@ -1,67 +1,44 @@
 <template>
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
-      <el-row v-if="user.roleType<=2">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="角色类型" prop="roleType">
-            <el-select v-model="model.roleType" filterable clearable @change="changeRoleTypeHandle()">
-              <el-option v-for="item in roleTypes" :key="item.key" :label="item.text" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-if="model.roleType>=3&&user.roleType<=2">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="所属企业" prop="companyId">
-            <el-select v-model="model.companyId" filterable clearable @change="changeCompanyHandle()">
-              <el-option v-for="item in companies" :key="item.key" :label="item.text" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="用户角色" prop="roleId">
-            <el-select v-model="model.roleId" filterable clearable>
-              <el-option v-for="item in roles" :key="item.key" :label="item.text" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="用户名" prop="userName">
-            <el-input v-model="model.userName" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="姓名" prop="name">
-            <el-input v-model="model.name" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="用户状态" prop="state">
-            <el-select v-model="model.state" clearable>
-              <el-option v-for="item in enums.userState" :key="item.key" :label="item.text" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :sl="24">
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="model.remark" type="textarea" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 55 }" height="200px" :data="datas" :default-sort="sort" border fit highlight-current-row @sort-change="handleSort">
+      <el-table-column type="selection" align="center" width="35" />
+      <el-table-column label="序号" type="index" align="center" width="65" fixed>
+        <template slot-scope="scope">
+          <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="点检保养内容" prop="deptName" align="left" show-overflow-tooltip />
+      <el-table-column fixed="right" label="操作" align="center" width="280">
+        <template slot-scope="{row}">
+          <!--          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
+          <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
+          <!--          </el-tooltip>-->
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="OK" placement="top-end">
+            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>
+          </el-tooltip>
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="NG" placement="top-end">
+            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>
+          </el-tooltip>
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="维修中" placement="top-end">
+            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>
+          </el-tooltip>
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="维修中" placement="top-end">
+            <el-input v-model.trim="query.name" class="query-item" style="width:80px" placeholder="备注" clearable />
+          </el-tooltip>
+          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">-->
+          <!--            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>-->
+          <!--          </el-tooltip>-->
+          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">-->
+          <!--            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>-->
+          <!--          </el-tooltip>-->
+        </template>
+      </el-table-column>
+    </el-table>
+    <pagination :hidden="page.total===0" :total="page.total" :page.sync="page.current" :limit.sync="page.size" @pagination="getDatas" />
+
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitUpdate">提交</el-button>
-      <el-button @click="resetUpdate">重置</el-button>
+      <el-button @click="resetUpdate">重置aaa</el-button>
       <el-button @click="visible = false">取消</el-button>
     </div>
   </el-dialog>
@@ -70,19 +47,25 @@
 <script>
 import { mapGetters } from 'vuex'
 import getDefaultUpdateViewData from '@/utils/viewData/update'
+import getDefaultListViewData from '@/utils/viewData/list'
 import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import adaptive from '@/directive/el-table'
 
 export default {
+  components: {
+    Pagination: () => import('@/components/Pagination')
+  },
+  directives: { adaptive },
   data() {
     const curModels = models.system.user
     const curApi = api.system.user
     return {
-      ...getDefaultUpdateViewData(), ...curModels, curApi, rules,
+      ...getDefaultUpdateViewData(), ...getDefaultListViewData, ...curModels, curApi, rules,
       ...{
-        dialogTitle: '编辑用户信息',
+        dialogTitle: '设备点检保养',
         model: curModels.update,
         roleTypes: [],
         companies: [],
@@ -110,33 +93,6 @@ export default {
       this.model.roleType = data.role.type
       this.model.companyId = data.role.company.id
       return this.getRoles(this.model.roleType, this.model.companyId)
-    },
-    // 切换角色类型
-    changeRoleTypeHandle() {
-      // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
-      this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.roleType >= 3
-      // 重置模型类
-      this.model.companyId = null
-      this.roles = []
-      this.model.roleId = null
-      // 重新获取角色
-      if (this.model.roleType === 2) {
-        this.getRoles(2, null)
-      }
-    },
-    // 切换企业
-    changeCompanyHandle() {
-      this.roles = []
-      this.model.roleId = null
-      if (this.model.roleType && this.model.companyId) {
-        this.getRoles(this.model.roleType, this.model.companyId)
-      }
-    },
-    // 获取角色列表
-    getRoles(roleType, companyId) {
-      return api.system.role.getSelectlist(roleType, companyId).then(response => {
-        this.roles = response.data || []
-      })
     }
   }
 }

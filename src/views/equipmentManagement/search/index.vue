@@ -40,7 +40,7 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="设备编号" prop="edeviceCode" align="left" width="200" show-overflow-tooltip />
+      <el-table-column label="设备编号" prop="edeviceNo" align="left" width="200" show-overflow-tooltip />
       <el-table-column label="生产编号" prop="eproductCode" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="设备名称" prop="ename" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="品牌型号" prop="ebrand" align="center" width="120" show-overflow-tooltip />
