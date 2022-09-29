@@ -20,7 +20,13 @@ export function get(id) {
     method: 'get'
   })
 }
-
+// 根据id获取数据
+export function getFlowData(id) {
+  return request({
+    url: `/eqRepairApply/${id}/getFlowData`,
+    method: 'get'
+  })
+}
 // 根据当前用户所有权限对应的功能列表
 export function getFunctionsFromAccess(roleType) {
   return request({
