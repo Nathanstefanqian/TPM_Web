@@ -101,7 +101,7 @@
         <el-step v-for="(item,index) in flowDatas" :key="index" :title="item.name" :description="item.checkPersonName">
           <div slot="description">
             <div>{{ item.checkPersonName }}</div>
-            <el-button v-if="active ===index" type="default">修改</el-button>
+            <el-button v-if="active ===index" type="default" @click="handleChangePerson(item)">修改</el-button>
           </div>
           <!--          <template v-slot:description>-->
           <!--            <div>丁工(wb001)待审核</div>-->
@@ -122,7 +122,7 @@
       :default-sort="sort"
       border
       fit
-highlight-current-row
+      highlight-current-row
       @sort-change="handleSort"
     >
       <el-table-column type="selection" align="center" width="35" />
@@ -137,6 +137,26 @@ highlight-current-row
       <el-table-column label="操作" prop="deptName" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="备注" prop="category" align="center" width="120" show-overflow-tooltip />
     </el-table>
+    <!--    修改操作人窗口-->
+    <el-dialog
+      :custom-class="'dialog-fullscreen '"
+      title="更换签核人"
+      :visible.sync="changeCheckPersonVisible"
+      :modal="false"
+      :modal-append-to-body="false"
+    >
+      <div class="app-container list">
+        <el-select v-model="newCheckPerson" class="query-item" style="width: 150px" placeholder="请选择" clearable @change="selectCheckPersonChanged">
+          <el-option v-for="(item,index) in checkPersons" :key="index" :label="item.text" :value="index" />
+        </el-select>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <div><span style="color: #dd1100">{{ description }}</span></div>
+        <el-button type="primary" @click="submitUpdateChangePerson">提交</el-button>
+        <!--        <el-button @click="resetUpdate">重置aaa</el-button>-->
+        <el-button @click="changeCheckPersonVisible = false">取消</el-button>
+      </div>
+    </el-dialog>
   </el-dialog>
 </template>
 
@@ -147,8 +167,11 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import { cloneDeep } from 'lodash'
+import adaptive from '@/directive/el-table'
 
 export default {
+  directives: { adaptive },
   data() {
     const curModels = models.repair.applySign
     const curApi = api.repair.applySign
@@ -161,9 +184,23 @@ export default {
         companies: [],
         roles: [],
         repairPersons: [],
+        checkPersons: [],
         appointPersonShow: false,
         active: 2,
-        flowDatas: []
+        flowDatas: [],
+        newCheckPerson: '',
+        newCheckPersonName: '',
+        newCheckPersonid: '',
+        changeCheckPersonVisible: false,
+        flowNode: {
+          id: null,
+          name: null,
+          flowId: null,
+          repairApplyId: null,
+          checkType: null,
+          checkOrder: null,
+          checkId: null
+        }
       }
     }
   },
@@ -172,7 +209,6 @@ export default {
   },
   created() {
     this.getPersons()
-    this.getFlowData(1)
   },
   methods: {
     ...crud,
@@ -180,6 +216,26 @@ export default {
     submitUpdatePass() {
       this.model.status = '3'
       this.submitUpdate()
+    },
+    handleChangePerson(item) {
+      this.changeCheckPersonVisible = true
+      this.flowNode.id = item.id
+      this.flowNode.name = item.name
+      this.flowNode.checkId = item.checkId
+      this.flowNode.flowId = item.flowId
+      this.flowNode.checkType = item.checkType
+      this.flowNode.checkOrder = item.checkOrder
+      this.flowNode.repairApplyId = item.repairApplyId
+      api.repair.applySign.changeCheckPerson(this.flowNode).then(res => {
+        // 关闭窗口 刷新流程
+        this.changeCheckPersonVisible = false
+        this.getFlowData(this.flowNode.repairApplyId)
+      }
+      )
+      console.log(item)
+    },
+    submitUpdateChangePerson() {
+      // 提交修改签核人
     },
     //  驳回
     submitUpdateBack() {
@@ -192,12 +248,25 @@ export default {
     getPersons() {
       api.system.user.getSelectlist().then(response => {
         this.repairPersons = response.data || []
+        this.checkPersons = cloneDeep(response.data)
       }).catch(reject => {
       })
     },
-    getFlowData(id) {
-      api.repair.applySign.getFlowData(id).then(response => {
+    getFlowData(repairApplyId) {
+      api.repair.applySign.getFlowData(repairApplyId).then(response => {
         this.flowDatas = response.data || []
+        console.log('active' + this.active)
+
+        // 设置激活的序号
+        for (const flowData of this.flowDatas) {
+          console.log('flowData' + flowData.checkId)
+          console.log('userid' + this.user.userId)
+
+          if (this.user.userId === flowData.checkId) {
+            this.active = flowData.checkOrder - 1
+            console.log('active' + this.active)
+          }
+        }
       }).catch(reject => {
       })
     },
@@ -210,8 +279,13 @@ export default {
       }
       console.log(this.model)
     },
+    selectCheckPersonChanged(value) {
+      this.newCheckPersonName = this.repairPersons[value].text
+      this.newCheckPersonid = this.repairPersons[value].key
+    },
     // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
+      this.getFlowData(row.id)
       // this.rules.password[0].required = false
       // this.roleTypes = this.$parent.roleTypes
       // this.companies = this.$parent.companies

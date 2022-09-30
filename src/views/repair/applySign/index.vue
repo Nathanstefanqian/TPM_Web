@@ -121,8 +121,8 @@ export default {
   },
   created() {
     this.clearAndInitQuery()
-    this.query.deptId = this.user.deptId
-    this.query.myRoleId = this.user.roleId
+    // this.query.deptId = this.user.deptId
+    // this.query.myRoleId = this.user.roleId
     this.query.myUserId = this.user.userId
     console.log('roleid：' + this.user.roleId)
     console.log('userid：' + this.user.userId)
