@@ -20,13 +20,21 @@ export function get(id) {
     method: 'get'
   })
 }
-// 根据id获取数据
+// 根据repairApplyid获取数据
 export function getFlowData(id) {
   return request({
     url: `/eqRepairApply/${id}/getFlowData`,
     method: 'get'
   })
 }
+// 根据repairApplyid获取日志数据
+export function getCheckLog(id) {
+  return request({
+    url: `/eqRepairApply/${id}/getCheckLog`,
+    method: 'get'
+  })
+}
+
 // 根据当前用户所有权限对应的功能列表
 export function getFunctionsFromAccess(roleType) {
   return request({
@@ -51,7 +59,14 @@ export function create(data) {
     data
   })
 }
-
+// 添加数据
+export function changeCheckPerson(data) {
+  return request({
+    url: '/eqRepairApply/changeCheckPerson',
+    method: 'post',
+    data
+  })
+}
 // 更新数据
 export function update(data) {
   return request({

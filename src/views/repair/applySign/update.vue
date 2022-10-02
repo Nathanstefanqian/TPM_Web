@@ -68,7 +68,7 @@
       <el-row v-if="appointPersonShow">
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="维修人员" prop="repairPerson">
-            <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择" clearable @change="selectPersonChanged">
+            <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择" filterable clearable @change="selectPersonChanged">
               <el-option v-for="item in repairPersons" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
@@ -118,24 +118,23 @@
       v-adaptive="{ bottomOffset:0 }"
       height="200px"
       width="600px"
-      :data="datas"
+      :data="logDatas"
       :default-sort="sort"
       border
       fit
       highlight-current-row
       @sort-change="handleSort"
     >
-      <el-table-column type="selection" align="center" width="35" />
       <el-table-column label="序号" type="index" align="center" width="65" fixed>
         <template slot-scope="scope">
-          <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
+          <span>{{ scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IP" prop="repairNum" align="left" width="200" show-overflow-tooltip />
-      <el-table-column label="签核人员" prop="deviceNum" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="签核时间" prop="productCode" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="操作" prop="deptName" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="备注" prop="category" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="IP" prop="checkIp" align="left" width="120" show-overflow-tooltip />
+      <el-table-column label="签核人员" prop="checkPerson" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="签核时间" prop="checkTime" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="操作" prop="checkInfo" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="备注" prop="checkContent" align="center" show-overflow-tooltip />
     </el-table>
     <!--    修改操作人窗口-->
     <el-dialog
@@ -146,12 +145,12 @@
       :modal-append-to-body="false"
     >
       <div class="app-container list">
-        <el-select v-model="newCheckPerson" class="query-item" style="width: 150px" placeholder="请选择" clearable @change="selectCheckPersonChanged">
+        <el-select v-model="newCheckPerson" filterable class="query-item" style="width: 150px" placeholder="请选择" clearable @change="selectCheckPersonChanged">
           <el-option v-for="(item,index) in checkPersons" :key="index" :label="item.text" :value="index" />
         </el-select>
       </div>
       <div slot="footer" class="dialog-footer">
-        <div><span style="color: #dd1100">{{ description }}</span></div>
+        <!--        <div><span style="color: #dd1100">{{ description }}</span></div>-->
         <el-button type="primary" @click="submitUpdateChangePerson">提交</el-button>
         <!--        <el-button @click="resetUpdate">重置aaa</el-button>-->
         <el-button @click="changeCheckPersonVisible = false">取消</el-button>
@@ -188,10 +187,12 @@ export default {
         appointPersonShow: false,
         active: 2,
         flowDatas: [],
+        logDatas: [],
         newCheckPerson: '',
         newCheckPersonName: '',
         newCheckPersonid: '',
         changeCheckPersonVisible: false,
+        sort: { prop: 'checkTime', order: 'descending' },
         flowNode: {
           id: null,
           name: null,
@@ -199,7 +200,8 @@ export default {
           repairApplyId: null,
           checkType: null,
           checkOrder: null,
-          checkId: null
+          checkId: null,
+          checkIdOld: null
         }
       }
     }
@@ -214,33 +216,49 @@ export default {
     ...crud,
     // 通过
     submitUpdatePass() {
+      if (this.appointPersonShow && this.model.repairPersonId == null) {
+        this.$message.error('请选择维修人员。')
+        return
+      }
       this.model.status = '3'
+      // todo  备注信息
+      this.model.checkMemo = ''
+      this.submitUpdate()
+    },
+    //  驳回
+    submitUpdateBack() {
+      this.model.status = '2'
+      // todo  备注信息
+      this.model.checkMemo = ''
       this.submitUpdate()
     },
     handleChangePerson(item) {
       this.changeCheckPersonVisible = true
       this.flowNode.id = item.id
       this.flowNode.name = item.name
-      this.flowNode.checkId = item.checkId
+      this.flowNode.checkIdOld = item.checkId
       this.flowNode.flowId = item.flowId
       this.flowNode.checkType = item.checkType
       this.flowNode.checkOrder = item.checkOrder
       this.flowNode.repairApplyId = item.repairApplyId
+    },
+    submitUpdateChangePerson() {
+      this.flowNode.checkId = this.newCheckPersonid
+      console.log(this.flowNode)
+
+      // 提交修改签核人
       api.repair.applySign.changeCheckPerson(this.flowNode).then(res => {
         // 关闭窗口 刷新流程
         this.changeCheckPersonVisible = false
         this.getFlowData(this.flowNode.repairApplyId)
+        this.$message({
+          type: 'success',
+          message: '修改成功: '
+        })
+        // 刷新签核记录
+        this.getCheckLog(this.flowNode.repairApplyId)
       }
       )
-      console.log(item)
-    },
-    submitUpdateChangePerson() {
-      // 提交修改签核人
-    },
-    //  驳回
-    submitUpdateBack() {
-      this.model.status = '2'
-      this.submitUpdate()
     },
     sentEmail() {
       this.submitUpdate()
@@ -255,16 +273,10 @@ export default {
     getFlowData(repairApplyId) {
       api.repair.applySign.getFlowData(repairApplyId).then(response => {
         this.flowDatas = response.data || []
-        console.log('active' + this.active)
-
-        // 设置激活的序号
+        // 设置界面上流程的激活的序号
         for (const flowData of this.flowDatas) {
-          console.log('flowData' + flowData.checkId)
-          console.log('userid' + this.user.userId)
-
           if (this.user.userId === flowData.checkId) {
             this.active = flowData.checkOrder - 1
-            console.log('active' + this.active)
           }
         }
       }).catch(reject => {
@@ -277,15 +289,24 @@ export default {
           this.model.repairPersonName = this.repairPersons[i].text
         }
       }
-      console.log(this.model)
     },
     selectCheckPersonChanged(value) {
       this.newCheckPersonName = this.repairPersons[value].text
       this.newCheckPersonid = this.repairPersons[value].key
     },
+    getCheckLog(repairApplyId) {
+      api.repair.applySign.getCheckLog(repairApplyId).then(response => {
+        this.logDatas = response.data || []
+      }).catch(reject => {
+      })
+    },
     // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
+      // 流程数据
       this.getFlowData(row.id)
+      // 签核记录数据
+      this.getCheckLog(row.id)
+
       // this.rules.password[0].required = false
       // this.roleTypes = this.$parent.roleTypes
       // this.companies = this.$parent.companies
@@ -301,34 +322,11 @@ export default {
       if (this.model.checkNextName === '维保主管审核') {
         this.appointPersonShow = true
       }
+    },
+    submitUpdateAfter() {
+      console.log('updateafter' + this.flowNode.repairApplyId)
+      // this.getCheckLog(this.flowNode.repairApplyId)
     }
-    // // 切换角色类型
-    // changeRoleTypeHandle() {
-    //   // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
-    //   this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.roleType >= 3
-    //   // 重置模型类
-    //   this.model.companyId = null
-    //   this.roles = []
-    //   this.model.roleId = null
-    //   // 重新获取角色
-    //   if (this.model.roleType === 2) {
-    //     this.getRoles(2, null)
-    //   }
-    // },
-    // // 切换企业
-    // changeCompanyHandle() {
-    //   this.roles = []
-    //   this.model.roleId = null
-    //   if (this.model.roleType && this.model.companyId) {
-    //     this.getRoles(this.model.roleType, this.model.companyId)
-    //   }
-    // },
-    // // 获取角色列表
-    // getRoles(roleType, companyId) {
-    //   return api.system.role.getSelectlist(roleType, companyId).then(response => {
-    //     this.roles = response.data || []
-    //   })
-    // }
   }
 }
 </script>
