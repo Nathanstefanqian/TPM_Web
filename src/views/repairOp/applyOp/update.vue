@@ -208,6 +208,7 @@ export default {
         newCheckPersonName: '',
         newCheckPersonid: '',
         changeCheckPersonVisible: false,
+        rpaId: null,
         sort: { prop: 'endTime', order: 'descending' },
 
         faultTypes: [
@@ -257,7 +258,9 @@ export default {
       this.logModel.opPersonId = this.user.userId
       this.logModel.opPersonName = this.user.name
       this.logModel.repairApplyId = this.model.id
-      this.logApi.create(this.logModel)
+      this.logApi.create(this.logModel).then(res => {
+        this.getCheckLog(this.rpaId)
+      })
     },
     //  提交维修结案
     submitOp() {
@@ -288,7 +291,7 @@ export default {
           message: '修改成功: '
         })
         // 刷新签核记录
-        this.getCheckLog(this.flowNode.repairApplyId)
+        this.getCheckLog(this.rpaId)
       }
       )
     },
@@ -334,6 +337,7 @@ export default {
     },
     // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
+      this.rpaId = row.id
       // 流程数据
       this.getFlowData(row.id)
       // 签核记录数据

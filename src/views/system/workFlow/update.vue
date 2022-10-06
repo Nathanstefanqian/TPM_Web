@@ -85,25 +85,25 @@ export default {
     ...mapGetters(['enums', 'user'])
   },
   created() {
-    this.getRoles()
+    // this.getRoles()
   },
   methods: {
     ...crud,
     // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
-      this.rules.password[0].required = false
-      this.roleTypes = this.$parent.roleTypes
-      this.companies = this.$parent.companies
-      if (this.user.roleType === 3) {
-        this.model.roleType = 4
-        this.model.companyId = this.user.companyId
-      }
+      // this.rules.password[0].required = false
+      // this.roleTypes = this.$parent.roleTypes
+      // this.companies = this.$parent.companies
+      // if (this.user.roleType === 3) {
+      //   this.model.roleType = 4
+      //   this.model.companyId = this.user.companyId
+      // }
     },
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
     initUpdateAfter(row, data) {
-      this.model.roleType = data.role.type
-      this.model.companyId = data.role.company.id
-      return this.getRoles(this.model.roleType, this.model.companyId)
+      // this.model.roleType = data.role.type
+      // this.model.companyId = data.role.company.id
+      // return this.getRoles(this.model.roleType, this.model.companyId)
     },
     // 切换角色类型
     changeRoleTypeHandle() {
