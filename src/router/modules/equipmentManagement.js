@@ -14,7 +14,7 @@ export default {
     {
       path: 'search',
       component: () => import('@/views/equipmentManagement/search/index'),
-      name: 'search',
+      name: 'eqsearch',
       access: 'search',
       meta: { title: '设备信息维护' }
     },

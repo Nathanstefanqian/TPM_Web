@@ -7,7 +7,7 @@ export default {
   name: 'maintain',
   access: 'maintain',
   meta: {
-    title: '设备保养管理',
+    title: '点检保养管理',
     icon: 'task'
   },
   children: [

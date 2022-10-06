@@ -7,20 +7,20 @@ export default {
   name: 'repair',
   access: 'repair',
   meta: {
-    title: '设备报修管理',
+    title: '报修管理',
     icon: 'buoy'
   },
   children: [
     {
       path: 'apply',
-      component: () => import('@/views/repair/apply/index'),
+      component: () => import('@/views/repairOp/applyList/index'),
       name: 'apply',
       access: 'apply',
       meta: { title: '设备报修' }
     },
     {
       path: 'applySign',
-      component: () => import('@/views/repair/applySign/index'),
+      component: () => import('@/views/repairOp/applyOp/index'),
       name: 'applySign',
       access: 'applySign',
       meta: { title: '设备报修签核' }

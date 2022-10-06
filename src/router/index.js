@@ -11,6 +11,7 @@ import Layout from '@/layout'
 // 导入路由
 import equipmentManagement from './modules/equipmentManagement'
 import repair from './modules/repair'
+import repairOp from './modules/repairOp'
 import maintain from './modules/maintain'
 import fileManagement from './modules/fileManagement'
 import measureFixture from './modules/measureFixture'
@@ -98,6 +99,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
   equipmentManagement,
   repair,
+  repairOp,
   maintain,
   fileManagement,
   measureFixture,
