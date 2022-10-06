@@ -51,12 +51,14 @@
 
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
           <el-form-item label="报修内容" prop="content">
-            <el-input
-              v-model="model.content"
-              type="textarea"
-              readonly="readonly"
-              :autosize="{ minRows: 2, maxRows: 4}"
-            />
+            <span>{{ model.content }}</span>
+
+            <!--            <el-input-->
+            <!--              v-model="model.content"-->
+            <!--              type="textarea"-->
+            <!--              readonly="readonly"-->
+            <!--              :autosize="{ minRows: 2, maxRows: 4}"-->
+            <!--            />-->
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
@@ -65,11 +67,22 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="appointPersonShow">
+      <el-row>
+        <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
+          <el-form-item style="text-decoration-color: #0a76a4" label="维修记录" prop="content">
+            <el-input
+              v-model="logModel.opLog"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="维修人员" prop="repairPerson">
-            <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择" filterable clearable @change="selectPersonChanged">
-              <el-option v-for="item in repairPersons" :key="item.key" :label="item.text" :value="item.key" />
+          <el-form-item label="故障判定" prop="repairPerson">
+            <el-select v-model="logModel.problem" class="query-item" style="width: 150px" placeholder="请选择" filterable clearable @change="selectPersonChanged">
+              <el-option v-for="item in faultTypes" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -77,40 +90,40 @@
 
     </el-form>
     <div style="text-align: center">
-      <el-button type="primary" @click="submitUpdatePass">通过</el-button>
+      <el-button type="primary" @click="saveLog">保存记录本次维修</el-button>
       <!--      <el-button type="success" @click="sentEmail">发送邮件</el-button>-->
-      <el-button type="danger" @click="submitUpdateBack">驳回</el-button>
+      <el-button type="danger" @click="submitOp">提交结束维修</el-button>
       <el-button @click="visible = false">取消</el-button>
     </div>
 
-    <div style="margin-top: 30px">
-      <el-steps
-        align-center
-        :space="400"
-        :active="active"
-        finish-status="success"
-      >
-        <!--        <el-step title="员工申请" description="李工(yg001)"></el-step>-->
-        <!--        <el-step title="部门主管审核" description="王工(bm001)审核通过"></el-step>-->
-        <!--        <el-step title="维保主管审核"  description="李工(yg001)">-->
-        <!--          <div slot="description">-->
-        <!--            <div>丁工(wb001)待审核</div>-->
-        <!--            <el-button v-if="1" type="default">修改</el-button>-->
-        <!--          </div>-->
-        <!--        </el-step>-->
-        <el-step v-for="(item,index) in flowDatas" :key="index" :title="item.name" :description="item.checkPersonName">
-          <div slot="description">
-            <div>{{ item.checkPersonName }}</div>
-            <el-button v-if="active ===index" type="default" @click="handleChangePerson(item)">修改</el-button>
-          </div>
-          <!--          <template v-slot:description>-->
-          <!--            <div>丁工(wb001)待审核</div>-->
-          <!--            <el-button type="default" >修改</el-button>-->
-          <!--          </template>-->
-        </el-step>
-        <!--        <el-step title="维修" description="待维修"></el-step>-->
-      </el-steps>
-    </div>
+    <!--    <div style="margin-top: 30px">-->
+    <!--      <el-steps-->
+    <!--        align-center-->
+    <!--        :space="400"-->
+    <!--        :active="active"-->
+    <!--        finish-status="success"-->
+    <!--      >-->
+    <!--        &lt;!&ndash;        <el-step title="员工申请" description="李工(yg001)"></el-step>&ndash;&gt;-->
+    <!--        &lt;!&ndash;        <el-step title="部门主管审核" description="王工(bm001)审核通过"></el-step>&ndash;&gt;-->
+    <!--        &lt;!&ndash;        <el-step title="维保主管审核"  description="李工(yg001)">&ndash;&gt;-->
+    <!--        &lt;!&ndash;          <div slot="description">&ndash;&gt;-->
+    <!--        &lt;!&ndash;            <div>丁工(wb001)待审核</div>&ndash;&gt;-->
+    <!--        &lt;!&ndash;            <el-button v-if="1" type="default">修改</el-button>&ndash;&gt;-->
+    <!--        &lt;!&ndash;          </div>&ndash;&gt;-->
+    <!--        &lt;!&ndash;        </el-step>&ndash;&gt;-->
+    <!--        <el-step v-for="(item,index) in flowDatas" :key="index" :title="item.name" :description="item.checkPersonName">-->
+    <!--          <div slot="description">-->
+    <!--            <div>{{ item.checkPersonName }}</div>-->
+    <!--            <el-button v-if="active ===index" type="default" @click="handleChangePerson(item)">修改</el-button>-->
+    <!--          </div>-->
+    <!--          &lt;!&ndash;          <template v-slot:description>&ndash;&gt;-->
+    <!--          &lt;!&ndash;            <div>丁工(wb001)待审核</div>&ndash;&gt;-->
+    <!--          &lt;!&ndash;            <el-button type="default" >修改</el-button>&ndash;&gt;-->
+    <!--          &lt;!&ndash;          </template>&ndash;&gt;-->
+    <!--        </el-step>-->
+    <!--        &lt;!&ndash;        <el-step title="维修" description="待维修"></el-step>&ndash;&gt;-->
+    <!--      </el-steps>-->
+    <!--    </div>-->
 
     <el-table
       ref="listTable"
@@ -130,11 +143,10 @@
           <span>{{ scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IP" prop="checkIp" align="left" width="120" show-overflow-tooltip />
-      <el-table-column label="签核人员" prop="checkPerson" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="签核时间" prop="checkTime" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="操作" prop="checkInfo" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="备注" prop="checkContent" align="center" show-overflow-tooltip />
+      <el-table-column label="维修人员" prop="opPersonName" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="维修时间" prop="endTime" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="故障判定" prop="problem" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="维修记录" prop="opLog" align="center" show-overflow-tooltip />
     </el-table>
     <!--    修改操作人窗口-->
     <el-dialog
@@ -174,11 +186,15 @@ export default {
   data() {
     const curModels = models.repair.applySign
     const curApi = api.repair.applySign
+    const logModels = models.repair.operate
+    const logApi = api.repair.operate
     return {
       ...getDefaultUpdateViewData(), ...curModels, curApi, rules,
       ...{
-        dialogTitle: '报修签核',
+        dialogTitle: '维修签核',
         model: curModels.update,
+        logModel: logModels.update,
+        logApi: logApi,
         roleTypes: [],
         companies: [],
         roles: [],
@@ -192,7 +208,21 @@ export default {
         newCheckPersonName: '',
         newCheckPersonid: '',
         changeCheckPersonVisible: false,
-        sort: { prop: 'checkTime', order: 'descending' },
+        sort: { prop: 'endTime', order: 'descending' },
+
+        faultTypes: [
+          {
+            key: '人为故障',
+            text: '人为故障'
+          },
+          {
+            key: '正常磨损',
+            text: '正常磨损'
+          },
+          {
+            key: '其他原因',
+            text: '其他原因'
+          }],
         flowNode: {
           id: null,
           name: null,
@@ -214,23 +244,25 @@ export default {
   },
   methods: {
     ...crud,
-    // 通过
-    submitUpdatePass() {
-      if (this.appointPersonShow && this.model.repairPersonId == null) {
-        this.$message.error('请选择维修人员。')
+    // 保存维修记录
+    saveLog() {
+      if (this.logModel.opLog == null || this.logModel.opLog === '') {
+        this.$message.error('请选填写维修记录。')
         return
       }
-      this.model.status = '3'
-      // todo  备注信息
-      this.model.checkMemo = ''
-      this.submitUpdate()
+      if (this.logModel.problem == null) {
+        this.$message.error('请选择故障判定。')
+        return
+      }
+      this.logModel.opPersonId = this.user.userId
+      this.logModel.opPersonName = this.user.name
+      this.logModel.repairApplyId = this.model.id
+      this.logApi.create(this.logModel)
     },
-    //  驳回
-    submitUpdateBack() {
-      this.model.status = '2'
-      // todo  备注信息
-      this.model.checkMemo = ''
-      this.submitUpdate()
+    //  提交维修结案
+    submitOp() {
+      this.saveLog()
+      this.logApi.finishOp(this.logModel)
     },
     handleChangePerson(item) {
       this.changeCheckPersonVisible = true
@@ -295,7 +327,7 @@ export default {
       this.newCheckPersonid = this.repairPersons[value].key
     },
     getCheckLog(repairApplyId) {
-      api.repair.applySign.getCheckLog(repairApplyId).then(response => {
+      api.repair.operate.getOpLog(repairApplyId).then(response => {
         this.logDatas = response.data || []
       }).catch(reject => {
       })

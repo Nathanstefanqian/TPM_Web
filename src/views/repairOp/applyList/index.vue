@@ -55,22 +55,22 @@
       <el-table-column label="报修类别" prop="category" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="报修等级" prop="level" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="状态" prop="checkStatusName" align="left" show-overflow-tooltip />
-      <!--      <el-table-column fixed="right" label="操作" align="center" width="180">-->
-      <!--        <template slot-scope="{row}">-->
-      <!--          &lt;!&ndash;          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">&ndash;&gt;-->
-      <!--          &lt;!&ndash;            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>&ndash;&gt;-->
-      <!--          &lt;!&ndash;          </el-tooltip>&ndash;&gt;-->
-      <!--          &lt;!&ndash;          <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">&ndash;&gt;-->
-      <!--          &lt;!&ndash;            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>&ndash;&gt;-->
-      <!--          &lt;!&ndash;          </el-tooltip>&ndash;&gt;-->
-      <!--&lt;!&ndash;          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">&ndash;&gt;-->
-      <!--&lt;!&ndash;            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>&ndash;&gt;-->
-      <!--&lt;!&ndash;          </el-tooltip>&ndash;&gt;-->
-      <!--          &lt;!&ndash;          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">&ndash;&gt;-->
-      <!--          &lt;!&ndash;            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>&ndash;&gt;-->
-      <!--          &lt;!&ndash;          </el-tooltip>&ndash;&gt;-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
+      <el-table-column fixed="right" label="操作" align="center" width="180">
+        <template slot-scope="{row}">
+          <!--          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
+          <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
+          <!--          </el-tooltip>-->
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">
+            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-detail" /></el-button>
+          </el-tooltip>
+          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">-->
+          <!--            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>-->
+          <!--          </el-tooltip>-->
+          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">-->
+          <!--            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>-->
+          <!--          </el-tooltip>-->
+        </template>
+      </el-table-column>
     </el-table>
     <pagination :hidden="page.total===0" :total="page.total" :page.sync="page.current" :limit.sync="page.size" @pagination="getDatas" />
     <dialog-create ref="dialogCreate" />
@@ -140,16 +140,20 @@ export default {
   },
   created() {
     this.clearAndInitQuery()
-    this.query.repairPersonId = this.user.userId
+    if (this.user.roleType === 1) {
+      console.log('平台管理员，可以查看所有报修')
+    } else {
+      this.query.repairPersonId = this.user.userId
+    }
 
     console.log(this.user)
     this.getDatas()
-    this.getRoleTypes()
-    this.getDeparts()
-    this.getZhixis()
-    this.getFactories()
-    this.getProcessDepts()
-    this.getSections()
+    // this.getRoleTypes()
+    // this.getDeparts()
+    // this.getZhixis()
+    // this.getFactories()
+    // this.getProcessDepts()
+    // this.getSections()
   },
   methods: {
     ...crud,

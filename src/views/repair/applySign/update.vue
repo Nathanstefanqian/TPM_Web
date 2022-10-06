@@ -220,6 +220,9 @@ export default {
         this.$message.error('请选择维修人员。')
         return
       }
+      if (this.appointPersonShow) {
+        this.model.checkNextId = this.model.repairPersonId
+      }
       this.model.status = '3'
       // todo  备注信息
       this.model.checkMemo = ''

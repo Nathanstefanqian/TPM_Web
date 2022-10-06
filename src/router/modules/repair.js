@@ -13,14 +13,14 @@ export default {
   children: [
     {
       path: 'apply',
-      component: () => import('@/views/repairOp/applyList/index'),
+      component: () => import('@/views/repair/apply/index'),
       name: 'apply',
       access: 'apply',
       meta: { title: '设备报修' }
     },
     {
       path: 'applySign',
-      component: () => import('@/views/repairOp/applyOp/index'),
+      component: () => import('@/views/repair/applySign/index'),
       name: 'applySign',
       access: 'applySign',
       meta: { title: '设备报修签核' }
