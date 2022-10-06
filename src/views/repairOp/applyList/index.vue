@@ -140,7 +140,7 @@ export default {
   },
   created() {
     this.clearAndInitQuery()
-    this.query.applyPersonId = this.user.userId
+    this.query.repairPersonId = this.user.userId
 
     console.log(this.user)
     this.getDatas()

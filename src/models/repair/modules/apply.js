@@ -46,7 +46,8 @@ const queryEmpty = {
   applyPersonName: null,
   deptId: null,
   myRoleId: null,
-  myUserId: null
+  myUserId: null,
+  repairPersonId: null
 }
 
 const query = _.cloneDeep(queryEmpty)
