@@ -17,6 +17,7 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
+import JsonExcel from 'vue-json-excel'
 
 Vue.use(Element, {
   size: localStorage.getItem('size') || 'medium' // set element-ui default size
@@ -28,7 +29,7 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
-
+Vue.component('downloadExcel', JsonExcel)
 new Vue({
   el: '#app',
   router,
