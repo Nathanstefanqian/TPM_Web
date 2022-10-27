@@ -84,3 +84,11 @@ export function getOpLog(id) {
     method: 'get'
   })
 }
+// 获取配件信息
+export function getPart(data) {
+  return request({
+    url: '/part/list',
+    method: 'post',
+    data
+  })
+}

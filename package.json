@@ -15,6 +15,12 @@
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml",
     "new": "plop"
   },
+  "eslintConfig": {
+    "rules": {
+      "eslint-disable-next-line": false,
+      "eslint-disable": false
+    }
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
