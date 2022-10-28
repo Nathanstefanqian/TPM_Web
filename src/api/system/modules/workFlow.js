@@ -22,10 +22,11 @@ export function get(id) {
 }
 
 // 获得下拉列表的数据
-export function getSelectlist() {
+export function getSelectlist(typeId) {
   return request({
-    url: '/workflow/selectlist',
-    method: 'get'
+    url: `/workflow/${typeId}/selectlist`,
+    method: 'get',
+    typeId: typeId
   })
 }
 
