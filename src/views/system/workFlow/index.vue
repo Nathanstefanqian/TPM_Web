@@ -16,19 +16,25 @@
         </template>
       </el-table-column>
       <el-table-column label="流程名称" prop="name" align="center" show-overflow-tooltip />
+      <el-table-column label="流程类型" prop="type" align="center" :formatter="formatterType" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
-          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
-          <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
-          <!--          </el-tooltip>-->
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">
+            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>
+          </el-tooltip>
           <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
             <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
+          </el-tooltip>
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">
+            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
     <pagination :hidden="page.total===0" :total="page.total" :page.sync="page.current" :limit.sync="page.size" @pagination="getDatas" />
+    <dialog-create ref="dialogCreate" />
     <dialog-update ref="dialogUpdate" />
+    <dialog-detail ref="dialogDetail" />
   </div>
 </template>
 
@@ -44,7 +50,9 @@ export default {
   name: 'WorkFlow',
   components: {
     Pagination: () => import('@/components/Pagination'),
-    DialogUpdate: () => import('./update')
+    DialogUpdate: () => import('./update'),
+    DialogCreate: () => import('./create'),
+    DialogDetail: () => import('./detail')
   },
   directives: { adaptive },
   data() {
@@ -69,6 +77,9 @@ export default {
   },
   methods: {
     ...crud,
+    formatterType(rows, column) {
+      return rows.type === 1 ? '报修' : (rows.type === 2 ? '委外' : null)
+    },
     // 根据登录用户角色获取角色类型列表
     getRoleTypes() {
       api.system.role.getRoleTypes().then(response => {

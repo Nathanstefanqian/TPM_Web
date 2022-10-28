@@ -22,10 +22,11 @@ export function get(id) {
 }
 
 // 获得下拉列表的数据
-export function getSelectlist() {
+export function getSelectlist(typeId) {
   return request({
-    url: '/workflow/selectlist',
-    method: 'get'
+    url: `/workflow/${typeId}/selectlist`,
+    method: 'get',
+    typeId: typeId
   })
 }
 
@@ -53,5 +54,21 @@ export function del(data) {
     url: '/workflow/delete',
     method: 'delete',
     data: data
+  })
+}
+
+// 根据流程id获取流程节点
+export function getFlows(id) {
+  return request({
+    url: `/workflowNodes/${id}/getFlows`,
+    method: 'get'
+  })
+}
+
+// 获取工作流类型
+export function getFlowTypes(id) {
+  return request({
+    url: `workflow/getTypes`,
+    method: 'get'
   })
 }

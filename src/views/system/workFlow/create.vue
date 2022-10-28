@@ -1,67 +1,18 @@
 <template>
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
-      <el-row v-if="user.roleType<=2">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="角色类型" prop="roleType">
-            <el-select v-model="model.roleType" filterable clearable @change="changeRoleTypeHandle()">
-              <el-option v-for="item in roleTypes" :key="item.key" :label="item.text" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-if="model.roleType>=3&&user.roleType<=2">
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="所属企业" prop="companyId">
-            <el-select v-model="model.companyId" filterable clearable @change="changeCompanyHandle()">
-              <el-option v-for="item in companies" :key="item.key" :label="item.text" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
       <el-row>
         <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="用户角色" prop="roleId">
-            <el-select v-model="model.roleId" filterable clearable>
-              <el-option v-for="item in roles" :key="item.key" :label="item.text" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="用户名" prop="userName">
-            <el-input v-model="model.userName" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="姓名" prop="name">
+          <el-form-item label="流程名称" prop="name">
             <el-input v-model="model.name" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="初始密码" prop="password">
-            <el-input v-model="model.password" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="用户状态" prop="state">
-            <el-select v-model="model.state" clearable>
-              <el-option v-for="item in enums.userState" :key="item.key" :label="item.text" :value="item.key" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :sl="24">
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="model.remark" type="textarea" />
+        <el-col>
+          <el-form-item label="流程类型" prop="type">
+            <el-radio v-model="model.type" label="1" border>报修</el-radio>
+            <el-radio v-model="model.type" label="2" border>委外</el-radio>
           </el-form-item>
         </el-col>
       </el-row>
@@ -83,69 +34,122 @@ import api from '@/api'
 
 export default {
   data() {
-    const curModels = models.system.user
-    const curApi = api.system.user
+    const curModels = models.system.workFlow
+    const curApi = api.system.workFlow
     return {
       ...getDefaultCreateViewData(), ...curModels, curApi, rules,
       ...{
-        dialogTitle: '添加用户',
-        model: curModels.create,
-        roleTypes: [],
-        companies: [],
-        roles: []
+        dialogTitle: '添加流程',
+        model: curModels.create
+        // roleTypes: [],
+        // companies: []
       }
     }
   },
   computed: {
     ...mapGetters(['enums', 'user'])
   },
+  // created() {
+  //   this.clearAndInitQuery()
+  //   this.getDatas()
+  // },
   methods: {
     ...crud,
     async initCreateBefore() {
-      this.roleTypes = this.$parent.roleTypes
-      this.companies = this.$parent.companies
-      if (this.user.roleType === 3) {
-        this.model.roleType = 4
-        this.model.companyId = this.user.companyId
-      }
-      // 页面刷新，丢失数据
-      this.getRoles(this.model.roleType, this.model.companyId)
+      // this.roleTypes = this.$parent.roleTypes
+      // this.companies = this.$parent.companies
+      // if (this.user.roleType === 3) {
+      //   this.model.type = 4
+      //   this.model.companyId = this.user.companyId
+      //   await this.getFunctions(this.model.type)
+      // }
     },
+    // // 获取当前用户权限的所有系统功能
+    // getFunctions(roleType) {
+    //   this.loading = true
+    //   return api.system.role.getFunctionsFromAccess(roleType).then(response => {
+    //     this.functions = response.data
+    //     this.loading = false
+    //   }).catch(reject => {
+    //     this.loading = false
+    //   })
+    // },
     // 切换角色类型
-    changeRoleTypeHandle() {
-      // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
-      this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.roleType >= 3
-      // 重置模型类
-      this.model.companyId = null
-      this.roles = []
-      this.model.roleId = null
-      // 重新获取角色
-      if (this.model.roleType === 2) {
-        this.getRoles(2, null)
-      }
-    },
-    // 切换企业
-    async changeCompanyHandle() {
-      this.roles = []
-      this.model.roleId = null
-      if (this.model.roleType && this.model.companyId) {
-        this.getRoles(this.model.roleType, this.model.companyId)
-      }
-    },
-    // 获取角色列表
-    getRoles(roleType, companyId) {
-      return api.system.role.getSelectlist(roleType, companyId).then(response => {
-        this.roles = response.data || []
+    // async changeRoleTypeHandle() {
+    //   // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
+    //   this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.type >= 3
+    //   // 获取系统功能
+    //   if (this.model.type) {
+    //     await this.getFunctions(this.model.type)
+    //   }
+    // },
+
+    // 提交前处理
+    submitCreateBefore() {
+      this.model.accesses = (this.functions || []).filter(s => s.checked).map(f => {
+        return { functionId: f.id, allow: f.checked ? 1 : 0 }
       })
+      return true
     },
     submitCreateAfter() {
       // 清空部分数据
-      this.model.userName = null
+      this.model.name = null
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.function-level-1 {
+  padding-left: 5px;
+  background-color: #e8e8e8;
+
+  + .function-level-2 {
+    border-top: none
+  }
+
+  + .function-level-3 {
+    padding-left: 30px;
+  }
+}
+
+.function-level-2 {
+  margin-left: 30px;
+  border-top: dashed 1px #a0a0a0;
+
+  + .function-level-3 {
+    padding-left: 55px;
+  }
+}
+
+.function-level-3 {
+  display: inline-block;
+
+  .item {
+    padding-right: 20px;
+  }
+}
+
+/deep/ .disabled-checkbox {
+  cursor: not-allowed !important;
+}
+
+/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+  background-color: #409EFF !important;
+  border-color: #409EFF !important;
+  cursor: not-allowed !important;
+
+  &::after {
+    border-color: #FFF !important;
+  }
+}
+
+/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked + span.el-checkbox__label {
+  color: #409EFF !important;
+}
+
+/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner::before {
+  background-color: #FFF;
+}
 </style>
 

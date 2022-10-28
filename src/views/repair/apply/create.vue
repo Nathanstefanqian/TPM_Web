@@ -61,6 +61,14 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="选择签核流程" prop="workFlow">
+            <el-select v-model="model.flowId" class="query-item" style="width: 150px" placeholder="签核流程" clearable @clear="handleQuery">
+              <el-option v-for="item in workFlows" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+
       </el-row>
       <el-row>
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
@@ -74,7 +82,7 @@
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label=" " prop="opDescription">
-            <el-button type="primary" @click="submitCreate">添加附件</el-button>
+            <el-button type="primary" @click="submitCreate1">添加附件</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -105,6 +113,7 @@ export default {
         model: curModels.create,
         roleTypes: [],
         companies: [],
+        workFlows: [],
         roles: [],
         departs: [],
         zhixis: [],
@@ -143,9 +152,17 @@ export default {
       this.factories = this.$parent.factories
       this.processDepts = this.$parent.processDepts
       this.sections = this.$parent.sections
-      this.model.flowId = '1'
+      // this.model.flowId = ''
+      this.getWorkFlows()
       // 页面刷新，丢失数据
       // this.getRoles(this.model.roleType, this.model.companyId)
+    },
+    // 根据登录用户角色获取企业列表
+    getWorkFlows() {
+      api.system.workFlow.getSelectlist('1').then(response => {
+        this.workFlows = response.data || []
+      }).catch(reject => {
+      })
     },
     onChangeDepart(val) {
       this.model.deptName = val
