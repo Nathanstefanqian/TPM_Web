@@ -65,7 +65,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="appointPersonShow">
+      <el-row v-if="canAssign">
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="维修人员" prop="repairPerson">
             <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择" filterable clearable @change="selectPersonChanged">
@@ -184,9 +184,11 @@ export default {
         roles: [],
         repairPersons: [],
         checkPersons: [],
-        appointPersonShow: false,
+        // appointPersonShow: false,
+        canAssign: false,
         active: 2,
         flowDatas: [],
+        a: [],
         logDatas: [],
         newCheckPerson: '',
         newCheckPersonName: '',
@@ -211,16 +213,30 @@ export default {
   },
   created() {
     this.getPersons()
+    console.log('userid：' + this.user.userId)
   },
   methods: {
     ...crud,
+    // 获取canAssign
+    getcanAssign(x) {
+      api.repair.applySign.getFlowData(x).then(response => {
+        this.a = response.data || []
+        for (var i = 0; i < this.a.length; i++) {
+          if (this.a[i].checkId === this.user.userId) {
+            this.canAssign = this.a[i].canAssign
+            console.log('this.canAssign', this.canAssign)
+          }
+        }
+      }).catch(reject => {
+      })
+    },
     // 通过
     submitUpdatePass() {
-      if (this.appointPersonShow && this.model.repairPersonId == null) {
+      if (this.canAssign && this.model.repairPersonId == null) {
         this.$message.error('请选择维修人员。')
         return
       }
-      if (this.appointPersonShow) {
+      if (this.canAssign) {
         this.model.checkNextId = this.model.repairPersonId
       }
       this.model.status = '3'
@@ -276,6 +292,8 @@ export default {
     getFlowData(repairApplyId) {
       api.repair.applySign.getFlowData(repairApplyId).then(response => {
         this.flowDatas = response.data || []
+        console.log('this.flowDatas', this.flowDatas)
+        // console.log('this.appointPersonShow',this.appointPersonShow)
         // 设置界面上流程的激活的序号
         for (const flowData of this.flowDatas) {
           if (this.user.userId === flowData.checkId) {
@@ -309,6 +327,8 @@ export default {
       this.getFlowData(row.id)
       // 签核记录数据
       this.getCheckLog(row.id)
+      // 获取canAssign
+      this.getcanAssign(row.id)
 
       // this.rules.password[0].required = false
       // this.roleTypes = this.$parent.roleTypes
@@ -322,9 +342,9 @@ export default {
     initUpdateAfter(row, data) {
       console.log(data)
       this.model = data
-      if (this.model.checkNextName === '维保主管审核') {
-        this.appointPersonShow = true
-      }
+      // if (this.model.checkNextName === '维保主管审核') {
+      //   this.appointPersonShow = true
+      // }
     },
     submitUpdateAfter() {
       console.log('updateafter' + this.flowNode.repairApplyId)
