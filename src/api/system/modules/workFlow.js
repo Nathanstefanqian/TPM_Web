@@ -55,3 +55,19 @@ export function del(data) {
     data: data
   })
 }
+
+// 根据流程id获取流程节点
+export function getFlows(id) {
+  return request({
+    url: `/workflowNodes/${id}/getFlows`,
+    method: 'get'
+  })
+}
+
+// 获取工作流类型
+export function getFlowTypes(id) {
+  return request({
+    url: `workflow/getTypes`,
+    method: 'get'
+  })
+}
