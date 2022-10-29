@@ -1,6 +1,12 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
-    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+  <el-dialog
+    v-loading="loading"
+    :custom-class="'dialog-fullscreen dialog-'+dialogClass"
+    :title="dialogTitle"
+    :visible.sync="visible"
+    :modal="false"
+    :modal-append-to-body="false"
+  >
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth || '120px'">
       <el-row>
         <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
@@ -67,14 +73,6 @@
             <el-link>查看附件</el-link>
           </el-form-item>
         </el-col>
-        <!-- <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
-          <el-form-item label="选择配件">
-            <el-select v-model="partList.partId" style="width:80% ;" placeholder="请选择配件" @change="chooseNum">
-              <el-option v-for="item in partList" :key="item.partId" :label="item.partName" :value="item.partId">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col> -->
         <el-col :xl="6" :lg="4" :md="10" :sm="12" :xs="24">
           <el-form-item label="请选择起止时间">
             <el-date-picker v-model="logModel.startTime" type="datetime" placeholder="选择维修开始时间" />
@@ -99,20 +97,38 @@
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="故障判定" prop="repairPerson">
-            <el-select v-model="logModel.problem" class="query-item" style="width: 150px" placeholder="请选择" filterable
-              clearable @change="selectPersonChanged">
+            <el-select
+              v-model="logModel.problem"
+              class="query-item"
+              style="width: 150px"
+              placeholder="请选择"
+              filterable
+              clearable
+              @change="selectPersonChanged"
+            >
               <el-option v-for="item in faultTypes" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
-            <el-input v-if="logModel.problem === '其他原因'" type="textarea" :autosize="{ minRows: 2 }"
-              placeholder="请输入其他原因" />
+            <el-input
+              v-if="logModel.problem === '其他原因'"
+              type="textarea"
+              :autosize="{ minRows: 2 }"
+              placeholder="请输入其他原因"
+            />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="维修结果" prop="result">
-            <el-select v-model="resultList.key" class="query-item" style="width: 150px" placeholder="请选择" filterable
-              clearable @change="selectPersonChanged">
+            <el-select
+              v-model="resultList.key"
+              class="query-item"
+              style="width: 150px"
+              placeholder="请选择"
+              filterable
+              clearable
+              @change="selectPersonChanged"
+            >
               <el-option v-for="item in resultList" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
             <el-button v-if="resultList.key === 2" type="primary" size="mini" @click="lackcase = 1">配件库存不足
@@ -122,57 +138,66 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-table v-if="resultList.key === 1" :data="partArrary">
-        <el-table-column prop="name" label="配件名" />
-        <el-table-column prop="stock" label="库存" />
-        <el-table-column label="配件数量">
-          <input v-model="partNum">
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center" width="150">
-          <template slot-scope="{row}">
-            <el-tooltip transition="false" :hide-after="1000" class="item" content="保存" placement="top-end">
-              <el-button type="success" icon="el-icon-check" plain class="button-operate button-update" size="mini"
-                @click="savePart(row)" />
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-table v-if="resultList.key === 2 && lackcase === 1" :data="partArrary">
-        <el-table-column prop="name" label="配件名" />
-        <el-table-column prop="stock" label="现有库存" />
-        <el-table-column label="所需配件总数">
-          <input v-model="partNum">
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center" width="150">
-          <template slot-scope="{row}">
-            <el-tooltip transition="false" :hide-after="1000" class="item" content="保存" placement="top-end">
-              <el-button type="success" icon="el-icon-check" plain class="button-operate button-update" size="mini"
-                @click="saveLeakPart(row)" />
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-table v-if="resultList.key === 2 && lackcase === 2" :data="lackPartsList">
-        <el-table-column prop="partName" label="配件名">
-          <input v-model="lackpartName">
-        </el-table-column>
-        <el-table-column prop="partNum" label="配件数量">
-          <input v-model="lackpartNum">
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" align="center" width="150">
-          <template>
-            <el-tooltip transition="false" :hide-after="1000" class="item" content="保存" placement="top-end">
-              <el-button type="success" icon="el-icon-check" plain class="button-operate button-update" size="mini"
-                @click="savelackPart()" />
-            </el-tooltip>
-            <el-tooltip transition="false" :hide-after="1000" class="item" content="添加" placement="top-end">
-              <el-button type="success" icon="el-icon-plus" plain class="button-operate button-update" size="mini"
-                @click="addLackPart()" />
-            </el-tooltip>
-          </template>
-        </el-table-column>
-      </el-table>
     </el-form>
+    <el-row>
+      <el-col :span="12">
+        <el-table
+          ref="listTable"
+          v-loading="loading.table"
+          height="200px"
+          width="600px"
+          :data="partList"
+          :default-sort="sort"
+          fit
+        >
+          <el-table-column label="配件名" prop="partName" align="center" width="200" show-overflow-tooltip />
+          <el-table-column label="使用数量" prop="partNum" align="center" width="200" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.partNum" />
+            </template>
+          </el-table-column>
+          <el-table-column />
+          <el-table-column fixed="right" label="操作" align="center" width="100">
+            <template slot-scope="{row}">
+              <el-tooltip transition="false" :hide-after="1000" class="item" content="保存" placement="top-end">
+                <el-button
+                  type="primary"
+                  plain
+                  class="button-operate button-update"
+                  size="mini"
+                  @click="SavePartNum(row)"
+                ><i class="el-icon-check" /></el-button>
+              </el-tooltip>
+              <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
+                <el-button
+                  type="danger"
+                  plain
+                  class="button-operate button-delete"
+                  size="mini"
+                  @click="DeletePart(row)"
+                ><i class="vue-icon-delete" /></el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="12">
+        <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="partArrary" fit>
+          <el-table-column label="配件名" prop="name" align="center" width="200" show-overflow-tooltip />
+          <el-table-column label="库存数量" prop="stock" align="center" width="200" show-overflow-tooltip />
+          <el-table-column />
+          <el-table-column fixed="right" label="操作" align="center" width="180">
+            <template slot-scope="{row}">
+              <el-tooltip transition="false" :hide-after="1000" class="item" content="添加" placement="top-end">
+                <el-button type="primary" plain class="button-operate button-update" size="mini" @click="SavePart(row)">
+                  <i class="el-icon-plus" />
+                </el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
     <div style="text-align: center">
       <el-button v-if="resultList.key === 0 || resultList.key === 2" type="primary" @click="saveLog">保存记录本次维修
       </el-button>
@@ -211,8 +236,19 @@
     <!--      </el-steps>-->
     <!--    </div>-->
 
-    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 0 }" height="200px" width="600px"
-      :data="logDatas" :default-sort="sort" border fit highlight-current-row @sort-change="handleSort">
+    <el-table
+      ref="listTable"
+      v-loading="loading.table"
+      v-adaptive="{ bottomOffset: 0 }"
+      height="200px"
+      width="600px"
+      :data="logDatas"
+      :default-sort="sort"
+      border
+      fit
+      highlight-current-row
+      @sort-change="handleSort"
+    >
       <el-table-column label="序号" type="index" align="center" width="65" fixed>
         <template slot-scope="scope">
           <span>{{ scope.$index + 1 }}</span>
@@ -224,11 +260,23 @@
       <el-table-column label="维修记录" prop="opLog" align="center" show-overflow-tooltip />
     </el-table>
     <!--    修改操作人窗口-->
-    <el-dialog :custom-class="'dialog-fullscreen '" title="更换签核人" :visible.sync="changeCheckPersonVisible"
-      :modal="false" :modal-append-to-body="false">
+    <el-dialog
+      :custom-class="'dialog-fullscreen '"
+      title="更换签核人"
+      :visible.sync="changeCheckPersonVisible"
+      :modal="false"
+      :modal-append-to-body="false"
+    >
       <div class="app-container list">
-        <el-select v-model="newCheckPerson" filterable class="query-item" style="width: 150px" placeholder="请选择"
-          clearable @change="selectCheckPersonChanged">
+        <el-select
+          v-model="newCheckPerson"
+          filterable
+          class="query-item"
+          style="width: 150px"
+          placeholder="请选择"
+          clearable
+          @change="selectCheckPersonChanged"
+        >
           <el-option v-for="(item, index) in checkPersons" :key="index" :label="item.text" :value="index" />
         </el-select>
       </div>
@@ -262,6 +310,7 @@ export default {
     return {
       ...getDefaultUpdateViewData(), ...curModels, curApi, rules,
       ...{
+        page: { total: 0, current: 1, size: 10 },
         dialogTitle: '维修签核',
         model: curModels.update,
         logModel: logModels.update,
@@ -348,6 +397,7 @@ export default {
   },
   methods: {
     ...crud,
+    handleChange() { },
     // 获取配件信息
     getPart() {
       const that = this
@@ -355,34 +405,31 @@ export default {
         that.partArrary = response.data.items
       })
     },
-    // 保存配件数量
-    savePart(row) {
-      let t = 1
-      const part = {
+    // 保存配件
+    SavePart(row) {
+      const p = {
         partId: row.id,
-        partNum: this.partNum
+        partName: row.name,
+        partNum: null
       }
-      this.partNum = null
-      console.log(part)
-      // console.log(this.partList)
-      if (this.partList.length === 0) {
-        this.partList.push(part)
-        t = 0
-      } else {
-        for (let i = 0; i < this.partList.length; i++) {
-          if (this.partList[i].partId === part.partId) {
-            this.partList[i].partNum = part.partNum
-          } else {
-            t++
-          }
-        }
+      const temp = this.partList.find(item => item.partId == row.id)
+      if (temp === undefined) {
+        this.partList.push(p)
       }
-      console.log(t)
-      if (t === this.partList.length + 1) {
-        this.partList.push(part)
+    },
+    // 删除配件
+    DeletePart(row) {
+      const i = this.partList.findIndex(item => item.partId == row.partId)
+      this.partList.splice(i, 1)
+    },
+    // 保存使用配件的数量
+    SavePartNum(row) {
+      const p = {
+        partId: row.partId,
+        partName: row.partName,
+        partNum: row.partNum
       }
-      console.log(this.partList)
-      alert('保存成功,' + row.name + ' 数量' + part.partNum)
+      alert(p.partName + '的使用数量为' + p.partNum)
     },
     // 保存缺少配件数量
     saveLackPart(row) {
