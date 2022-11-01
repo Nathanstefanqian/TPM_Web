@@ -111,6 +111,45 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-form v-if="resultList.key == 3" ref="form" label-position="right" :rules="rules" :model="outsourceModel"
+        :label-width="labelWidth || '120px'">
+        <el-row v-if="user.roleType <= 2">
+          <el-col :span=12>
+            <el-form-item label="报修单id">
+              {{ this.model.repairNum }}
+            </el-form-item>
+          </el-col>
+          <el-col :span=12>
+            <el-form-item label="委外原因" prop="reason">
+              <el-input v-model="outsourceModel.reason" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span=12>
+            <el-form-item label="维修人员姓名" prop="outDept">
+              <el-input v-model="outsourceModel.outDept" />
+            </el-form-item>
+          </el-col>
+          <el-col :span=12>
+            <el-form-item label="工期要求(天)" prop="estimatedTime">
+              <el-input v-model="outsourceModel.estimatedTime" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span=12>
+            <el-form-item label="预计费用(元)" prop="estimatedFee">
+              <el-input v-model="outsourceModel.estimatedFee" />
+            </el-form-item>
+          </el-col>
+          <el-col :span=12>
+            <el-form-item label="签核状态">
+              待签核
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
     </el-form>
     <el-row v-if="resultList.key == 1">
       <el-col :span="12">
@@ -208,7 +247,7 @@
       </el-button>
       <!--      <el-button type="success" @click="sentEmail">发送邮件</el-button>-->
       <el-button v-if="resultList.key === 1" type="success" @click="submitOp">提交结束维修</el-button>
-      <el-button v-if="resultList.key === 3" type="danger" @click="weiwai">申请委外维修</el-button>
+      <el-button v-if="resultList.key === 3" type="danger" @click="outsource">申请委外维修</el-button>
       <el-button @click="visible = false">取消</el-button>
     </div>
 
@@ -289,6 +328,8 @@ export default {
     const curApi = api.repair.applySign
     const logModels = models.repair.operate
     const logApi = api.repair.operate
+    const outsourceModels = models.repair.outsource
+    const outsourceApi = api.repair.outsource
     return {
       ...getDefaultUpdateViewData(), ...curModels, curApi, rules,
       ...{
@@ -296,7 +337,9 @@ export default {
         dialogTitle: '维修签核',
         model: curModels.update,
         logModel: logModels.create,
+        outsourceModel: outsourceModels.create,
         logApi: logApi,
+        outsourceApi,
         roleTypes: [],
         companies: [],
         roles: [],
@@ -442,9 +485,15 @@ export default {
       }
       alert(p.partName + '的使用数量为' + p.partNum)
     },
-    // weiwai() {
-    //   this.logModel.result = this.resultList.key
-    // },
+    //申请委外
+    outsource() {
+      this.outsourceModel.status = 1
+      this.outsourceModel.repairApplyId = this.model.repairNum
+      this.outsourceModel.flowId = 3
+      console.log(this.outsourceModel)
+      const data = this.outsourceModel
+      this.outsourceApi.applyOutSource(data)
+    },
     // 保存维修记录
     saveLog() {
       this.logModel.result = this.resultList.key
