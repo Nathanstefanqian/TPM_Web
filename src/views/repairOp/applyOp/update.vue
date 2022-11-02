@@ -69,15 +69,24 @@
         </el-col>
         <el-col :xl="6" :lg="4" :md="10" :sm="12" :xs="24">
           <el-form-item label="请选择起止时间">
-            <el-date-picker v-model="logModel.startTime" type="datetime" placeholder="选择维修开始时间" />
-            <el-date-picker v-model="logModel.endTime" type="datetime" placeholder="选择维修结束时间" />
+            <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="logModel.startTime" type="datetime"
+              placeholder="选择维修开始时间" />
+            <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="logModel.endTime" type="datetime"
+              placeholder="选择维修结束时间" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="现象">
-            <el-input v-model="logModel.phenomenon" />
+            <el-input v-model="logModel.phenomenon" placeholder="请输入错误编码" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="维修方法">
+            <el-input v-model="logModel.processMethod" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -111,6 +120,7 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <!-- 委外表单 -->
       <el-form v-if="resultList.key == 3" ref="form" label-position="right" :rules="rules" :model="outsourceModel"
         :label-width="labelWidth || '120px'">
         <el-row v-if="user.roleType <= 2">
@@ -151,7 +161,9 @@
         </el-row>
       </el-form>
     </el-form>
+    <!-- 维修成功 -->
     <el-row v-if="resultList.key == 1">
+      <!-- 使用配件 -->
       <el-col :span="12">
         <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="partList"
           :default-sort="sort" fit>
@@ -176,6 +188,7 @@
           </el-table-column>
         </el-table>
       </el-col>
+      <!-- 配件库存 -->
       <el-col :span="12">
         <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="partArrary" fit>
           <el-table-column label="配件名" prop="name" align="center" width="200" show-overflow-tooltip />
@@ -193,7 +206,9 @@
         </el-table>
       </el-col>
     </el-row>
+    <!-- 缺少配件无法维修 -->
     <el-row v-if="resultList.key == 2">
+      <!-- 缺少配件 -->
       <el-col :span="12">
         <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="LackPartsList"
           :default-sort="sort" fit>
@@ -224,6 +239,7 @@
           </el-table-column>
         </el-table>
       </el-col>
+      <!-- 配件库存 -->
       <el-col :span="12">
         <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="partArrary" fit>
           <el-table-column label="配件名" prop="name" align="center" width="200" show-overflow-tooltip />
@@ -518,7 +534,8 @@ export default {
       this.logModel.partList = this.partList
       this.logModel.LackPartsList = this.LackPartsList
       this.saveLog()
-      this.logApi.finishOp(this.logModel)
+      this.curApi.sign()
+      this.curApi.updateSign(this.logModel)
     },
     handleChangePerson(item) {
       this.changeCheckPersonVisible = true

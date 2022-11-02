@@ -92,3 +92,17 @@ export function getRoleTypes() {
     method: 'get'
   })
 }
+//签核完成
+export function sign() {
+  return request({
+    url: `/eqRepairApply/sign`,
+    method: 'put'
+  })
+}
+//保存签核记录
+export function updateSign() {
+  return request({
+    url: `/eqRepairApply/updateSign`,
+    method: 'put'
+  })
+}
