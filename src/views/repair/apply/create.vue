@@ -49,14 +49,14 @@
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修等级" prop="level">
-            <el-select v-model="model.level" filterable clearable @change="changeRoleTypeHandle()">
+            <el-select v-model="model.level" filterable clearable>
               <el-option v-for="item in levels" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeZhixi(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修类别" prop="factory">
-            <el-select v-model="model.category" filterable clearable @change="changeRoleTypeHandle()">
+            <el-select v-model="model.category" filterable clearable>
               <el-option v-for="item in categories" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeFactory(item.text)" />
             </el-select>
           </el-form-item>

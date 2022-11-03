@@ -45,6 +45,8 @@
       :modal-append-to-body="false"
     >
       <div class="app-container list">
+        <div><span style="color: #dd1100">{{ description }}</span></div>
+
         <el-table
           :key="randomKey"
           ref="listTable"
@@ -70,10 +72,11 @@
               <el-button v-if="row.isBind === '1' && row.scan !== 'true'" type="primary" @click="handleScan(row)">扫码</el-button>
               <div v-if="row.isBind === '0' || row.scan === 'true'">
                 <el-input v-if="row.isDigit === '1'" v-model.trim="row.inputData" class="query-item" style="width: 120px" placeholder="请输入数据" clearable @clear="handleQuery" />
+                <el-button v-if="row.isDigit === '1'" :type="primary" @click="handleOK(row)">确定</el-button>
 
-                <el-button :type="getOkType(row)" @click="handleOK(row)">OK</el-button>
-                <el-button :type="getNGType(row)" @click="handleNG(row)">NG</el-button>
-                <el-button :type="getWXType(row)" @click="handleWX(row)">维修中</el-button>
+                <el-button v-if="row.isDigit !== '1'" :type="getOkType(row)" @click="handleOK(row)">OK</el-button>
+                <el-button v-if="row.isDigit !== '1'" :type="getNGType(row)" @click="handleNG(row)">NG</el-button>
+                <!--                <el-button v-if="row.isDigit === '1'" :type="getWXType(row)" @click="handleWX(row)">维修中</el-button>-->
                 <el-input v-model.trim="row.memo" class="query-item" style="width: 120px" placeholder="备注" clearable @clear="handleQuery" />
               </div>
             </template>
@@ -82,7 +85,6 @@
 
       </div>
       <div slot="footer" class="dialog-footer">
-        <div><span style="color: #dd1100">{{ description }}</span></div>
         <el-button type="primary" @click="submitUpdate">提交</el-button>
         <!--        <el-button @click="resetUpdate">重置aaa</el-button>-->
         <el-button @click="checkDeviceVisible = false">取消</el-button>
@@ -225,7 +227,7 @@ export default {
     },
     handleScan(row) {
       this.currentRow = row
-      this.$prompt('设备扫码中', '扫码', {
+      this.$confirm('设备扫码中', '扫码', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
         // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
