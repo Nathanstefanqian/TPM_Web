@@ -1,7 +1,3 @@
-import realtimeData from './realtimeData'
-import historyData from './historyData'
-import task from './task'
-import buoy from './buoy'
 import company from './company'
 import system from './system'
 
@@ -13,10 +9,6 @@ import repair from './repair'
 import tools from './tools'
 
 export default {
-  realtimeData,
-  historyData,
-  task,
-  buoy,
   company,
   system,
   equipmentManagement,
