@@ -9,10 +9,11 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col>
+        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="流程类型" prop="type">
-            <el-radio v-model="model.type" :label="1" border>报修</el-radio>
-            <el-radio v-model="model.type" :label="2" border>委外</el-radio>
+            <el-select v-model="model.type" filterable class="query-item" clearable>
+              <el-option v-for="item in flowTypes" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -75,6 +76,7 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import { cloneDeep } from 'lodash'
 
 export default {
   components: {
@@ -94,7 +96,8 @@ export default {
         // roleTypes: [],
         // companies: [],
         roles: [],
-        flowDatas: []
+        flowDatas: [],
+        flowTypes: []
       }
     }
   },
@@ -102,7 +105,7 @@ export default {
     ...mapGetters(['enums', 'user'])
   },
   created() {
-    this.curApi.getFlowTypes()
+    this.getTypes()
   },
   methods: {
     ...crud,
@@ -124,6 +127,14 @@ export default {
         this.loading = false
       }).catch(reject => {
         this.loading = false
+      })
+    },
+
+    // 获取流程类型下拉列表
+    getTypes() {
+      this.curApi.getFlowTypes().then(res => {
+        this.flowTypes = cloneDeep(res.data)
+      }).catch(reject => {
       })
     },
 

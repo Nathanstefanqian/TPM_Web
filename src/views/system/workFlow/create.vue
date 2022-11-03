@@ -9,10 +9,11 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col>
+        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="流程类型" prop="type">
-            <el-radio v-model="model.type" label="1" border>报修</el-radio>
-            <el-radio v-model="model.type" label="2" border>委外</el-radio>
+            <el-select v-model="model.type" filterable class="query-item" clearable>
+              <el-option v-for="item in flowTypes" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -31,6 +32,7 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import { cloneDeep } from 'lodash'
 
 export default {
   data() {
@@ -40,7 +42,8 @@ export default {
       ...getDefaultCreateViewData(), ...curModels, curApi, rules,
       ...{
         dialogTitle: '添加流程',
-        model: curModels.create
+        model: curModels.create,
+        flowTypes: []
         // roleTypes: [],
         // companies: []
       }
@@ -49,41 +52,18 @@ export default {
   computed: {
     ...mapGetters(['enums', 'user'])
   },
-  // created() {
-  //   this.clearAndInitQuery()
-  //   this.getDatas()
-  // },
+  created() {
+    this.getTypes()
+  },
   methods: {
     ...crud,
-    async initCreateBefore() {
-      // this.roleTypes = this.$parent.roleTypes
-      // this.companies = this.$parent.companies
-      // if (this.user.roleType === 3) {
-      //   this.model.type = 4
-      //   this.model.companyId = this.user.companyId
-      //   await this.getFunctions(this.model.type)
-      // }
+    // 获取流程类型下拉列表
+    getTypes() {
+      this.curApi.getFlowTypes().then(res => {
+        this.flowTypes = cloneDeep(res.data)
+      }).catch(reject => {
+      })
     },
-    // // 获取当前用户权限的所有系统功能
-    // getFunctions(roleType) {
-    //   this.loading = true
-    //   return api.system.role.getFunctionsFromAccess(roleType).then(response => {
-    //     this.functions = response.data
-    //     this.loading = false
-    //   }).catch(reject => {
-    //     this.loading = false
-    //   })
-    // },
-    // 切换角色类型
-    // async changeRoleTypeHandle() {
-    //   // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
-    //   this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.type >= 3
-    //   // 获取系统功能
-    //   if (this.model.type) {
-    //     await this.getFunctions(this.model.type)
-    //   }
-    // },
-
     // 提交前处理
     submitCreateBefore() {
       this.model.accesses = (this.functions || []).filter(s => s.checked).map(f => {
@@ -94,6 +74,7 @@ export default {
     submitCreateAfter() {
       // 清空部分数据
       this.model.name = null
+      this.model.checkType = null
     }
   }
 }
