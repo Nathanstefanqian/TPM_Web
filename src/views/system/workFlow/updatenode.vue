@@ -10,9 +10,10 @@
       </el-row>
       <el-row>
         <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="处理人" prop="checkId">
-            <el-select v-model="model.checkId" filterable class="query-item" clearable>
-              <el-option v-for="item in checkPersons" :key="item.key" :label="item.text" :value="item.key" />
+          <el-form-item label="处理人" prop="checkerName">
+            <!--            <el-input v-model="model.checkerName" />-->
+            <el-select v-model="model.checkerName" filterable class="query-item" clearable>
+              <el-option v-for="(item,index) in checkPersons" :key="index" :label="item.text" :value="index" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -58,7 +59,6 @@ export default {
       api.system.user.getSelectlist().then(response => {
         // this.repairPersons = response.data || []
         this.checkPersons = cloneDeep(response.data)
-        console.log(this.checkPersons)
       }).catch(reject => {
       })
     }
