@@ -54,7 +54,7 @@
           <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
           <!--          </el-tooltip>-->
           <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
-            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
+            <el-button v-if="row.checkStatusName==='员工申请-审核中'" type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
           </el-tooltip>
           <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">-->
           <!--            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>-->
