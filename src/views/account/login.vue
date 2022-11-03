@@ -193,7 +193,7 @@ $cursor: #fff;
 
     .title {
       display: inline-block !important;
-      padding-left: 180px;
+      padding-left: 350px;
       font-size: 34px;
       font-weight: 400;
       color: $light-gray;

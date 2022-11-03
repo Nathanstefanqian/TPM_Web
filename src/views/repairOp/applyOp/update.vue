@@ -151,7 +151,7 @@
         <el-row v-if="user.roleType <= 2">
           <el-col :span="12">
             <el-form-item label="报修单id">
-              {{ this.model.repairNum }}
+              {{ model.repairNum }}
             </el-form-item>
           </el-col>
           <el-col :span="12">
