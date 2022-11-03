@@ -8,7 +8,6 @@ const base = {
   checkId: null,
   checkOrder: null,
   canAssign: null
-
 }
 
 const queryEmpty = { name: null }

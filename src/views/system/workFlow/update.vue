@@ -9,11 +9,9 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col>
+        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="流程类型" prop="type">
-            <!--            <el-radio v-model="model.type" :label="1" border>报修</el-radio>-->
-            <!--            <el-radio v-model="model.type" :label="2" border>委外</el-radio>-->
-            <el-select v-model="model.type" style="width: 200px" filterable clearable>
+            <el-select v-model="model.type" filterable class="query-item" clearable>
               <el-option v-for="item in flowTypes" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
@@ -66,7 +64,7 @@
       <el-button type="primary" @click="submitUpdate">提交</el-button>
       <el-button @click="visible = false">取消</el-button>
     </div>
-    <dialog-create ref="dialogCreate" :flow-id="flowId" @getFlowNode="getFlowNode" />
+    <dialog-create ref="dialogCreate" />
     <dialog-update ref="dialogUpdate" />
   </el-dialog>
 </template>
@@ -78,6 +76,7 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import { cloneDeep } from 'lodash'
 
 export default {
   components: {
@@ -98,14 +97,7 @@ export default {
         // companies: [],
         roles: [],
         flowDatas: [],
-        flowId: null,
-        flowTypes: [{
-          key: 1,
-          text: '报修'
-        }, {
-          key: 2,
-          text: '委外'
-        }]
+        flowTypes: []
       }
     }
   },
@@ -113,14 +105,13 @@ export default {
     ...mapGetters(['enums', 'user'])
   },
   created() {
-    this.curApi.getFlowTypes()
+    this.getTypes()
   },
   methods: {
     ...crud,
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
     async initUpdateAfter(row, data) {
       this.model = data
-      this.flowId = this.model.id
       this.getFlowNode(this.model.id)
     },
     // 获取流程各节点
@@ -136,6 +127,14 @@ export default {
         this.loading = false
       }).catch(reject => {
         this.loading = false
+      })
+    },
+
+    // 获取流程类型下拉列表
+    getTypes() {
+      this.curApi.getFlowTypes().then(res => {
+        this.flowTypes = cloneDeep(res.data)
+      }).catch(reject => {
       })
     },
 

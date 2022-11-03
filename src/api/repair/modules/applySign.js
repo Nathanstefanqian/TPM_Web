@@ -70,7 +70,7 @@ export function changeCheckPerson(data) {
 // 更新数据
 export function update(data) {
   return request({
-    url: '/eqRepairApply/updateSign',
+    url: '/eqRepairApply/sign',
     method: 'put',
     data
   })
@@ -92,17 +92,10 @@ export function getRoleTypes() {
     method: 'get'
   })
 }
-// 签核完成
-export function sign() {
-  return request({
-    url: `/eqRepairApply/sign`,
-    method: 'put'
-  })
-}
-// 保存签核记录
-export function updateSign() {
-  return request({
-    url: `/eqRepairApply/updateSign`,
-    method: 'put'
-  })
-}
+// //保存签核记录
+// export function updateSign() {
+//   return request({
+//     url: `/eqRepairApply/updateSign`,
+//     method: 'put'
+//   })
+// }

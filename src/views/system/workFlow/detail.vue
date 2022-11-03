@@ -9,6 +9,13 @@
         </el-col>
       </el-row>
       <el-row>
+        <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="流程类型" prop="type">
+            {{ model.type === 1 ? "报修" : "委外" }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :sm="24">
           <el-form-item label="流程预览">
             <el-steps align-center :space="400">
