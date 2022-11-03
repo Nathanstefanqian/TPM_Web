@@ -1,6 +1,12 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
-    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+  <el-dialog
+    v-loading="loading"
+    :custom-class="'dialog-fullscreen dialog-'+dialogClass"
+    :title="dialogTitle"
+    :visible.sync="visible"
+    :modal="false"
+    :modal-append-to-body="false"
+  >
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth || '120px'">
       <el-row>
         <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
@@ -53,67 +59,80 @@
         <el-col :xl="6" :lg="12" :md="12" :sm="12" :xs="24">
           <el-form-item label="报修内容" prop="content">
             <span>{{ model.content }}</span>
-
-            <!--            <el-input-->
-            <!--              v-model="model.content"-->
-            <!--              type="textarea"-->
-            <!--              readonly="readonly"-->
-            <!--              :autosize="{ minRows: 2, maxRows: 4}"-->
-            <!--            />-->
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
-          <el-form-item prop="opDescription">
-            <el-link>查看附件</el-link>
-          </el-form-item>
-        </el-col>
-        <el-col :xl="6" :lg="4" :md="10" :sm="12" :xs="24">
-          <el-form-item label="请选择起止时间">
-            <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="logModel.startTime" type="datetime"
-              placeholder="选择维修开始时间" />
-            <el-date-picker value-format="yyyy-MM-dd HH:mm:ss" v-model="logModel.endTime" type="datetime"
-              placeholder="选择维修结束时间" />
-          </el-form-item>
-        </el-col>
+        <!--        todo 下载报修附件-->
+        <!--        <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">-->
+        <!--          <el-form-item prop="opDescription">-->
+        <!--            <el-link>查看附件</el-link>-->
+        <!--          </el-form-item>-->
+        <!--        </el-col>-->
       </el-row>
       <el-row>
+        <el-col :xl="6" :lg="4" :md="10" :sm="12" :xs="24">
+          <el-form-item label="请选择起止时间">
+            <el-date-picker
+              v-model="logModel.startTime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="选择维修开始时间"
+            />
+            <el-date-picker
+              v-model="logModel.endTime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="datetime"
+              placeholder="选择维修结束时间"
+            />
+          </el-form-item>
+        </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="现象">
             <el-input v-model="logModel.phenomenon" placeholder="请输入错误编码" />
           </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+
           <el-form-item label="维修方法">
             <el-input v-model="logModel.processMethod" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
+        <el-col :xl="8" :lg="8" :md="12" :sm="12" :xs="24">
           <el-form-item style="text-decoration-color: #0a76a4" label="维修记录" prop="content">
-            <el-input v-model="logModel.opLog" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" />
+            <el-input v-model="logModel.opLog" type="textarea" :autosize="{ minRows: 3, maxRows: 6 }" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="故障判定" prop="repairPerson">
-            <el-select v-model="logModel.problem" class="query-item" style="width: 150px" placeholder="请选择" filterable
-              clearable @change="selectPersonChanged">
+            <el-select
+              v-model="logModel.problem"
+              class="query-item"
+              style="width: 150px"
+              placeholder="请选择"
+              filterable
+              clearable
+              @change="selectPersonChanged"
+            >
               <el-option v-for="item in faultTypes" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
-            <el-input v-if="logModel.problem === '其他原因'" type="textarea" :autosize="{ minRows: 2 }"
-              placeholder="请输入其他原因" />
+            <el-input
+              v-if="logModel.problem === '其他原因'"
+              type="textarea"
+              :autosize="{ minRows: 2 }"
+              placeholder="请输入其他原因"
+            />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="维修结果" prop="result">
-            <el-select v-model="resultList.key" class="query-item" style="width: 150px" placeholder="请选择" filterable
-              clearable @change="selectPersonChanged">
+            <el-select
+              v-model="resultList.key"
+              class="query-item"
+              style="width: 150px"
+              placeholder="请选择"
+              filterable
+              clearable
+              @change="selectPersonChanged"
+            >
               <el-option v-for="item in resultList" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
             <el-button v-if="resultList.key == 2" type="primary" @click="AddLackPart">添加库存中没有的配件</el-button>
@@ -121,39 +140,50 @@
         </el-col>
       </el-row>
       <!-- 委外表单 -->
-      <el-form v-if="resultList.key == 3" ref="form" label-position="right" :rules="rules" :model="outsourceModel"
-        :label-width="labelWidth || '120px'">
+      <el-form
+        v-if="resultList.key == 3"
+        ref="form"
+        label-position="right"
+        :rules="rules"
+        :model="outsourceModel"
+        :label-width="labelWidth || '120px'"
+      >
         <el-row v-if="user.roleType <= 2">
-          <el-col :span=12>
+          <el-col :span="12">
             <el-form-item label="报修单id">
               {{ this.model.repairNum }}
             </el-form-item>
           </el-col>
-          <el-col :span=12>
+          <el-col :span="12">
             <el-form-item label="委外原因" prop="reason">
               <el-input v-model="outsourceModel.reason" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span=12>
+          <el-col :span="12">
             <el-form-item label="维修人员姓名" prop="outDept">
               <el-input v-model="outsourceModel.outDept" />
             </el-form-item>
           </el-col>
-          <el-col :span=12>
+          <el-col :span="12">
             <el-form-item label="工期要求(天)" prop="estimatedTime">
               <el-input v-model="outsourceModel.estimatedTime" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span=12>
+          <el-col :span="12">
             <el-form-item label="预计费用(元)" prop="estimatedFee">
               <el-input v-model="outsourceModel.estimatedFee" />
             </el-form-item>
           </el-col>
-          <el-col :span=12>
+          <el-col :span="12">
+            <el-form-item label="选择签核流程" prop="workFlow">
+              <el-select v-model="outsourceModel.flowId" class="query-item" style="width: 150px" placeholder="签核流程" clearable @clear="handleQuery">
+                <el-option v-for="item in workFlows" :key="item.key" :label="item.text" :value="item.key" />
+              </el-select>
+            </el-form-item>
             <el-form-item label="签核状态">
               待签核
             </el-form-item>
@@ -165,8 +195,15 @@
     <el-row v-if="resultList.key == 1">
       <!-- 使用配件 -->
       <el-col :span="12">
-        <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="partList"
-          :default-sort="sort" fit>
+        <el-table
+          ref="listTable"
+          v-loading="loading.table"
+          height="200px"
+          width="600px"
+          :data="partList"
+          :default-sort="sort"
+          fit
+        >
           <el-table-column label="配件名" prop="partName" align="center" width="200" show-overflow-tooltip />
           <el-table-column label="使用数量" prop="partNum" align="center" width="200" show-overflow-tooltip>
             <template slot-scope="scope">
@@ -177,12 +214,22 @@
           <el-table-column fixed="right" label="操作" align="center" width="100">
             <template slot-scope="{row}">
               <el-tooltip transition="false" :hide-after="1000" class="item" content="保存" placement="top-end">
-                <el-button type="primary" plain class="button-operate button-update" size="mini"
-                  @click="SavePartNum(row)"><i class="el-icon-check" /></el-button>
+                <el-button
+                  type="primary"
+                  plain
+                  class="button-operate button-update"
+                  size="mini"
+                  @click="SavePartNum(row)"
+                ><i class="el-icon-check" /></el-button>
               </el-tooltip>
               <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
-                <el-button type="danger" plain class="button-operate button-delete" size="mini"
-                  @click="DeletePart(row)"><i class="vue-icon-delete" /></el-button>
+                <el-button
+                  type="danger"
+                  plain
+                  class="button-operate button-delete"
+                  size="mini"
+                  @click="DeletePart(row)"
+                ><i class="vue-icon-delete" /></el-button>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -210,8 +257,15 @@
     <el-row v-if="resultList.key == 2">
       <!-- 缺少配件 -->
       <el-col :span="12">
-        <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="LackPartsList"
-          :default-sort="sort" fit>
+        <el-table
+          ref="listTable"
+          v-loading="loading.table"
+          height="200px"
+          width="45%"
+          :data="LackPartsList"
+          :default-sort="sort"
+          fit
+        >
           <el-table-column label="配件名" prop="partName" align="center" width="200" show-overflow-tooltip>
             <template slot-scope="scope">
               <el-input v-model="scope.row.partName" :disabled="!IsInStack(scope.row.partId)" />
@@ -226,14 +280,24 @@
           <el-table-column fixed="right" label="操作" align="center" width="100">
             <template slot-scope="{row}">
               <el-tooltip transition="false" :hide-after="1000" class="item" content="保存" placement="top-end">
-                <el-button type="primary" plain class="button-operate button-update" size="mini"
-                  @click="SaveLackPartNum(row)">
+                <el-button
+                  type="primary"
+                  plain
+                  class="button-operate button-update"
+                  size="mini"
+                  @click="SaveLackPartNum(row)"
+                >
                   <i class="el-icon-check" />
                 </el-button>
               </el-tooltip>
               <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
-                <el-button type="danger" plain class="button-operate button-delete" size="mini"
-                  @click="DeleteLackPart(row)"><i class="vue-icon-delete" /></el-button>
+                <el-button
+                  type="danger"
+                  plain
+                  class="button-operate button-delete"
+                  size="mini"
+                  @click="DeleteLackPart(row)"
+                ><i class="vue-icon-delete" /></el-button>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -241,15 +305,20 @@
       </el-col>
       <!-- 配件库存 -->
       <el-col :span="12">
-        <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="partArrary" fit>
-          <el-table-column label="配件名" prop="name" align="center" width="200" show-overflow-tooltip />
+        <el-table ref="listTable" v-loading="loading.table" height="200px" width="45%" :data="partArrary" fit>
+          <el-table-column label="配件名" prop="name" align="center" show-overflow-tooltip />
           <el-table-column label="库存数量" prop="stock" align="center" width="200" show-overflow-tooltip />
           <el-table-column />
-          <el-table-column fixed="right" label="操作" align="center" width="180">
+          <el-table-column fixed="right" label="操作" align="center" width="80">
             <template slot-scope="{row}">
               <el-tooltip transition="false" :hide-after="1000" class="item" content="添加" placement="top-end">
-                <el-button type="primary" plain class="button-operate button-update" size="mini"
-                  @click="SaveLackPart(row)">
+                <el-button
+                  type="primary"
+                  plain
+                  class="button-operate button-update"
+                  size="mini"
+                  @click="SaveLackPart(row)"
+                >
                   <i class="el-icon-plus" />
                 </el-button>
               </el-tooltip>
@@ -296,8 +365,19 @@
     <!--      </el-steps>-->
     <!--    </div>-->
 
-    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 0 }" height="200px" width="600px"
-      :data="logDatas" :default-sort="sort" border fit highlight-current-row @sort-change="handleSort">
+    <el-table
+      ref="listTable"
+      v-loading="loading.table"
+      v-adaptive="{ bottomOffset: 0 }"
+      height="200px"
+      width="600px"
+      :data="logDatas"
+      :default-sort="sort"
+      border
+      fit
+      highlight-current-row
+      @sort-change="handleSort"
+    >
       <el-table-column label="序号" type="index" align="center" width="65" fixed>
         <template slot-scope="scope">
           <span>{{ scope.$index + 1 }}</span>
@@ -309,11 +389,23 @@
       <el-table-column label="维修记录" prop="opLog" align="center" show-overflow-tooltip />
     </el-table>
     <!--    修改操作人窗口-->
-    <el-dialog :custom-class="'dialog-fullscreen '" title="更换签核人" :visible.sync="changeCheckPersonVisible"
-      :modal="false" :modal-append-to-body="false">
+    <el-dialog
+      :custom-class="'dialog-fullscreen '"
+      title="更换签核人"
+      :visible.sync="changeCheckPersonVisible"
+      :modal="false"
+      :modal-append-to-body="false"
+    >
       <div class="app-container list">
-        <el-select v-model="newCheckPerson" filterable class="query-item" style="width: 150px" placeholder="请选择"
-          clearable @change="selectCheckPersonChanged">
+        <el-select
+          v-model="newCheckPerson"
+          filterable
+          class="query-item"
+          style="width: 150px"
+          placeholder="请选择"
+          clearable
+          @change="selectCheckPersonChanged"
+        >
           <el-option v-for="(item, index) in checkPersons" :key="index" :label="item.text" :value="index" />
         </el-select>
       </div>
@@ -365,6 +457,7 @@ export default {
         appointPersonShow: false,
         active: 2,
         flowDatas: [],
+        workFlows: [],
         logDatas: [],
         newCheckPerson: '',
         newCheckPersonName: '',
@@ -399,10 +492,10 @@ export default {
         partList: [],
         LackPartsList: [],
         resultList: [
-          {
-            key: 0,
-            text: '维修未成功'
-          },
+          // {
+          //   key: 0,
+          //   text: '维修未成功'
+          // },
           {
             key: 1,
             text: '维修成功'
@@ -425,6 +518,7 @@ export default {
   created() {
     this.getPersons()
     this.getPart()
+    // this.dialogTitle=this.dialogTitle+this.model.repairNum
   },
   methods: {
     ...crud,
@@ -436,6 +530,14 @@ export default {
         that.partArrary = response.data.items
       })
     },
+    // 获取流程下拉列表 2委外 1  报修
+    getWorkFlows() {
+      api.system.workFlow.getSelectlist('2').then(response => {
+        this.workFlows = response.data || []
+        console.log(this.workFlows)
+      }).catch(reject => {
+      })
+    },
     // 保存配件
     SavePart(row) {
       const p = {
@@ -443,14 +545,14 @@ export default {
         partName: row.name,
         partNum: null
       }
-      const temp = this.partList.find(item => item.partId == row.id)
+      const temp = this.partList.find(item => item.partId === row.id)
       if (temp === undefined) {
         this.partList.push(p)
       }
     },
     // 删除配件
     DeletePart(row) {
-      const i = this.partList.findIndex(item => item.partId == row.partId)
+      const i = this.partList.findIndex(item => item.partId === row.partId)
       this.partList.splice(i, 1)
     },
     // 保存使用配件的数量
@@ -469,16 +571,16 @@ export default {
         partName: row.name,
         partNum: null
       }
-      const temp = this.LackPartsList.find(item => item.partId == row.id)
+      const temp = this.LackPartsList.find(item => item.partId === row.id)
       if (temp === undefined) {
         this.LackPartsList.push(p)
       }
     },
-    //判断配件是否在库存中
+    // 判断配件是否在库存中
     IsInStack(value) {
-      return (this.partArrary.find(item => item.id == value) === undefined)
+      return (this.partArrary.find(item => item.id === value) === undefined)
     },
-    //新增配件
+    // 新增配件
     AddLackPart() {
       const p = {
         partId: null,
@@ -487,12 +589,12 @@ export default {
       }
       this.LackPartsList.push(p)
     },
-    //删除缺少的配件
+    // 删除缺少的配件
     DeleteLackPart(row) {
-      const i = this.LackpartList.findIndex(item => item.partId == row.partId)
+      const i = this.LackpartList.findIndex(item => item.partId === row.partId)
       this.LackpartList.splice(i, 1)
     },
-    //保存缺少配件的数量
+    // 保存缺少配件的数量
     SaveLackPartNum(row) {
       const p = {
         partId: row.partId,
@@ -501,7 +603,7 @@ export default {
       }
       alert(p.partName + '的使用数量为' + p.partNum)
     },
-    //申请委外
+    // 申请委外
     outsource() {
       this.outsourceModel.status = 1
       this.outsourceModel.repairApplyId = this.model.repairNum
@@ -612,7 +714,7 @@ export default {
       this.getFlowData(row.id)
       // 签核记录数据
       this.getCheckLog(row.id)
-
+      this.getWorkFlows()
       // this.rules.password[0].required = false
       // this.roleTypes = this.$parent.roleTypes
       // this.companies = this.$parent.companies
@@ -621,13 +723,16 @@ export default {
       //   this.model.companyId = this.user.companyId
       // }
     },
+
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
     initUpdateAfter(row, data) {
       console.log(data)
       this.model = data
-      if (this.model.checkNextName === '维保主管审核') {
-        this.appointPersonShow = true
-      }
+      //  窗口标题显示报修单编号
+      this.dialogTitle = '维修签核 ' + this.model.repairNum
+      // if (this.model.checkNextName === '维保主管审核') {
+      //   this.appointPersonShow = true
+      // }
     },
     submitUpdateAfter() {
       console.log('updateafter' + this.flowNode.repairApplyId)

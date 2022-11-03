@@ -157,7 +157,7 @@ export default {
       // 页面刷新，丢失数据
       // this.getRoles(this.model.roleType, this.model.companyId)
     },
-    // 根据登录用户角色获取企业列表
+    // 获取流程下拉列表
     getWorkFlows() {
       api.system.workFlow.getSelectlist('1').then(response => {
         this.workFlows = response.data || []
