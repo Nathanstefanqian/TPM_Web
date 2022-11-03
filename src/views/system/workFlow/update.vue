@@ -11,8 +11,11 @@
       <el-row>
         <el-col>
           <el-form-item label="流程类型" prop="type">
-            <el-radio v-model="model.type" :label="1" border>报修</el-radio>
-            <el-radio v-model="model.type" :label="2" border>委外</el-radio>
+            <!--            <el-radio v-model="model.type" :label="1" border>报修</el-radio>-->
+            <!--            <el-radio v-model="model.type" :label="2" border>委外</el-radio>-->
+            <el-select v-model="model.type" style="width: 200px" filterable clearable>
+              <el-option v-for="item in flowTypes" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -63,7 +66,7 @@
       <el-button type="primary" @click="submitUpdate">提交</el-button>
       <el-button @click="visible = false">取消</el-button>
     </div>
-    <dialog-create ref="dialogCreate" />
+    <dialog-create ref="dialogCreate" :flow-id="flowId" @getFlowNode="getFlowNode" />
     <dialog-update ref="dialogUpdate" />
   </el-dialog>
 </template>
@@ -94,7 +97,15 @@ export default {
         // roleTypes: [],
         // companies: [],
         roles: [],
-        flowDatas: []
+        flowDatas: [],
+        flowId: null,
+        flowTypes: [{
+          key: 1,
+          text: '报修'
+        }, {
+          key: 2,
+          text: '委外'
+        }]
       }
     }
   },
@@ -109,6 +120,7 @@ export default {
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
     async initUpdateAfter(row, data) {
       this.model = data
+      this.flowId = this.model.id
       this.getFlowNode(this.model.id)
     },
     // 获取流程各节点

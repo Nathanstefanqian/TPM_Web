@@ -11,8 +11,11 @@
       <el-row>
         <el-col>
           <el-form-item label="流程类型" prop="type">
-            <el-radio v-model="model.type" label="1" border>报修</el-radio>
-            <el-radio v-model="model.type" label="2" border>委外</el-radio>
+            <!--            <el-radio v-model="model.type" label="1" border>报修</el-radio>-->
+            <!--            <el-radio v-model="model.type" label="2" border>委外</el-radio>-->
+            <el-select v-model="model.type" style="width: 200px" filterable clearable>
+              <el-option v-for="item in flowTypes" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -40,7 +43,14 @@ export default {
       ...getDefaultCreateViewData(), ...curModels, curApi, rules,
       ...{
         dialogTitle: '添加流程',
-        model: curModels.create
+        model: curModels.create,
+        flowTypes: [{
+          key: 1,
+          text: '报修'
+        }, {
+          key: 2,
+          text: '委外'
+        }]
         // roleTypes: [],
         // companies: []
       }
