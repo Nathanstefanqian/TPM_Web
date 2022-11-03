@@ -447,6 +447,7 @@ export default {
       if (temp === undefined) {
         this.partList.push(p)
       }
+      console.log(this.partArrary)
     },
     // 删除配件
     DeletePart(row) {
@@ -534,8 +535,8 @@ export default {
       this.logModel.partList = this.partList
       this.logModel.LackPartsList = this.LackPartsList
       this.saveLog()
-      this.curApi.sign()
-      this.curApi.updateSign(this.logModel)
+      this.curApi.sign(this.logModel)
+      // this.curApi.updateSign(this.logModel)
     },
     handleChangePerson(item) {
       this.changeCheckPersonVisible = true
