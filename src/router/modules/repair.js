@@ -30,14 +30,14 @@ export default {
       component: () => import('@/views/repair/outsource/index'),
       name: 'outsource',
       access: 'outsource',
-      meta: { title: '维修/委外' }
+      meta: { title: '委外报修' }
     },
     {
       path: 'outsourceSign',
       component: () => import('@/views/repair/outsourceSign/index'),
       name: 'outsourceSign',
       access: 'outsourceSign',
-      meta: { title: '维修/委外签核' }
+      meta: { title: '委外签核' }
     }
   ]
 }
