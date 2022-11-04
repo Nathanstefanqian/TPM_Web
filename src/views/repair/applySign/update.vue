@@ -1,6 +1,7 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
+  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
+    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+    <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth || '120px'">
       <el-row>
         <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
           <el-form-item label="所属部门" prop="applyDeptId">
@@ -51,12 +52,8 @@
 
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
           <el-form-item label="报修内容" prop="content">
-            <el-input
-              v-model="model.content"
-              type="textarea"
-              readonly="readonly"
-              :autosize="{ minRows: 2, maxRows: 4}"
-            />
+            <el-input v-model="model.content" type="textarea" readonly="readonly"
+              :autosize="{ minRows: 2, maxRows: 4 }" />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
@@ -68,7 +65,8 @@
       <el-row v-if="canAssign">
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="维修人员" prop="repairPerson">
-            <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择" filterable clearable @change="selectPersonChanged">
+            <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择"
+              filterable clearable @change="selectPersonChanged">
               <el-option v-for="item in repairPersons" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
@@ -84,12 +82,7 @@
     </div>
 
     <div style="margin-top: 30px">
-      <el-steps
-        align-center
-        :space="400"
-        :active="active"
-        finish-status="success"
-      >
+      <el-steps align-center :space="400" :active="active" finish-status="success">
         <!--        <el-step title="员工申请" description="李工(yg001)"></el-step>-->
         <!--        <el-step title="部门主管审核" description="王工(bm001)审核通过"></el-step>-->
         <!--        <el-step title="维保主管审核"  description="李工(yg001)">-->
@@ -98,10 +91,10 @@
         <!--            <el-button v-if="1" type="default">修改</el-button>-->
         <!--          </div>-->
         <!--        </el-step>-->
-        <el-step v-for="(item,index) in flowDatas" :key="index" :title="item.name" :description="item.checkPersonName">
+        <el-step v-for="(item, index) in flowDatas" :key="index" :title="item.name" :description="item.checkPersonName">
           <div slot="description">
             <div>{{ item.checkPersonName }}</div>
-            <el-button v-if="active ===index" type="default" @click="handleChangePerson(item)">修改</el-button>
+            <el-button v-if="active === index" type="default" @click="handleChangePerson(item)">修改</el-button>
           </div>
           <!--          <template v-slot:description>-->
           <!--            <div>丁工(wb001)待审核</div>-->
@@ -112,19 +105,8 @@
       </el-steps>
     </div>
 
-    <el-table
-      ref="listTable"
-      v-loading="loading.table"
-      v-adaptive="{ bottomOffset:0 }"
-      height="200px"
-      width="600px"
-      :data="logDatas"
-      :default-sort="sort"
-      border
-      fit
-      highlight-current-row
-      @sort-change="handleSort"
-    >
+    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 0 }" height="200px" width="600px"
+      :data="logDatas" :default-sort="sort" border fit highlight-current-row @sort-change="handleSort">
       <el-table-column label="序号" type="index" align="center" width="65" fixed>
         <template slot-scope="scope">
           <span>{{ scope.$index + 1 }}</span>
@@ -137,16 +119,12 @@
       <el-table-column label="备注" prop="checkContent" align="center" show-overflow-tooltip />
     </el-table>
     <!--    修改操作人窗口-->
-    <el-dialog
-      :custom-class="'dialog-fullscreen '"
-      title="更换签核人"
-      :visible.sync="changeCheckPersonVisible"
-      :modal="false"
-      :modal-append-to-body="false"
-    >
+    <el-dialog :custom-class="'dialog-fullscreen '" title="更换签核人" :visible.sync="changeCheckPersonVisible"
+      :modal="false" :modal-append-to-body="false">
       <div class="app-container list">
-        <el-select v-model="newCheckPerson" filterable class="query-item" style="width: 150px" placeholder="请选择" clearable @change="selectCheckPersonChanged">
-          <el-option v-for="(item,index) in checkPersons" :key="index" :label="item.text" :value="index" />
+        <el-select v-model="newCheckPerson" filterable class="query-item" style="width: 150px" placeholder="请选择"
+          clearable @change="selectCheckPersonChanged">
+          <el-option v-for="(item, index) in checkPersons" :key="index" :label="item.text" :value="index" />
         </el-select>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -217,6 +195,35 @@ export default {
   },
   methods: {
     ...crud,
+    //重写submitUpdate方法
+    submitUpdate(result) {
+      this.$refs.form.validate((valid) => {
+        if (!valid) return false
+        this.loading = true
+        // 钩子，编辑提交前执行。返回true，执行删除；返回false，退出
+        if (this.submitUpdateBefore) {
+          if (!this.submitUpdateBefore()) {
+            this.loading = false
+            return false
+          }
+        }
+        const data = {
+          eqRepairApplyId: this.model.id,
+          remark: this.model.checkNowName,
+          result: result,
+          repairManId: this.model.repairPersonId
+        }
+        this.curApi.update(data).then(() => {
+          // 钩子，编辑提交后执行。无返回值
+          if (this.submitUpdateAfter) this.submitUpdateAfter()
+          // 重新加载列表页
+          this.$parent.getDatas()
+          this.loading = false
+        }).catch(() => {
+          this.loading = false
+        })
+      })
+    },
     // 获取canAssign
     getcanAssign(x) {
       api.repair.applySign.getFlowData(x).then(response => {
@@ -242,14 +249,14 @@ export default {
       this.model.status = '3'
       // todo  备注信息
       this.model.checkMemo = ''
-      this.submitUpdate()
+      this.submitUpdate(1)
     },
     //  驳回
     submitUpdateBack() {
       this.model.status = '2'
       // todo  备注信息
       this.model.checkMemo = ''
-      this.submitUpdate()
+      this.submitUpdate(0)
     },
     handleChangePerson(item) {
       this.changeCheckPersonVisible = true
@@ -355,4 +362,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>
