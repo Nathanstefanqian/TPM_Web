@@ -92,3 +92,11 @@ export function getPart(data) {
     data
   })
 }
+//获取错误编码信息
+export function getProblem(data) {
+  return request({
+    url: `/repository/list`,
+    method: 'post',
+    data
+  })
+}

@@ -73,9 +73,9 @@
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="现象">
-            <el-input v-model="logModel.phenomenon" placeholder="请输入错误编码" />
+            <el-autocomplete class="inline-input" v-model="logModel.phenomenon" :fetch-suggestions="querySearch"
+              placeholder="请输入错误编码" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
           </el-form-item>
-
           <el-form-item label="维修方法">
             <el-input v-model="logModel.processMethod" />
           </el-form-item>
@@ -392,6 +392,8 @@ export default {
         partArrary: [],
         partList: [],
         LackPartsList: [],
+        ProblemList: [],
+        problemList: [],
         resultList: [
           // {
           //   key: 0,
@@ -419,11 +421,34 @@ export default {
   created() {
     this.getPersons()
     this.getPart()
-    // this.dialogTitle=this.dialogTitle+this.model.repairNum
+    this.getProblem()
   },
   methods: {
     ...crud,
-    handleChange() { },
+    getProblem() {
+      const that = this
+      this.logApi.getProblem({}).then((response) => {
+        that.problemList = response.data.items
+        for (let item of that.problemList) {
+          that.ProblemList.push({ "value": item.historyProblem, "deviceNum": item.deviceNum, "processMethod": item.processMethod })
+        }
+      })
+    },
+    querySearch(queryString, cb) {
+      var ProblemList = this.ProblemList
+      var results = queryString ? ProblemList.filter(this.createFilter(queryString)) : ProblemList;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (ProblemList) => {
+        return (ProblemList.value.toLowerCase().indexOf(queryString.toLowerCase()) !== -1);
+      };
+    },
+    handleSelect(item) {
+      this.logModel.phenomenon = item.value
+      alert('设备名：' + item.deviceNum + " 处理方法:" + item.processMethod + " 问题名：" + item.value)
+    },
     // 获取配件信息
     getPart() {
       const that = this
