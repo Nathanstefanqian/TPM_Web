@@ -181,11 +181,15 @@
         </el-table>
       </el-col>
       <el-col :span="12">
-        <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="partArrary" fit>
+        <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px"
+          :data="partArrary.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" fit>
           <el-table-column label="配件名" prop="name" align="center" width="200" show-overflow-tooltip />
           <el-table-column label="库存数量" prop="stock" align="center" width="200" show-overflow-tooltip />
           <el-table-column />
-          <el-table-column fixed="right" label="操作" align="center" width="180">
+          <el-table-column fixed="right" align="center" width="300">
+            <template slot="header" slot-scope="scope">
+              <el-input v-model="search" size="mini" placeholder="输入配件名搜索" />
+            </template>
             <template slot-scope="{row}">
               <el-tooltip transition="false" :hide-after="1000" class="item" content="添加" placement="top-end">
                 <el-button type="primary" plain class="button-operate button-update" size="mini" @click="SavePart(row)">
@@ -229,11 +233,15 @@
         </el-table>
       </el-col>
       <el-col :span="12">
-        <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px" :data="partArrary" fit>
+        <el-table ref="listTable" v-loading="loading.table" height="200px" width="600px"
+          :data="partArrary.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" fit>
           <el-table-column label="配件名" prop="name" align="center" width="200" show-overflow-tooltip />
           <el-table-column label="库存数量" prop="stock" align="center" width="200" show-overflow-tooltip />
           <el-table-column />
-          <el-table-column fixed="right" label="操作" align="center" width="180">
+          <el-table-column fixed="right" align="center" width="300">
+            <template slot="header" slot-scope="scope">
+              <el-input v-model="search" size="mini" placeholder="输入配件名搜索" />
+            </template>
             <template slot-scope="{row}">
               <el-tooltip transition="false" :hide-after="1000" class="item" content="添加" placement="top-end">
                 <el-button type="primary" plain class="button-operate button-update" size="mini"
@@ -383,6 +391,7 @@ export default {
           checkId: null,
           checkIdOld: null
         },
+        search: '',
         partArrary: [],
         partList: [],
         LackPartsList: [],
