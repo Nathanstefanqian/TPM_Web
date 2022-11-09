@@ -69,8 +69,10 @@
         </el-col>
         <el-col :xl="6" :lg="4" :md="10" :sm="12" :xs="24">
           <el-form-item label="请选择起止时间">
-            <el-date-picker v-model="logModel.startTime" type="datetime" placeholder="选择维修开始时间" />
-            <el-date-picker v-model="logModel.endTime" type="datetime" placeholder="选择维修结束时间" />
+            <el-date-picker value-format="yyyy-MM-dd hh:mm:ss" v-model="logModel.startTime" type="datetime"
+              placeholder="选择维修开始时间" />
+            <el-date-picker value-format="yyyy-MM-dd hh:mm:ss" v-model="logModel.endTime" type="datetime"
+              placeholder="选择维修结束时间" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -119,7 +121,7 @@
         :label-width="labelWidth || '120px'">
         <el-row v-if="user.roleType <= 2">
           <el-col :span=12>
-            <el-form-item label="报修单id">
+            <el-form-item label="报修单号">
               {{ this.model.repairNum }}
             </el-form-item>
           </el-col>
@@ -529,7 +531,7 @@ export default {
       this.outsourceModel.status = 1
       this.outsourceModel.repairApplyId = this.model.repairNum
       this.outsourceModel.flowId = 3
-      console.log(this.outsourceModel)
+      //console.log(this.outsourceModel)
       const data = this.outsourceModel
       this.outsourceApi.applyOutSource(data)
     },
@@ -557,7 +559,13 @@ export default {
       this.logModel.partList = this.partList
       this.logModel.LackPartsList = this.LackPartsList
       this.saveLog()
-      this.logApi.finishOp(this.logModel)
+      const data = {
+        eqRepairApplyId: this.model.repairNum,
+        remark: "维修成功 结案",
+        result: 1
+
+      }
+      this.curApi.update(data)
     },
     handleChangePerson(item) {
       this.changeCheckPersonVisible = true
