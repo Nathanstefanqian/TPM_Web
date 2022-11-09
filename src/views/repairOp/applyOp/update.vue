@@ -560,7 +560,7 @@ export default {
       this.logModel.LackPartsList = this.LackPartsList
       this.saveLog()
       const data = {
-        eqRepairApplyId: this.model.repairNum,
+        eqRepairApplyId: this.model.id,
         remark: "维修成功 结案",
         result: 1
 
