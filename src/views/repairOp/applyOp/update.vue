@@ -81,6 +81,19 @@
           <el-form-item label="现象">
             <el-autocomplete class="inline-input" v-model="logModel.phenomenon" :fetch-suggestions="querySearch"
               placeholder="请输入错误编码" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
+            <el-popover placement="right" width="1200" trigger="click">
+              <el-table :data="DeviceFaultStore">
+                <el-table-column width="100" property="deviceName" label="设备名"></el-table-column>
+                <el-table-column width="150" property="deviceModel" label="设备型号"></el-table-column>
+                <el-table-column width="200" property="controller" label="控制器"></el-table-column>
+                <el-table-column width="200" property="alarmNumber" label="报警号"></el-table-column>
+                <el-table-column width="100" property="alarmMessage" label="报警信息"></el-table-column>
+                <el-table-column width="300" property="descriptionOfAlarm" label="报警信息说明"></el-table-column>
+                <el-table-column width="300" property="action1" label="解除动作1"></el-table-column>
+                <el-table-column width="300" property="action2" label="解除动作2"></el-table-column>
+              </el-table>
+              <el-button slot="reference" @click="getDeviceFalut">查询</el-button>
+            </el-popover>
           </el-form-item>
           <el-form-item label="维修方法">
             <el-input v-model="logModel.processMethod" />
@@ -362,8 +375,10 @@ export default {
         checkPersons: [],
         appointPersonShow: false,
         active: 2,
+        DeviceFaultStore: null,
         flowDatas: [],
         logDatas: [],
+        deviceModel: null,
         newCheckPerson: '',
         newCheckPersonName: '',
         newCheckPersonid: '',
@@ -430,6 +445,23 @@ export default {
   },
   methods: {
     ...crud,
+    //获取知识库信息
+    getDeviceFalut() {
+      if (this.logModel.phenomenon == null) {
+        请先输入错误编码
+      }
+      else {
+        const that = this
+        let data = {
+          alarmNumber: this.logModel.phenomenon,
+          deviceModel: this.deviceModel
+        }
+        this.logApi.getDeviceFaultStore(data).then((response) => {
+          that.DeviceFaultStore = response.data
+        })
+      }
+
+    },
     getProblem() {
       const that = this
       this.logApi.getProblem({}).then((response) => {
@@ -452,7 +484,8 @@ export default {
     },
     handleSelect(item) {
       this.logModel.phenomenon = item.value
-      alert('设备名：' + item.deviceNum + " 处理方法:" + item.processMethod + " 问题名：" + item.value)
+      this.deviceModel = item.deviceNum
+      //alert('设备名：' + item.deviceNum + " 处理方法:" + item.processMethod + " 问题名：" + item.value)
     },
     // 获取配件信息
     getPart() {

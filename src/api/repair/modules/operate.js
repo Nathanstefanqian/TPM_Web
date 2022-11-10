@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { method } from 'lodash'
 
 // 获取列表数据（查询、翻页）
 export function getList(query, page, sort) {
@@ -100,3 +101,11 @@ export function getProblem(data) {
     data
   })
 }
+//获取知识库信息/deviceFaultsStore
+export function getDeviceFaultStore(data) {
+  return request({
+    url: `/deviceFaultsStore/fuzzyQuery`,
+    method: 'post',
+    data
+  })
+}  
