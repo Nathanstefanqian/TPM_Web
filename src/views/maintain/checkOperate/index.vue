@@ -14,7 +14,7 @@
     </div>
     <el-scrollbar style="height: 90%">
       <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-        <div v-for="(o, index) in datas" :key="o.productCode" :span="8">
+        <div v-for="o in datas" :key="o.productCode" :span="8">
           <el-card :body-style="{ padding: '10px' }">
             <div style="padding: 14px; background: #20a0ff">
               <span style="color: #ffffff">{{ o.deviceNo }}</span>
@@ -94,7 +94,6 @@ import getDefaultListViewData from '@/utils/viewData/list'
 import models from '@/models'
 import crud from '@/utils/crud'
 import api from '@/api'
-import { updateResult } from '../../../api/maintain/modules/operate'
 
 export default {
   name: 'Role',
@@ -225,17 +224,16 @@ export default {
       }).then(({ value }) => {
         row.memo = value
         const data = {
-          maintainId: row.maintianId,
+          maintainId: row.maintainId,
           remark: row.memo,
           contentId: row.id,
           result: 'V',
           data: row.inputData
         }
-        console.log(data)
         api.maintain.operate.updateResult(data).then(res => {
           console.log(res)
           // 刷新数据
-          this.getContentDatas(row.maintianId)
+          this.getContentDatas(row.maintainId)
           this.$message({
             type: 'success',
             message: '提交成功'
@@ -260,7 +258,7 @@ export default {
       this.dialogNGVisible = false
       console.log(this.currentRow)
       const data = {
-        maintainId: this.currentRow.maintianId,
+        maintainId: this.currentRow.maintainId,
         remark: this.beizhu,
         contentId: this.currentRow.id,
         result: 'O',
@@ -269,7 +267,7 @@ export default {
       console.log(data)
       api.maintain.operate.updateResult(data).then(res => {
         // 刷新数据
-        this.getContentDatas(this.currentRow.maintianId)
+        this.getContentDatas(this.currentRow.maintainId)
         this.$message({
           type: 'success',
           message: '提交成功'
@@ -282,7 +280,7 @@ export default {
       this.dialogNGVisible = false
       console.log(this.currentRow)
       const data = {
-        maintainId: this.currentRow.maintianId,
+        maintainId: this.currentRow.maintainId,
         remark: this.beizhu,
         contentId: this.currentRow.id,
         result: 'X',
@@ -290,7 +288,7 @@ export default {
       }
       api.maintain.operate.updateResult(data).then(res => {
         // 刷新数据
-        this.getContentDatas(this.currentRow.maintianId)
+        this.getContentDatas(this.currentRow.maintainId)
         this.$message({
           type: 'success',
           message: '提交成功'

@@ -3,7 +3,8 @@ import request from '@/utils/request'
 // 获取列表数据（查询、翻页）
 export function getList(query, page, sort) {
   return request({
-    url: '/eqMaintain/list',
+    // url: '/eqMaintain/list',
+    url: '/eqMaintainException/list',
     method: 'post',
     data: {
       page: { current: page.current, size: page.size },
@@ -13,11 +14,20 @@ export function getList(query, page, sort) {
   })
 }
 
-// 根据id获取数据
+// 根据maintainId获取数据
 export function get(id) {
   return request({
-    url: `/eqMaintain/${id}/detail`,
+    url: `/eqMaintainContent/exception/${id}/list`,
     method: 'get'
+  })
+}
+
+// 点检异常修改
+export function maintainModify(data) {
+  return request({
+    url: '/eqMaintain/modify',
+    method: 'post',
+    data
   })
 }
 
