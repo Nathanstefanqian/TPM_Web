@@ -71,3 +71,12 @@ export function getRoleTypes() {
     method: 'get'
   })
 }
+
+// 更新数据
+export function updateResult(data) {
+  return request({
+    url: '/eqMaintain/check',
+    method: 'post',
+    data
+  })
+}

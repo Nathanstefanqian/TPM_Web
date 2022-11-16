@@ -37,21 +37,27 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单位" prop="deptName" align="left" width="200" show-overflow-tooltip />
-      <el-table-column label="制造编号" prop="productCode" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="设备编号" prop="deviceType" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="单位" prop="deptName" align="left" show-overflow-tooltip />
+      <el-table-column label="制造编号" prop="productCode" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <el-link type="primary" @click="maintainDetail(row)">{{ row.productCode }}</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="设备编号" prop="deviceNo" align="center" show-overflow-tooltip />
+      <el-table-column label="机台型号" prop="deviceType" align="center" show-overflow-tooltip />
+      <el-table-column label="点检周期" prop="maintainType" align="center" show-overflow-tooltip />
+      <!--      <el-table-column label="机台状态" prop="status" align="center" show-overflow-tooltip />-->
+      <el-table-column label="点检人" prop="maintainPersonName" align="center" show-overflow-tooltip />
+      <el-table-column label="点检时间" prop="maintainTime" align="center" show-overflow-tooltip />
+      <el-table-column label="计划日期" prop="planTime" align="center" show-overflow-tooltip />
       <!--      <el-table-column label="品牌型号" prop="ebrand" align="center" width="120" show-overflow-tooltip />-->
       <!--      <el-table-column label="制造日期" prop="eproductdate" align="center" width="120" show-overflow-tooltip />-->
       <!--      <el-table-column label="验收日期" prop="echeckdate" align="center" width="120" show-overflow-tooltip />-->
-      <el-table-column label="职系" prop="zhixi" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="加工部" prop="processDeptName" align="left" show-overflow-tooltip />
-      <el-table-column label="厂区" prop="factory" align="left" show-overflow-tooltip />
-
-      <el-table-column label="机台状态" prop="status" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="点检周期" prop="" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="保养情况" prop="" align="center" width="120" show-overflow-tooltip />
-
-      <el-table-column fixed="right" label="操作" align="center" width="180">
+      <!--      <el-table-column label="职系" prop="zhixi" align="center" show-overflow-tooltip />-->
+      <!--      <el-table-column label="加工部" prop="processDeptName" align="left" show-overflow-tooltip />-->
+      <!--      <el-table-column label="厂区" prop="factory" align="left" show-overflow-tooltip />-->
+      <!--      <el-table-column label="保养情况" prop="" align="center" show-overflow-tooltip />-->
+      <el-table-column fixed="right" label="操作" align="center" width="150">
         <template slot-scope="{row}">
           <!--          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
           <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
@@ -72,6 +78,61 @@
     <dialog-create ref="dialogCreate" />
     <dialog-update ref="dialogUpdate" />
     <dialog-detail ref="dialogDetail" />
+
+    <!--  点击制造编号详情弹窗  -->
+    <el-dialog
+      :custom-class="'dialog-fullscreen dialog-update'"
+      :title="dialogTitle"
+      :visible.sync="maintainDialogVisible"
+      :modal="false"
+      :modal-append-to-body="false"
+    >
+      <div class="app-container list">
+        <el-table
+          :key="randomKey"
+          ref="listTable"
+          v-loading="loading.table"
+          v-adaptive="{ bottomOffset: 55 }"
+          :height="tableHeight"
+          :data="contentDatas"
+          border
+          fit
+          highlight-current-row
+        >
+          <el-table-column type="selection" align="center" width="35" />
+          <el-table-column label="序号" type="index" align="center" width="65" fixed>
+            <template slot-scope="scope">
+              <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="点检内容" prop="content" align="left" show-overflow-tooltip width="350" />
+          <el-table-column label="状态" prop="result" align="center" :formatter="formatterType" show-overflow-tooltip />
+          <el-table-column label="操作" align="center">
+            <template slot-scope="{row}">
+              <el-button v-if="row.isBind === '1' && row.scan !== true" type="primary" style="width: 120px" @click="handleScan(row)">点击扫码</el-button>
+              <el-input v-if="(row.isDigit === '1' && (row.isBind === '0' || (row.isBind === '1' && row.scan === true)))" v-model.trim="row.inputData" class="query-item" style="width: 120px" placeholder="请输入数据" clearable @clear="handleQuery" />
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" align="center">
+            <template v-if="row.isBind === '0' || (row.isBind === '1' && row.scan === true)" slot-scope="{row}">
+              <el-button type="success" :disabled="row.result==='V'" @click="handleOK(row)">OK</el-button>
+              <el-button type="danger" @click="handleNG(row)">NG</el-button>
+              <el-button type="primary" @click="sendEmail">发送提醒</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
+    <!--  点击NG弹窗  -->
+    <el-dialog title="确认NG？" :visible.sync="dialogNGVisible">
+      <span>请输入情况说明</span>
+      <el-input v-model.trim="beizhu" />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogNGVisible = false; beizhu= ''">取消</el-button>
+        <el-button type="warning" @click="clickRepairing">维修中</el-button>
+        <el-button type="danger" @click="clickRepair">报修</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -100,12 +161,20 @@ export default {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
       ...{
         sort: { prop: 'maintain_time', order: 'descending' },
+        contentDatas: [],
         roleTypes: [],
         companies: [],
         departs: [],
         zhixis: [],
         factories: [],
-        processDepts: []
+        processDepts: [],
+        maintainDialogVisible: false,
+        dialogNGVisible: false,
+        tableHeight: null,
+        dialogTitle: '',
+        randomKey: Math.random(),
+        beizhu: '',
+        currentRow: null
       },
       queryInfos: [{
         key: '1',
@@ -132,8 +201,137 @@ export default {
     this.getFactories()
     this.getProcessDepts()
   },
+  mounted() {
+    // 延迟获取页面高度, 确保能正确返回
+    this.tableHeight = document.body.offsetHeight - 100 + 'px'
+  },
   methods: {
     ...crud,
+    formatterType(rows, column) {
+      return rows.result === null || rows.result === '' ? '未点检' : rows.result
+    },
+    // 点击制造编号超链接
+    maintainDetail(row) {
+      this.dialogTitle = row.deviceNo + '保养'
+      this.maintainDialogVisible = true
+      // this.description = row.description
+      console.log(row.maintainId)
+      this.getContentDatas(row.maintainId)
+    },
+    // 获取点检异常内容
+    getContentDatas(mId) {
+      this.curApi.get(mId).then(res => {
+        this.contentDatas = res.data
+      })
+    },
+    // 发送提醒
+    sendEmail() {
+
+    },
+    // 点击扫码
+    handleScan(row) {
+      this.currentRow = row
+      this.$confirm('设备扫码中', '扫码', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        this.currentRow.scan = true
+        row.scan = true
+        this.refreshTable()
+        this.$message({
+          type: 'success',
+          message: '扫码成功'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消'
+        })
+      })
+    },
+    refreshTable() {
+      this.randomKey = Math.random()
+    },
+    // 点击OK
+    handleOK(row) {
+      this.currentRow = row
+      this.$prompt('备注', '确认点检状态正常？', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        row.memo = value
+        const data = {
+          maintainId: row.maintainId,
+          remark: row.memo,
+          contentId: row.id,
+          result: 'V',
+          data: row.inputData
+        }
+        console.log(data)
+        this.curApi.maintainModify(data).then(res => {
+          console.log(res)
+          // 刷新数据
+          this.getContentDatas(row.maintainId)
+          this.$message({
+            type: 'success',
+            message: '提交成功'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消'
+        })
+      })
+    },
+    // 点击NG
+    handleNG(row) {
+      this.dialogNGVisible = true
+      this.currentRow = row
+    },
+    // 点击维修中按钮
+    clickRepairing() {
+      this.dialogNGVisible = false
+      console.log(this.currentRow)
+      const data = {
+        maintainId: this.currentRow.maintainId,
+        remark: this.beizhu,
+        contentId: this.currentRow.id,
+        result: 'O',
+        data: this.currentRow.inputData
+      }
+      console.log(data)
+      this.curApi.maintainModify(data).then(res => {
+        // 刷新数据
+        this.getContentDatas(this.currentRow.maintainId)
+        this.$message({
+          type: 'success',
+          message: '提交成功'
+        })
+      })
+    },
+
+    // 点击报修按钮
+    clickRepair() {
+      this.dialogNGVisible = false
+      console.log(this.currentRow)
+      const data = {
+        maintainId: this.currentRow.maintainId,
+        remark: this.beizhu,
+        contentId: this.currentRow.id,
+        result: 'X',
+        data: this.currentRow.inputData
+      }
+      this.curApi.maintainModify(data).then(res => {
+        // 刷新数据
+        this.getContentDatas(this.currentRow.maintainId)
+        this.$message({
+          type: 'success',
+          message: '提交成功'
+        })
+      })
+    },
+
     // 根据登录用户角色获取角色类型列表
     getRoleTypes() {
       api.system.role.getRoleTypes().then(response => {
