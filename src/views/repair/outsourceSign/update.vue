@@ -1,8 +1,7 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
-    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-card>
-      <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth || '120px'">
+      <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
         <div style="margin-left: 20px">
           <el-row>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
@@ -73,8 +72,12 @@
           <el-row>
             <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
               <el-form-item label="报修内容" prop="content">
-                <el-input v-model="model.content" type="textarea" readonly="readonly"
-                  :autosize="{ minRows: 2, maxRows: 4 }" />
+                <el-input
+                  v-model="model.content"
+                  type="textarea"
+                  readonly="readonly"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -90,8 +93,7 @@
           <el-row>
             <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
               <el-form-item label="维修人员" prop="repairPerson">
-                <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择"
-                  clearable @change="selectPersonChanged">
+                <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择" clearable @change="selectPersonChanged">
                   <el-option v-for="item in repairPersons" :key="item.key" :label="item.text" :value="item.key" />
                 </el-select>
               </el-form-item>
@@ -155,7 +157,12 @@
 
     </el-card>
     <el-card style="margin-top: 10px">
-      <el-steps align-center :space="400" :active="2" finish-status="success">
+      <el-steps
+        align-center
+        :space="400"
+        :active="2"
+        finish-status="success"
+      >
         <el-step title="员工申请" description="李工(yg001)" />
         <el-step title="部门主管审核" description="王工(bm001)审核通过" />
         <el-step title="维保主管审核" description="丁工(wb001)审核中" />
@@ -245,5 +252,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
