@@ -10,7 +10,7 @@ function getDatas(setting) {
   if (params.showLoading) this.loading.table = true
   this.queryReal = _.cloneDeep(this.query)
   this.curApi.getList(this.queryReal, this.page, this.sort).then(response => {
-    this.datas = response.data.items
+    this.datas = response.data
     this.page.total = response.data.total
     // 钩子，获取数据后执行。无返回值
     if (this.getDatasAfter) this.getDatasAfter()
