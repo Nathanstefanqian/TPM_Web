@@ -38,13 +38,13 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报修单号" prop="repairNum" align="left" width="200" show-overflow-tooltip />
-      <el-table-column label="设备编号" prop="deviceNum" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="制造编号" prop="productCode" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="所属部门" prop="deptName" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="报修类别" prop="category" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="报修等级" prop="level" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="状态" prop="checkStatusName" align="left" show-overflow-tooltip />
+      <el-table-column label="报修单号" prop="eqRepairApply.repairNum" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="维修类型" prop="eqRepairApply.category" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="维修时间" prop="eqRepairApply.repairTime" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="维修等级" prop="eqRepairApply.level" align="center" width="150" show-overflow-tooltip />
+      <el-table-column label="委外原因" prop="reason" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="维修人员" prop="outDept" align="center" width="120" show-overflow-tooltip />
+      <el-table-column show-overflow-tooltip />
       <el-table-column fixed="right" label="签核" align="center" width="180">
         <template slot-scope="{row}">
           <!--          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
@@ -87,9 +87,9 @@ export default {
   },
   directives: { adaptive },
   data() {
-    const curModels = models.repair.applySign
-    const curApi = api.repair.applySign
-    const curPermission = this.$store.getters.access.repair.apply
+    const curModels = models.repair.outsource
+    const curApi = api.repair.outsource
+    const curPermission = this.$store.getters.access.repair.outsource
     return {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
       ...{
@@ -138,6 +138,7 @@ export default {
   },
   methods: {
     ...crud,
+
     // 根据登录用户角色获取角色类型列表
     getRoleTypes() {
       api.system.role.getRoleTypes().then(response => {
