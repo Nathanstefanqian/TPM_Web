@@ -12,7 +12,6 @@
             <span>{{ model.section }}</span>
           </el-form-item>
         </el-col>
-
         <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
           <el-form-item label="制造编号" prop="productCode">
             <span>{{ model.productCode }}</span>
