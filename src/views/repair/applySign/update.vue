@@ -435,6 +435,7 @@ export default {
       this.model.status = '3'
       // todo  备注信息
       this.model.checkMemo = ''
+      this.active++
       this.submitUpdate(1)
     },
     //  驳回
