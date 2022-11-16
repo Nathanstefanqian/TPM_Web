@@ -76,6 +76,7 @@
     </el-form>
     <div style="text-align: center">
       <el-button type="primary" @click="submitUpdatePass">通过</el-button>
+      <el-button type="danger" @click="OutsourceApply">申请委外</el-button>
       <!--      <el-button type="success" @click="sentEmail">发送邮件</el-button>-->
       <el-button type="danger" @click="submitUpdateBack">驳回</el-button>
       <el-button @click="visible = false">取消</el-button>
@@ -167,6 +168,7 @@ export default {
         active: 2,
         flowDatas: [],
         a: [],
+        ifOutsource: null,
         logDatas: [],
         newCheckPerson: '',
         newCheckPersonName: '',
@@ -195,6 +197,9 @@ export default {
   },
   methods: {
     ...crud,
+    OutsourceApply() {
+      this.ifOutsource = 1
+    },
     //重写submitUpdate方法
     submitUpdate(result) {
       this.$refs.form.validate((valid) => {

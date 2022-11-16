@@ -29,7 +29,14 @@ export function create(data) {
     data
   })
 }
-
+// 根据保修单id获取list
+export function getByUserId(id) {
+  return request({
+    url: `/eqRepairOutsource/${id}/getByUserId`,
+    method: 'get',
+    data: data
+  })
+}
 // 申请
 export function applyOutSource(data) {
   return request({

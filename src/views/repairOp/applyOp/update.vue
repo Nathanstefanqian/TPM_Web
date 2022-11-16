@@ -83,6 +83,16 @@
               placeholder="请输入错误编码" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
             <el-popover placement="right" width="1200" trigger="click">
               <el-table :data="DeviceFaultStore">
+                <el-table-column fixed="left" align="center" width="70">
+                  <template slot-scope="{row}">
+                    <el-tooltip transition="false" :hide-after="1000" class="item" content="应用" placement="top-end">
+                      <el-button type="primary" plain class="button-operate button-update" size="mini"
+                        @click="SavePhenomenon(row)">
+                        <i class="el-icon-plus" />
+                      </el-button>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
                 <el-table-column width="100" property="deviceName" label="设备名"></el-table-column>
                 <el-table-column width="150" property="deviceModel" label="设备型号"></el-table-column>
                 <el-table-column width="200" property="controller" label="控制器"></el-table-column>
@@ -460,7 +470,14 @@ export default {
           that.DeviceFaultStore = response.data
         })
       }
-
+    },
+    //应用知识库内容
+    SavePhenomenon(row) {
+      if (this.logModel.processMethod != null)
+        this.logModel.processMethod = this.logModel.processMethod + "," + row.action1 + "," + row.action2
+      else {
+        this.logModel.processMethod = row.action1 + "," + row.action2
+      }
     },
     getProblem() {
       const that = this
