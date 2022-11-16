@@ -10,7 +10,7 @@ function getDatas(setting) {
   if (params.showLoading) this.loading.table = true
   this.queryReal = _.cloneDeep(this.query)
   this.curApi.getList(this.queryReal, this.page, this.sort).then(response => {
-    this.datas = response.data
+    this.datas = response.data.items
     this.page.total = response.data.total
     // 钩子，获取数据后执行。无返回值
     if (this.getDatasAfter) this.getDatasAfter()
@@ -210,7 +210,7 @@ function submitUpdate() {
 }
 
 function resetUpdate() {
-  this.initUpdate(this.rowData).then(() => {})
+  this.initUpdate(this.rowData).then(() => { })
 }
 
 // =========================================删除=========================================
@@ -294,7 +294,7 @@ async function initDetail(row) {
  * 打开详情窗口
  */
 function handleDetail(row) {
-  this.$refs.dialogDetail.initDetail(row).then(() => {})
+  this.$refs.dialogDetail.initDetail(row).then(() => { })
 }
 
 // =========================================导出=========================================
