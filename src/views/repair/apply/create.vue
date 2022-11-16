@@ -1,18 +1,23 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
+  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
+    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+    <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth || '120px'">
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="所属部门" prop="applyDeptId">
-            <el-select v-model="model.deptId" class="query-item" style="width: 150px" placeholder="申请部门" clearable @clear="handleQuery">
-              <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeDepart(item.text)" />
+            <el-select v-model="model.deptId" class="query-item" style="width: 150px" placeholder="申请部门" clearable
+              @clear="handleQuery">
+              <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key"
+                @click.native="onChangeDepart(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="所属工段" prop="applyDeptId">
-            <el-select v-model="model.section" class="query-item" style="width: 150px" placeholder="所属工段" clearable @clear="handleQuery">
-              <el-option v-for="item in sections" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeDepart(item.text)" />
+            <el-select v-model="model.section" class="query-item" style="width: 150px" placeholder="所属工段" clearable
+              @clear="handleQuery">
+              <el-option v-for="item in sections" :key="item.key" :label="item.text" :value="item.key"
+                @click.native="onChangeDepart(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -26,7 +31,8 @@
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="制造日期" prop="productCode">
-            <el-date-picker v-model="model.productDate" align="center" placeholder="选择日期" type="datetime" value-format="yyyy-MM-dd" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+            <el-date-picker v-model="model.productDate" align="center" placeholder="选择日期" type="datetime"
+              value-format="yyyy-MM-dd" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
@@ -50,20 +56,23 @@
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修等级" prop="level">
             <el-select v-model="model.level" filterable clearable>
-              <el-option v-for="item in levels" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeZhixi(item.text)" />
+              <el-option v-for="item in levels" :key="item.key" :label="item.text" :value="item.key"
+                @click.native="onChangeZhixi(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修类别" prop="factory">
             <el-select v-model="model.category" filterable clearable>
-              <el-option v-for="item in categories" :key="item.key" :label="item.text" :value="item.key" @click.native="onChangeFactory(item.text)" />
+              <el-option v-for="item in categories" :key="item.key" :label="item.text" :value="item.key"
+                @click.native="onChangeFactory(item.text)" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="选择签核流程" prop="workFlow">
-            <el-select v-model="model.flowId" class="query-item" style="width: 150px" placeholder="签核流程" clearable @clear="handleQuery">
+            <el-select v-model="model.flowId" class="query-item" style="width: 150px" placeholder="签核流程" clearable
+              @clear="handleQuery">
               <el-option v-for="item in workFlows" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
@@ -73,16 +82,12 @@
       <el-row>
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
           <el-form-item label="报修内容" prop="content">
-            <el-input
-              v-model="model.content"
-              type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4}"
-            />
+            <el-input v-model="model.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label=" " prop="opDescription">
-            <el-button type="primary" @click="submitCreate1">添加附件</el-button>
+            <el-button type="primary">添加附件</el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -220,5 +225,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>
 

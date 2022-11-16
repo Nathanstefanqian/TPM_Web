@@ -1,7 +1,19 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
-    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth || '120px'">
+  <el-dialog
+    v-loading="loading"
+    :custom-class="'dialog-fullscreen dialog-' + dialogClass"
+    :title="dialogTitle"
+    :visible.sync="visible"
+    :modal="false"
+    :modal-append-to-body="false"
+  >
+    <el-form
+      ref="form"
+      label-position="right"
+      :rules="rules"
+      :model="model"
+      :label-width="labelWidth || '120px'"
+    >
       <el-row>
         <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
           <el-form-item label="所属部门" prop="applyDeptId">
@@ -52,8 +64,12 @@
 
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
           <el-form-item label="报修内容" prop="content">
-            <el-input v-model="model.content" type="textarea" readonly="readonly"
-              :autosize="{ minRows: 2, maxRows: 4 }" />
+            <el-input
+              v-model="model.content"
+              type="textarea"
+              readonly="readonly"
+              :autosize="{ minRows: 2, maxRows: 4 }"
+            />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
@@ -65,24 +81,93 @@
       <el-row v-if="canAssign">
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="维修人员" prop="repairPerson">
-            <el-select v-model="model.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择"
-              filterable clearable @change="selectPersonChanged">
-              <el-option v-for="item in repairPersons" :key="item.key" :label="item.text" :value="item.key" />
+            <el-select
+              v-model="model.repairPersonId"
+              class="query-item"
+              style="width: 150px"
+              placeholder="请选择"
+              filterable
+              clearable
+              @change="selectPersonChanged"
+            >
+              <el-option
+                v-for="item in repairPersons"
+                :key="item.key"
+                :label="item.text"
+                :value="item.key"
+              />
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
-
+    </el-form>
+    <el-form
+      v-if="ifOutsource == 1"
+      ref="form"
+      label-position="right"
+      :rules="rules"
+      :model="outsourceModel"
+      :label-width="labelWidth || '120px'"
+    >
+      <el-row v-if="user.roleType <= 2">
+        <el-col :span="12">
+          <el-form-item label="报修单号">
+            {{ this.model.repairNum }}
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="委外原因" prop="reason">
+            <el-input v-model="outsourceModel.reason" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="维修人员姓名" prop="outDept">
+            <el-input v-model="outsourceModel.outDept" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="工期要求(天)" prop="estimatedTime">
+            <el-input v-model="outsourceModel.estimatedTime" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="预计费用(元)" prop="estimatedFee">
+            <el-input v-model="outsourceModel.estimatedFee" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="签核状态"> 待签核 </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <div style="text-align: center">
       <el-button type="primary" @click="submitUpdatePass">通过</el-button>
+      <el-button
+        v-if="ifOutsource != 1"
+        type="danger"
+        @click="OutsourceApply"
+      >申请委外</el-button>
+      <el-button
+        v-if="ifOutsource == 1"
+        type="primary"
+        @click="outsource"
+      >提交委外申请</el-button>
       <!--      <el-button type="success" @click="sentEmail">发送邮件</el-button>-->
       <el-button type="danger" @click="submitUpdateBack">驳回</el-button>
       <el-button @click="visible = false">取消</el-button>
     </div>
 
     <div style="margin-top: 30px">
-      <el-steps align-center :space="400" :active="active" finish-status="success">
+      <el-steps
+        align-center
+        :space="400"
+        :active="active"
+        finish-status="success"
+      >
         <!--        <el-step title="员工申请" description="李工(yg001)"></el-step>-->
         <!--        <el-step title="部门主管审核" description="王工(bm001)审核通过"></el-step>-->
         <!--        <el-step title="维保主管审核"  description="李工(yg001)">-->
@@ -91,10 +176,19 @@
         <!--            <el-button v-if="1" type="default">修改</el-button>-->
         <!--          </div>-->
         <!--        </el-step>-->
-        <el-step v-for="(item, index) in flowDatas" :key="index" :title="item.name" :description="item.checkPersonName">
+        <el-step
+          v-for="(item, index) in flowDatas"
+          :key="index"
+          :title="item.name"
+          :description="item.checkPersonName"
+        >
           <div slot="description">
             <div>{{ item.checkPersonName }}</div>
-            <el-button v-if="active === index" type="default" @click="handleChangePerson(item)">修改</el-button>
+            <el-button
+              v-if="active === index"
+              type="default"
+              @click="handleChangePerson(item)"
+            >修改</el-button>
           </div>
           <!--          <template v-slot:description>-->
           <!--            <div>丁工(wb001)待审核</div>-->
@@ -105,34 +199,101 @@
       </el-steps>
     </div>
 
-    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 0 }" height="200px" width="600px"
-      :data="logDatas" :default-sort="sort" border fit highlight-current-row @sort-change="handleSort">
-      <el-table-column label="序号" type="index" align="center" width="65" fixed>
+    <el-table
+      ref="listTable"
+      v-loading="loading.table"
+      v-adaptive="{ bottomOffset: 0 }"
+      height="200px"
+      width="600px"
+      :data="logDatas"
+      :default-sort="sort"
+      border
+      fit
+      highlight-current-row
+      @sort-change="handleSort"
+    >
+      <el-table-column
+        label="序号"
+        type="index"
+        align="center"
+        width="65"
+        fixed
+      >
         <template slot-scope="scope">
           <span>{{ scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IP" prop="checkIp" align="left" width="120" show-overflow-tooltip />
-      <el-table-column label="签核人员" prop="checkPerson" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="签核时间" prop="checkTime" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="操作" prop="checkInfo" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="备注" prop="checkContent" align="center" show-overflow-tooltip />
+      <el-table-column
+        label="IP"
+        prop="checkIp"
+        align="left"
+        width="120"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="签核人员"
+        prop="checkPerson"
+        align="center"
+        width="200"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="签核时间"
+        prop="checkTime"
+        align="center"
+        width="200"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="操作"
+        prop="checkInfo"
+        align="center"
+        width="120"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="备注"
+        prop="checkContent"
+        align="center"
+        show-overflow-tooltip
+      />
     </el-table>
     <!--    修改操作人窗口-->
-    <el-dialog :custom-class="'dialog-fullscreen '" title="更换签核人" :visible.sync="changeCheckPersonVisible"
-      :modal="false" :modal-append-to-body="false">
+    <el-dialog
+      :custom-class="'dialog-fullscreen '"
+      title="更换签核人"
+      :visible.sync="changeCheckPersonVisible"
+      :modal="false"
+      :modal-append-to-body="false"
+    >
       <div class="app-container list">
-        <el-select v-model="newCheckPerson" filterable class="query-item" style="width: 150px" placeholder="请选择"
-          clearable @change="selectCheckPersonChanged">
-          <el-option v-for="(item, index) in checkPersons" :key="index" :label="item.text" :value="index" />
+        <el-select
+          v-model="newCheckPerson"
+          filterable
+          class="query-item"
+          style="width: 150px"
+          placeholder="请选择"
+          clearable
+          @change="selectCheckPersonChanged"
+        >
+          <el-option
+            v-for="(item, index) in checkPersons"
+            :key="index"
+            :label="item.text"
+            :value="index"
+          />
         </el-select>
       </div>
       <div slot="footer" class="dialog-footer">
         <!--        <div><span style="color: #dd1100">{{ description }}</span></div>-->
-        <el-button type="primary" @click="submitUpdateChangePerson">提交</el-button>
+        <el-button
+          type="primary"
+          @click="submitUpdateChangePerson"
+        >提交</el-button>
         <!--        <el-button @click="resetUpdate">重置aaa</el-button>-->
         <el-button @click="changeCheckPersonVisible = false">取消</el-button>
       </div>
+      提交委外申请
     </el-dialog>
   </el-dialog>
 </template>
@@ -152,14 +313,21 @@ export default {
   data() {
     const curModels = models.repair.applySign
     const curApi = api.repair.applySign
+    const outsourceModels = models.repair.outsource
+    const outsourceApi = api.repair.outsource
     return {
-      ...getDefaultUpdateViewData(), ...curModels, curApi, rules,
+      ...getDefaultUpdateViewData(),
+      ...curModels,
+      curApi,
+      rules,
       ...{
         dialogTitle: '报修签核',
         model: curModels.update,
         roleTypes: [],
         companies: [],
         roles: [],
+        outsourceModel: outsourceModels.create,
+        outsourceApi,
         repairPersons: [],
         checkPersons: [],
         // appointPersonShow: false,
@@ -167,6 +335,7 @@ export default {
         active: 2,
         flowDatas: [],
         a: [],
+        ifOutsource: 0,
         logDatas: [],
         newCheckPerson: '',
         newCheckPersonName: '',
@@ -195,7 +364,19 @@ export default {
   },
   methods: {
     ...crud,
-    //重写submitUpdate方法
+    OutsourceApply() {
+      this.ifOutsource = 1
+    },
+    // 申请委外
+    outsource() {
+      this.outsourceModel.status = 1
+      this.outsourceModel.repairApplyId = this.model.id
+      this.outsourceModel.flowId = 3
+      // console.log(this.outsourceModel)
+      const data = this.outsourceModel
+      this.outsourceApi.applyOutSource(data)
+    },
+    // 重写submitUpdate方法
     submitUpdate(result) {
       this.$refs.form.validate((valid) => {
         if (!valid) return false
@@ -213,29 +394,34 @@ export default {
           result: result,
           repairManId: this.model.repairPersonId
         }
-        this.curApi.update(data).then(() => {
-          // 钩子，编辑提交后执行。无返回值
-          if (this.submitUpdateAfter) this.submitUpdateAfter()
-          // 重新加载列表页
-          this.$parent.getDatas()
-          this.loading = false
-        }).catch(() => {
-          this.loading = false
-        })
+        this.curApi
+          .update(data)
+          .then(() => {
+            // 钩子，编辑提交后执行。无返回值
+            if (this.submitUpdateAfter) this.submitUpdateAfter()
+            // 重新加载列表页
+            this.$parent.getDatas()
+            this.loading = false
+          })
+          .catch(() => {
+            this.loading = false
+          })
       })
     },
     // 获取canAssign
     getcanAssign(x) {
-      api.repair.applySign.getFlowData(x).then(response => {
-        this.a = response.data || []
-        for (var i = 0; i < this.a.length; i++) {
-          if (this.a[i].checkId === this.user.userId) {
-            this.canAssign = this.a[i].canAssign
-            console.log('this.canAssign', this.canAssign)
+      api.repair.applySign
+        .getFlowData(x)
+        .then((response) => {
+          this.a = response.data || []
+          for (var i = 0; i < this.a.length; i++) {
+            if (this.a[i].checkId === this.user.userId) {
+              this.canAssign = this.a[i].canAssign
+              console.log('this.canAssign', this.canAssign)
+            }
           }
-        }
-      }).catch(reject => {
-      })
+        })
+        .catch((reject) => {})
     },
     // 通过
     submitUpdatePass() {
@@ -249,6 +435,7 @@ export default {
       this.model.status = '3'
       // todo  备注信息
       this.model.checkMemo = ''
+      this.active++
       this.submitUpdate(1)
     },
     //  驳回
@@ -273,7 +460,7 @@ export default {
       console.log(this.flowNode)
 
       // 提交修改签核人
-      api.repair.applySign.changeCheckPerson(this.flowNode).then(res => {
+      api.repair.applySign.changeCheckPerson(this.flowNode).then((res) => {
         // 关闭窗口 刷新流程
         this.changeCheckPersonVisible = false
         this.getFlowData(this.flowNode.repairApplyId)
@@ -283,32 +470,35 @@ export default {
         })
         // 刷新签核记录
         this.getCheckLog(this.flowNode.repairApplyId)
-      }
-      )
+      })
     },
     sentEmail() {
       this.submitUpdate()
     },
     getPersons() {
-      api.system.user.getSelectlist().then(response => {
-        this.repairPersons = response.data || []
-        this.checkPersons = cloneDeep(response.data)
-      }).catch(reject => {
-      })
+      api.system.user
+        .getSelectlist()
+        .then((response) => {
+          this.repairPersons = response.data || []
+          this.checkPersons = cloneDeep(response.data)
+        })
+        .catch((reject) => {})
     },
     getFlowData(repairApplyId) {
-      api.repair.applySign.getFlowData(repairApplyId).then(response => {
-        this.flowDatas = response.data || []
-        console.log('this.flowDatas', this.flowDatas)
-        // console.log('this.appointPersonShow',this.appointPersonShow)
-        // 设置界面上流程的激活的序号
-        for (const flowData of this.flowDatas) {
-          if (this.user.userId === flowData.checkId) {
-            this.active = flowData.checkOrder - 1
+      api.repair.applySign
+        .getFlowData(repairApplyId)
+        .then((response) => {
+          this.flowDatas = response.data || []
+          console.log('this.flowDatas', this.flowDatas)
+          // console.log('this.appointPersonShow',this.appointPersonShow)
+          // 设置界面上流程的激活的序号
+          for (const flowData of this.flowDatas) {
+            if (this.user.userId === flowData.checkId) {
+              this.active = flowData.checkOrder - 1
+            }
           }
-        }
-      }).catch(reject => {
-      })
+        })
+        .catch((reject) => {})
     },
     selectPersonChanged(value) {
       for (var i = 0; i < this.repairPersons.length; i++) {
@@ -323,10 +513,12 @@ export default {
       this.newCheckPersonid = this.repairPersons[value].key
     },
     getCheckLog(repairApplyId) {
-      api.repair.applySign.getCheckLog(repairApplyId).then(response => {
-        this.logDatas = response.data || []
-      }).catch(reject => {
-      })
+      api.repair.applySign
+        .getCheckLog(repairApplyId)
+        .then((response) => {
+          this.logDatas = response.data || []
+        })
+        .catch((reject) => {})
     },
     // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
@@ -362,5 +554,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
