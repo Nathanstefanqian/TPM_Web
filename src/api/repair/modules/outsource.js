@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function getList(query, page, sort) {
   return request({
     url: '/eqRepairOutsource/list',
-    method: 'post',
+    method: 'get',
     data: {
       page: { current: page.current, size: page.size },
       sort: sort === null ? null : { property: sort.prop, direction: sort.order },
@@ -29,14 +29,7 @@ export function create(data) {
     data
   })
 }
-// 根据保修单id获取list
-export function getByUserId(id) {
-  return request({
-    url: `/eqRepairOutsource/${id}/getByUserId`,
-    method: 'get',
-    data: data
-  })
-}
+
 // 申请
 export function applyOutSource(data) {
   return request({
@@ -59,7 +52,40 @@ export function update(data) {
 export function del(data) {
   return request({
     url: '/eqRepairOutsource/delete',
-    method: 'delete',
-    data: data
+    method: 'delete'
   })
 }
+
+// 获取列表数据（查询、翻页）
+export function getinfo() {
+  return request({
+    url: '/eqRepairOutsource/list',
+    method: 'get'
+  })
+}
+
+// 获取工作流结点
+export function getFlowData(id) {
+  return request({
+    url: `/eqRepairOutsource/${id}/getFlowData`,
+    method: 'get'
+  })
+}
+
+// 委外申请签核
+export function sign(data) {
+  return request({
+    url: '/eqRepairOutsource/sign',
+    method: 'put',
+    data
+  })
+}
+
+// 根据申请id获取签核记录
+export function getOpLog(id) {
+  return request({
+    url: `/eqRepairOpLog/${id}/getOpLog`,
+    method: 'get'
+  })
+}
+
