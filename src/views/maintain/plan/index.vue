@@ -11,6 +11,7 @@
           action="http://localhost:8889/api/v1/file/addPlan"
           :headers="headers"
           :multiple="false"
+          :on-change="uploadVideoProcess"
           :on-success="handleUploadSuccess"
           :show-file-list="false"
         >
@@ -23,6 +24,7 @@
             class="tool tool-create"
           >下载模板</el-button>
         </a>
+        <el-progress v-show="progressFlag" :percentage="loadProgress"></el-progress>
         <!--        <el-button class="tool tool-create" type="primary" icon="vue-icon-create" @click="handleCreate">批量上传</el-button>-->
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
       </div>
@@ -38,9 +40,13 @@
       <el-table-column label="点检信息" prop="maintainType" align="center" width="120" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">
+            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>
+          </el-tooltip>
           <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
             <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
           </el-tooltip>
+
         </template>
       </el-table-column>
     </el-table>
@@ -84,7 +90,8 @@ export default {
         factories: [],
         processDepts: [],
         persons: [],
-        fileList: [],
+        loadProgress:0,
+        progressFlag:false,
         headers: { token: null },
         message: null
       },
@@ -171,8 +178,9 @@ export default {
       switch (res.code) {
         case 20000:
           this.message = res.message
+          file.status === 'success'
           this.loading = true
-          api.maintian.plan.getList(this.queryReal, this.page, this.sort).then(response => {
+          api.maintain.plan.getList(this.queryReal, this.page, this.sort).then(response => {
             this.datas = response.data.items
             this.page.total = response.data.total
             // 钩子，获取数据后执行。无返回值
@@ -197,7 +205,24 @@ export default {
         dangerouslyUseHTMLString: true,
         message: this.message
       })
-    }
+    },
+    uploadVideoProcess(file, fileList) {
+        if(file.status === 'ready'){
+          this.progressFlag = true; // 显示进度条
+          this.loadProgress = 0; 
+          const interval = setInterval(() => {
+            if(this.loadProgress >=99){
+              clearInterval(interval)
+              return
+            }
+            this.loadProgress += 1
+          }, 20);
+        }
+          if (file.status === 'success') {
+            this.progressFlag = false; // 显示进度条
+            this.loadProgress = 100;
+          }
+      },
 
   }
 }

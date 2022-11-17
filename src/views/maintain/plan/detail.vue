@@ -3,50 +3,50 @@
     <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth||'120px'">
       <el-row v-if="user.roleType<=2">
         <el-col>
-          <el-form-item label="角色类型">
-            {{ model.role.typeText }}
+          <el-form-item label="单位">
+            {{ model.deptName }}
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="model.role.type>=3&&user.roleType<=2">
+      <el-row >
         <el-col>
-          <el-form-item label="所属企业">
-            {{ model.role.company.name }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="用户角色">
-            {{ model.role.name }}
+          <el-form-item label="制造编号">
+            {{ model.productCode }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="用户名">
-            {{ model.userName }}
+          <el-form-item label="设备编号">
+            {{ model.deviceType }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="姓名">
-            {{ model.userName }}
+          <el-form-item label="职系">
+            {{ model.zhixi }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="用户状态">
-            {{ model.stateText }}
+          <el-form-item label="加工部">
+            {{ model.processDeptName }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="备注">
-            {{ model.remark }}
+          <el-form-item label="厂区">
+            {{ model.factory }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="点检信息">
+            {{ model.maintainType }}
           </el-form-item>
         </el-col>
       </el-row>
@@ -63,12 +63,12 @@ import api from '@/api'
 
 export default {
   data() {
-    const curModels = models.system.user
-    const curApi = api.system.user
+    const curModels = models.maintian.plan
+    const curApi = api.maintain.plan
     return {
       ...getDefaultDetailViewData(), ...curModels, curApi,
       ...{
-        dialogTitle: '用户信息',
+        dialogTitle: '详情信息',
         model: curModels.detail,
         functions: []
       }
