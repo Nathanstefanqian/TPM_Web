@@ -6,73 +6,73 @@
           <el-row>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="报修单号">
-                <span>{{ this.eqRepairApplyList.repairNum }}</span>
+                <span>{{ this.eqRepairApplyList[0].repairNum }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="保修人员" prop="applyPersonName">
-                <span>{{ this.eqRepairApplyList.applyPersonName }}</span>
+                <span>{{ this.eqRepairApplyList[0].applyPersonName }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
-              <el-form-item label="所属工段" prop="applyDeptId">
-                <span>{{ this.eqRepairApplyList.applyDeptId }}</span>
+              <el-form-item label="所属工段" prop="section">
+                <span>{{ this.eqRepairApplyList[0].section }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="所属单位" prop="deptName">
-                <span>{{ this.eqRepairApplyList.deptName }}</span>
+                <span>{{ this.eqRepairApplyList[0].deptName }}</span>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="制造编号" prop="productCode">
-                <span>{{ this.eqRepairApplyList.productCode }}</span>
+                <span>{{ this.eqRepairApplyList[0].productCode }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="制造日期" prop="productDate">
-                <span>{{ this.eqRepairApplyList.productDate }}</span>
+                <span>{{ this.eqRepairApplyList[0].productDate }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="设备编号" prop="deviceNum">
-                <span>{{ this.eqRepairApplyList.deviceNum }}</span>
+                <span>{{ this.eqRepairApplyList[0].deviceNum }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="设备型号" prop="deviceType">
-                <span>{{ this.eqRepairApplyList.deviceType }}</span>
+                <span>{{ this.eqRepairApplyList[0].deviceType }}</span>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="资产编号" prop="propertyCode">
-                <span>{{ this.eqRepairApplyList.propertyCode }}</span>
+                <span>{{ this.eqRepairApplyList[0].propertyCode }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="报修等级" prop="level">
-                <span>{{ this.eqRepairApplyList.level }}</span>
+                <span>{{ this.eqRepairApplyList[0].level }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="报修类别" prop="category">
-                <span>{{ this.eqRepairApplyList.category }}</span>
+                <span>{{ this.eqRepairApplyList[0].category }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:300px">
               <el-form-item label="报修日期" prop="repairTime">
-                <span>{{ this.eqRepairApplyList.repairTime }}</span>
+                <span>{{ this.eqRepairApplyList[0].repairTime }}</span>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
               <el-form-item label="报修内容" prop="content">
-                <span>{{ this.eqRepairApplyList.content }}</span>
+                <span>{{ this.eqRepairApplyList[0].content }}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -195,7 +195,7 @@ export default {
     ...mapGetters(['enums', 'user'])
   },
   created() {
-    this.getApplyList()
+    // this.getApplyList()
   },
   methods: {
     ...crud,
@@ -232,11 +232,16 @@ export default {
     },
 
     //
-    getApplyList() {
+    getApplyList(id) {
+      this.eqRepairApplyList = []
       this.curApi.getinfo().then(response => {
         this.applyList = response.data
-        this.len = response.data.length
-        // console.log(this.applyList)
+        for (let i = 0; i < response.data.length; i++) {
+          if (id === this.applyList[i].id) {
+            this.eqRepairApplyList.push(this.applyList[i].eqRepairApply)
+          }
+        }
+        console.log(this.eqRepairApplyList)
       })
     },
 
@@ -244,18 +249,10 @@ export default {
       this.curApi.getFlowData(id).then(response => {
         this.flowDataList = response.data
         this.length = response.data.length
-        console.log(this.flowDataList)
+        // console.log(this.flowDataList)
       })
     },
 
-    fliter(id) {
-      this.eqRepairApplyList = []
-      for (let i = 0; i < this.len; i++) {
-        if (id === this.applyList[i].id) {
-          this.eqRepairApplyList.push(this.applyList[i].eqRepairApply)
-        }
-      }
-    },
     getOpLogList(id) {
       this.curApi.getOpLog(id).then(response => {
         this.opLogList = response.data
@@ -289,7 +286,7 @@ export default {
     async initUpdateBefore(row) {
       this.getFlowDataList(row.repairApplyId)
       this.getOpLogList(row.repairApplyId)
-      this.fliter(row.id)
+      this.getApplyList(row.id)
       //
     },
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
