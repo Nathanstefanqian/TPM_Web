@@ -1,43 +1,113 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth||'120px'">
-      <el-row v-if="user.rolType<=2">
+  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-' + dialogClass" :title="dialogTitle"
+    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+    <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth || '120px'">
+      <el-row>
         <el-col>
-          <el-form-item label="角色类型" prop="type">
-            {{ model.typeText }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row v-if="model.type>=3&&user.rolType<=2">
-        <el-col>
-          <el-form-item label="所属企业">
-            {{ model.companyName }}
+          <el-form-item label="报修单号">
+            {{ model.repairNum }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="角色名称">
-            {{ model.name }}
+          <el-form-item label="报修人工号id">
+            {{ model.applyPersonId }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="备注">
-            {{ model.remark }}
+          <el-form-item label="报修人">
+            {{ model.applyPersonName }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="权限配置">
-            <div v-for="(func,index) in functions" :key="index" :class="`function-level-${func.level}`">
-              <span class="item"><el-checkbox v-model="func.checked" :indeterminate="func.indeterminate" :label="func.id" class="disabled-checkbox" disabled>{{ func.title }}</el-checkbox></span>
-            </div>
+          <el-form-item label="所属工段">
+            {{ model.section }}
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="所属部门id">
+            {{ model.deptId }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="所属部门名称">
+            {{ model.deptName }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="制造编号">
+            {{ model.productCode }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="制造日期">
+            {{ model.productDate }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="设备编号">
+            {{ model.deviceNum }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="设备型号">
+            {{ model.deviceType }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="资产编号">
+            {{ model.propertyCode }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="报修等级">
+            {{ model.level }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="报修类别">
+            {{ model.category }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="报修内容">
+            {{ model.content }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="报修时间">
+            {{ model.repairTime }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+
     </el-form>
   </el-dialog>
 </template>
@@ -51,12 +121,12 @@ import api from '@/api'
 
 export default {
   data() {
-    const curModels = models.system.role
-    const curApi = api.system.role
+    const curModels = models.repair.apply
+    const curApi = api.repair.apply
     return {
       ...getDefaultDetailViewData(), ...curModels, curApi,
       ...{
-        dialogTitle: '角色权限信息',
+        dialogTitle: '详情',
         model: curModels.detail,
         functions: []
       }
@@ -67,46 +137,6 @@ export default {
   },
   methods: {
     ...crud,
-    // 初始化数据之后 row：行绑定数据；data：接口返回数据
-    async initDetailAfter(row, data) {
-      this.model = data.role
-      const accesses = data.accesses
-      await this.getFunctions(this.model.type)
-      this.initAccess(accesses)
-    },
-    // 获取当前用户权限的所有系统功能
-    getFunctions(roleType) {
-      this.loading = true
-      return api.system.role.getFunctionsFromAccess(roleType).then(response => {
-        this.functions = response.data
-        this.loading = false
-      }).catch(reject => {
-        this.loading = false
-      })
-    },
-    // 权限选中以及级联选中初始化
-    initAccess(accesses) {
-      const functions = this.functions
-      const functionsClone = Object.assign([], functions)
-      functionsClone.sort((a, b) => b.level - a.level)
-      functionsClone.forEach(t => {
-        const current = functions.find(f => f.id === t.id)
-        const checked = accesses.includes(current.id)
-        if (checked) {
-          const children = functions.filter(f => f.parentId === current.id)
-          const childrenCount = children.length
-          if (childrenCount === 0) {
-            current.checked = true
-            current.indeterminate = false
-          } else {
-            const childrenCheckedCount = children.filter(f => f.checked).length
-            const childrenIndeterminateCount = children.filter(f => f.indeterminate).length
-            current.checked = childrenCheckedCount > 0
-            current.indeterminate = childrenIndeterminateCount > 0 || (childrenCheckedCount > 0 && childrenCheckedCount < childrenCount)
-          }
-        }
-      })
-    }
   }
 }
 </script>
@@ -116,11 +146,11 @@ export default {
   padding-left: 5px;
   background-color: #e8e8e8;
 
-  + .function-level-2 {
+  +.function-level-2 {
     border-top: none
   }
 
-  + .function-level-3 {
+  +.function-level-3 {
     padding-left: 30px;
   }
 }
@@ -129,7 +159,7 @@ export default {
   margin-left: 30px;
   border-top: dashed 1px #a0a0a0;
 
-  + .function-level-3 {
+  +.function-level-3 {
     padding-left: 55px;
   }
 }
@@ -156,7 +186,7 @@ export default {
   }
 }
 
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked + span.el-checkbox__label {
+/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked+span.el-checkbox__label {
   color: #409EFF !important;
 }
 
