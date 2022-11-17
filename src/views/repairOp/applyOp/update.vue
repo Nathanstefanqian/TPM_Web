@@ -583,7 +583,8 @@ export default {
       this.outsourceModel.status = 1
       this.outsourceModel.repairApplyId = this.model.repairNum
       this.outsourceModel.flowId = 3
-      // console.log(this.outsourceModel)
+      this.outsourceModel.repairApplyId = this.model.id
+      //console.log(this.outsourceModel)
       const data = this.outsourceModel
       this.outsourceApi.applyOutSource(data)
     },
