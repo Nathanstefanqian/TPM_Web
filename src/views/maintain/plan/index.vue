@@ -27,7 +27,7 @@
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
       </div>
     </div>
-    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 55 }" height="200px" :data="datas" :default-sort="sort" border fit highlight-current-row @sort-change="handleSort">
+    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 55 }" height="200px" :data="datas" border fit highlight-current-row @sort-change="handleSort">
       <el-table-column type="selection" align="center" width="35" />
       <el-table-column label="序号" type="index" align="center" width="65" fixed>
         <template slot-scope="scope">
@@ -38,6 +38,10 @@
       <el-table-column label="点检信息" prop="maintainType" align="center" width="120" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">
+            <!--            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>-->
+            <el-button type="primary" plain class="button-operate button-detail" size="mini"><i class="vue-icon-detail" /></el-button>
+          </el-tooltip>
           <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
             <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
           </el-tooltip>
@@ -60,7 +64,7 @@ import crud from '@/utils/crud'
 import api from '@/api'
 
 export default {
-  name: 'Role',
+  name: 'PLAN',
   components: {
     Pagination: () => import('@/components/Pagination'),
     DialogCreate: () => import('./create'),
@@ -107,12 +111,12 @@ export default {
   created() {
     this.clearAndInitQuery()
     this.getDatas()
-    this.getRoleTypes()
-    this.getDeparts()
-    this.getZhixis()
-    this.getFactories()
-    this.getProcessDepts()
-    this.getPersons()
+    // this.getRoleTypes()
+    // this.getDeparts()
+    // this.getZhixis()
+    // this.getFactories()
+    // this.getProcessDepts()
+    // this.getPersons()
     this.headers.token = this.token
     console.log('token:', this.token)
   },
