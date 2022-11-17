@@ -71,3 +71,10 @@ export function getRoleTypes() {
     method: 'get'
   })
 }
+// 上传Excel
+export function addPlan() {
+  return request({
+    url: `/file/addPlan`,
+    method: 'post'
+  })
+}

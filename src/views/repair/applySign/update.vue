@@ -71,9 +71,9 @@
             <el-link>查看附件</el-link>
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
           <el-form-item label="备注信息">
-            <el-input v-model="remark" type="textarea" />
+            <el-input v-model="remark" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" />
           </el-form-item>
         </el-col>
       </el-row>
