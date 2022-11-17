@@ -120,13 +120,37 @@
       <el-steps
         align-center
         :space="400"
-        :active="2"
+        :active="1"
         finish-status="success"
       >
-        <el-step title="员工申请" description="李工(yg001)" />
-        <el-step title="部门主管审核" description="王工(bm001)审核通过" />
-        <el-step title="维保主管审核" description="丁工(wb001)审核中" />
-        <el-step title="维修" description="待维修" />
+        <!--        <el-step title="员工申请" description="李工(yg001)"></el-step>-->
+        <!--        <el-step title="部门主管审核" description="王工(bm001)审核通过"></el-step>-->
+        <!--        <el-step title="维保主管审核"  description="李工(yg001)">-->
+        <!--          <div slot="description">-->
+        <!--            <div>丁工(wb001)待审核</div>-->
+        <!--            <el-button v-if="1" type="default">修改</el-button>-->
+        <!--          </div>-->
+        <!--        </el-step>-->
+        <el-step
+          v-for="(item, index) in flowDataList"
+          :key="index"
+          :title="item.name"
+          :description="item.checkPersonName"
+        >
+          <div slot="description">
+            <div>{{ item.checkPersonName }}</div>
+            <el-button
+              v-if="active === index"
+              type="default"
+              @click="handleChangePerson(item)"
+            >修改</el-button>
+          </div>
+          <!--          <template v-slot:description>-->
+          <!--            <div>丁工(wb001)待审核</div>-->
+          <!--            <el-button type="default" >修改</el-button>-->
+          <!--          </template>-->
+        </el-step>
+        <!--        <el-step title="维修" description="待维修"></el-step>-->
       </el-steps>
       <div style="text-align: center;margin-top: 30px">
         <el-button type="primary" @click="submitUpdatePass">变更当前节点审核人</el-button>
@@ -160,6 +184,7 @@ export default {
         applyList: [],
         opLogList: [],
         eqRepairApplyList: [],
+        flowDataList: [],
         len: 0,
         length: 0
 
@@ -214,19 +239,27 @@ export default {
         // console.log(this.applyList)
       })
     },
+
+    getFlowDataList(id) {
+      this.curApi.getFlowData(id).then(response => {
+        this.flowDataList = response.data
+        this.length = response.data.length
+        console.log(this.flowDataList)
+      })
+    },
+
     fliter(id) {
       this.eqRepairApplyList = []
       for (let i = 0; i < this.len; i++) {
-        if (id === this.applyList[i].repairApplyId) {
+        if (id === this.applyList[i].id) {
           this.eqRepairApplyList.push(this.applyList[i].eqRepairApply)
         }
-        console.log(this.eqRepairApplyList)
       }
     },
     getOpLogList(id) {
       this.curApi.getOpLog(id).then(response => {
         this.opLogList = response.data
-        console.log(this.opLogList)
+        // console.log(this.opLogList)
       })
     },
 
@@ -254,8 +287,9 @@ export default {
 
     // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
+      this.getFlowDataList(row.repairApplyId)
       this.getOpLogList(row.repairApplyId)
-      this.fliter(row.repairApplyId)
+      this.fliter(row.id)
       //
     },
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
