@@ -209,7 +209,7 @@ export default {
     uploadVideoProcess(file, fileList) {
         if(file.status === 'ready'){
           this.progressFlag = true; // 显示进度条
-          this.loadProgress = 0; 
+          this.loadProgress = 0;
           const interval = setInterval(() => {
             if(this.loadProgress >=99){
               clearInterval(interval)

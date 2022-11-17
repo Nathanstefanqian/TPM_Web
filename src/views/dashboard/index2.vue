@@ -1,130 +1,14 @@
 <template>
   <div class="app-container list">
     <div class="content">
-      <!--      <span id="refresh-time">数据刷新时间：<span class="time" :style="{color: timeColor}">{{ refreshTime }}</span></span>-->
-      <!--      <div class="open-setting" :style="{'display':settingVisible?'none':'block'}" @click="settingVisible=true">-->
-      <!--        浮标设置<i class="el-icon-caret-right el-icon&#45;&#45;right" />-->
-      <!--      </div>-->
-      <!--      <el-drawer-->
-      <!--        title="浮标设置"-->
-      <!--        :visible.sync="settingVisible"-->
-      <!--        :append-to-body="false"-->
-      <!--        :modal="false"-->
-      <!--        :with-header="false"-->
-      <!--        custom-class="setting"-->
-      <!--        direction="ltr"-->
-      <!--        size="460px"-->
-      <!--        @close="settingVisible=false"-->
-      <!--      >-->
-      <!--        <div class="setting-content">-->
-      <!--          <div v-for="(data,index) in datas" :key="index" class="setting-buoy">-->
-      <!--            <h6> {{ data.buoyCode }} <span class="imei">(IMEI：{{ data.imei }})</span></h6>-->
-      <!--            <div class="info-item">-->
-      <!--              <span class="info-item-label">时间：</span>-->
-      <!--              <span class="info-item-value" style="width: 170px">{{ data.time }}</span>-->
-      <!--              &lt;!&ndash;              <span class="info-item-label">gps状态：</span>&ndash;&gt;-->
-      <!--              &lt;!&ndash;              <span class="info-item-value">{{ data.gpsStatusText }}</span>&ndash;&gt;-->
-      <!--            </div>-->
-      <!--            <div class="info-item">-->
-      <!--              <span class="info-item-label">位置：</span>-->
-      <!--              <span class="info-item-value">{{ data.lonGcj }}, {{ data.latGcj }}</span>-->
-      <!--            </div>-->
-      <!--            <div class="info-item">-->
-      <!--              <span class="info-item-label">速度：</span>-->
-      <!--              <span class="info-item-value" style="width: 170px">{{ data.velocity }}米/秒</span>-->
-      <!--              <span class="info-item-label">流向角度：</span>-->
-      <!--              <span class="info-item-value">{{ data.directionAng }}°</span>-->
-      <!--            </div>-->
-      <!--            <div class="control-item">-->
-      <!--              <span class="info-item-label">数据上报时间间隔：</span>-->
-      <!--              <span class="info-item-value" style="width: 50px">{{ data.reportInterval }}秒</span>-->
-      <!--              <el-input v-model="settingData[index].reportInterval" style="width: 120px;" size="mini">-->
-      <!--                <template slot="append">秒</template>-->
-      <!--              </el-input>-->
-      <!--              <el-button type="primary" size="mini" plain @click="handleSetReportInterval(data.imei,settingData[index].reportInterval)">设置</el-button>-->
-      <!--            </div>-->
-      <!--            <div class="control-item">-->
-      <!--              <span class="info-item-label">灯闪烁时间间隔：</span>-->
-      <!--              <span class="info-item-value" style="width: 64px">{{ data.ledFlashInterval }}秒</span>-->
-      <!--              <el-input v-model="settingData[index].ledFlashInterval" style="width: 120px;" size="mini">-->
-      <!--                <template slot="append">秒</template>-->
-      <!--              </el-input>-->
-      <!--              <el-button type="primary" size="mini" plain @click="handleSetLedFlashInterval(data.imei,settingData[index].ledFlashInterval)">设置</el-button>-->
-      <!--            </div>-->
-      <!--            <div class="control-item" style="padding-left: 10px">-->
-      <!--              <el-badge is-dot type="success" :hidden="data.ledStatus==='0'">-->
-      <!--                <el-button type="primary" size="mini" plain @click="handleLedOn(data.imei)">开灯</el-button>-->
-      <!--              </el-badge>-->
-      <!--              <el-badge is-dot type="danger" :hidden="data.ledStatus==='1'">-->
-      <!--                <el-button type="warning" size="mini" plain @click="handleLedOff(data.imei)">关灯</el-button>-->
-      <!--              </el-badge>-->
-      <!--              <el-badge is-dot type="success" :hidden="true">-->
-      <!--                <el-button type="danger" size="mini" plain @click="handleReboot(data.imei)">重启</el-button>-->
-      <!--              </el-badge>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </el-drawer>-->
       <div id="map" />
-      <div v-for="(data,index) in datas" :key="index" :ref="'info-'+data.imei" class="info-wrapper">
-        <div class="info">
-          <div class="info-item">
-            <span class="info-item-label">时间：</span>
-            <span class="info-item-value">{{ data.time }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-item-label">编号：</span>
-            <span class="info-item-value">{{ data.buoyCode }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-item-label">IMEI：</span>
-            <span class="info-item-value">{{ data.imei }}</span>
-          </div>
-          <!--          <div class="info-item">-->
-          <!--            <span class="info-item-label">gps状态：</span>-->
-          <!--            <span class="info-item-value">{{ data.gpsStatusText }}</span>-->
-          <!--          </div>-->
-          <div class="info-item">
-            <span class="info-item-label">经度：</span>
-            <span class="info-item-value">{{ data.lonGcj }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-item-label">纬度：</span>
-            <span class="info-item-value">{{ data.latGcj }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-item-label">速度：</span>
-            <span class="info-item-value">{{ data.velocity }}米/秒</span>
-          </div>
-          <div class="info-item">
-            <span class="info-item-label">流向角度：</span>
-            <span class="info-item-value">{{ data.directionAng }}°</span>
-          </div>
-          <div class="info-item">
-            <span class="info-item-label">灯状态：</span>
-            <span class="info-item-value">{{ data.ledStatusText }}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-item-label">上报间隔：</span>
-            <span class="info-item-value">{{ data.reportInterval }}秒</span>
-          </div>
-          <div class="info-item">
-            <span class="info-item-label">灯闪间隔：</span>
-            <span class="info-item-value">{{ data.ledFlashInterval }}秒</span>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import AMap from 'AMap'
-import api from '@/api'
 import adaptive from '@/directive/el-table'
-import { parseTime } from '@/utils'
-import { Message } from 'element-ui'
 
 export default {
   name: 'NoKeepAliveDashboard',
@@ -145,116 +29,12 @@ export default {
     ...mapGetters(['enums', 'user'])
   },
   mounted() {
-    // this.initMap()
   },
   destroyed() {
     this.destroyed = true
     clearInterval(this.interval)
   },
   methods: {
-    getRealtimeData() {
-      const self = this
-      api.realtimeData.getList(null, { current: 1, size: 1000 }, null).then(response => {
-        this.map.clearMap()
-        if (this.destroyed) return
-        this.datas = response.data.items
-        // 更新设置区
-        const newSettingData = this.datas.map(m => {
-          const exist = this.settingData.find(f => f.imei === m.imei)
-          if (exist) {
-            return { imei: m.imei, reportInterval: exist.reportInterval, ledFlashInterval: exist.ledFlashInterval }
-          } else {
-            return { imei: m.imei, reportInterval: null, ledFlashInterval: null }
-          }
-        })
-        this.settingData = newSettingData
-
-        // 更新地图
-        this.datas.forEach((data) => {
-          if (this.destroyed) return
-          // 创建点标记
-          const marker = new AMap.Marker({
-            map: this.map,
-            position: [+data.lonGcj, +data.latGcj],
-            title: data.buoyCode,
-            icon: new AMap.Icon({
-              image: '/images/buoy.png',
-              size: new AMap.Size(57, 91),
-              imageSize: new AMap.Size(19, 30)
-            })
-          })
-          this.$nextTick(() => {
-            if (this.$refs['info-' + data.imei].length <= 0) return
-            // 创建信息窗
-            const infoWindow = new AMap.InfoWindow({
-              isCustom: true,
-              content: this.$refs['info-' + data.imei][0].innerHTML,
-              offset: new AMap.Pixel(16, -45),
-              anchor: 'bottom-center'
-            })
-            // 事件监听
-            marker.on('click', function() {
-              infoWindow.open(self.map, marker.getPosition())
-            })
-          })
-        })
-        // 调整地图视域
-        if (this.datas.length > 0) {
-          this.map.setFitView()
-        }
-        // 更新刷新时间
-        this.refreshTime = parseTime(new Date(), '{y}-{m}-{d} {h}:{i}:{s}')
-        this.timeColor = '#F56C6C'
-        setTimeout(() => {
-          this.timeColor = '#409EFF'
-        }, 500)
-      })
-    },
-    // 初始化地图
-    initMap() {
-      this.map = new AMap.Map('map', {
-        zoom: 5,
-        center: [107.45, 33.68],
-        layers: [
-          new AMap.TileLayer.Satellite(),
-          new AMap.TileLayer.RoadNet()
-        ]
-      })
-      this.map.on('complete', () => {
-        this.getRealtimeData()
-        this.interval = setInterval(() => {
-          this.getRealtimeData()
-        }, 4000)
-      })
-      // AMap.plugin(['AMap.MapType', 'AMap.ToolBar', 'AMap.Scale'], function() {
-      //   this.map.addControl(new AMap.MapType())
-      //   this.map.addControl(new AMap.ToolBar())
-      //   this.map.addControl(new AMap.Scale())
-      // })
-    },
-    handleLedOn(imei) {
-      api.buoy.ledOn(imei)
-    },
-    handleLedOff(imei) {
-      api.buoy.ledOff(imei)
-    },
-    handleReboot(imei) {
-      api.buoy.reboot(imei)
-    },
-    handleSetReportInterval(imei, interval) {
-      if (!interval || !Number.isFinite(+interval)) {
-        Message.error('请填写数值')
-        return
-      }
-      api.buoy.setReportInterval(imei, interval)
-    },
-    handleSetLedFlashInterval(imei, interval) {
-      if (!interval || !Number.isFinite(+interval)) {
-        Message.error('请填写数值')
-        return
-      }
-      api.buoy.setLedFlashInterval(imei, interval)
-    }
   }
 }
 </script>
