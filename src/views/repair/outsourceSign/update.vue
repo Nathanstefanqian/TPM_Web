@@ -98,7 +98,7 @@
         </div>
 
         <el-table :data="this.opLogList">
-          <el-table-column label="" prop="opLog" align="center" width="200" show-overflow-tooltip />
+          <el-table-column label="维修记录" prop="opLog" align="center" width="200" show-overflow-tooltip />
           <el-table-column label="维修人员" prop="opPersonName" align="center" width="200" show-overflow-tooltip />
           <el-table-column label="故障判定" prop="problem" align="center" width="200" show-overflow-tooltip />
           <el-table-column label="维修开始时间" prop="startTime" align="center" width="150" show-overflow-tooltip />
@@ -123,14 +123,6 @@
         :active="1"
         finish-status="success"
       >
-        <!--        <el-step title="员工申请" description="李工(yg001)"></el-step>-->
-        <!--        <el-step title="部门主管审核" description="王工(bm001)审核通过"></el-step>-->
-        <!--        <el-step title="维保主管审核"  description="李工(yg001)">-->
-        <!--          <div slot="description">-->
-        <!--            <div>丁工(wb001)待审核</div>-->
-        <!--            <el-button v-if="1" type="default">修改</el-button>-->
-        <!--          </div>-->
-        <!--        </el-step>-->
         <el-step
           v-for="(item, index) in flowDataList"
           :key="index"
@@ -138,7 +130,9 @@
           :description="item.checkPersonName"
         >
           <div slot="description">
-            <div>{{ item.checkPersonName }}</div>
+            <div>
+              <span> {{ item.checkPersonName }}</span>
+            </div>
             <el-button
               v-if="active === index"
               type="default"
