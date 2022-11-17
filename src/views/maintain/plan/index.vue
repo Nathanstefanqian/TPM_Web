@@ -2,32 +2,10 @@
   <div class="app-container list">
     <div ref="toolbar" class="toolbar">
       <div class="tool-group">
-        <!--        <el-input v-model.trim="query.name" class="query-item" style="width: 120px" placeholder="角色名" clearable @clear="handleQuery" />-->
-        <el-select v-model="query.eDeptId" class="query-item" style="width: 150px" placeholder="查询单位" clearable @clear="handleQuery">
-          <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key" />
-        </el-select>
-        <el-input v-model.trim="query.name" class="query-item" style="width: 120px" placeholder="制造编号" clearable @clear="handleQuery" />
-        <el-input v-model.trim="query.name" class="query-item" style="width: 120px" placeholder="设备编码" clearable @clear="handleQuery" />
-        <el-select v-model="queryinfo" class="query-item" style="width: 150px" placeholder="查询信息" clearable @clear="handleQuery">
-          <el-option v-for="item in queryInfos" :key="item.key" :label="item.text" :value="item.key" />
-        </el-select>
-        <!--        <el-input v-if="user.roleType <=2" v-model.trim="query['company.name']" class="query-item" style="width: 150px" placeholder="所属企业" clearable @clear="handleQuery" />-->
-        <!--        <el-input v-model.trim="query['company.name']" class="query-item" style="width: 150px" placeholder="所属企业" clearable @clear="handleQuery" />-->
-      </div>
-      <div class="tool-group">
-        <!--        <el-input v-model.trim="query.name" class="query-item" style="width: 120px" placeholder="角色名" clearable @clear="handleQuery" />-->
-        <el-select v-model="query.eZhixi" class="query-item" style="width: 150px" placeholder="职系" clearable @clear="handleQuery">
-          <el-option v-for="item in zhixis" :key="item.key" :label="item.text" :value="item.key" />
-        </el-select>
-        <el-select v-model="query.eFactory" class="query-item" style="width: 150px" placeholder="厂区" clearable @clear="handleQuery">
-          <el-option v-for="item in factories" :key="item.key" :label="item.text" :value="item.key" />
-        </el-select>
-        <el-select v-model="query.eProcessDept" class="query-item" style="width: 150px" placeholder="加工部" clearable @clear="handleQuery">
-          <el-option v-for="item in processDepts" :key="item.key" :label="item.text" :value="item.key" />
-        </el-select>
+        <el-input v-model.trim="query.deviceType" class="query-item" style="width: 120px" placeholder="设备型号" clearable @clear="handleQuery" />
+        <el-input v-model.trim="query.maintainType" class="query-item" style="width: 120px" placeholder="点检类型" clearable @clear="handleQuery" />
         <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除</el-button>
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
-        <el-button class="tool tool-create" type="danger" icon="vue-icon-create" @click="handleCreateOpen">新建计划</el-button>
         <el-upload
           class="inline-block"
           action="http://localhost:8889/api/v1/file/addPlan"
@@ -39,8 +17,13 @@
           <el-button class="tool tool-create" icon="vue-icon-create" type="primary">导入计划</el-button>
         </el-upload>
 
+        <a href="/excels/点检保养计划模板.xlsx">
+          <el-button
+            size="medium"
+            class="tool tool-create"
+          >下载模板</el-button>
+        </a>
         <!--        <el-button class="tool tool-create" type="primary" icon="vue-icon-create" @click="handleCreate">批量上传</el-button>-->
-
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
       </div>
     </div>
@@ -51,32 +34,13 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单位" prop="deptName" align="left" width="200" show-overflow-tooltip />
-      <el-table-column label="制造编号" prop="productCode" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="设备编号" prop="deviceType" align="center" width="120" show-overflow-tooltip />
-      <!--      <el-table-column label="品牌型号" prop="ebrand" align="center" width="120" show-overflow-tooltip />-->
-      <!--      <el-table-column label="制造日期" prop="eproductdate" align="center" width="120" show-overflow-tooltip />-->
-      <!--      <el-table-column label="验收日期" prop="echeckdate" align="center" width="120" show-overflow-tooltip />-->
-      <el-table-column label="职系" prop="zhixi" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="加工部" prop="processDeptName" align="left" show-overflow-tooltip />
-      <el-table-column label="厂区" prop="factory" align="left" show-overflow-tooltip />
-
+      <el-table-column label="设备型号" prop="deviceType" align="center" show-overflow-tooltip />
       <el-table-column label="点检信息" prop="maintainType" align="center" width="120" show-overflow-tooltip />
-
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
-          <!--          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
-          <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
-          <!--          </el-tooltip>-->
-          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
-          <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
-          <!--          </el-tooltip>-->
           <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
             <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
           </el-tooltip>
-          <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">-->
-          <!--            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>-->
-          <!--          </el-tooltip>-->
         </template>
       </el-table-column>
     </el-table>
@@ -112,7 +76,7 @@ export default {
     return {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
       ...{
-        sort: { prop: 'maintain_time', order: 'descending' },
+        sort: { prop: 'deviceType', order: 'descending' },
         roleTypes: [],
         companies: [],
         departs: [],
@@ -160,6 +124,9 @@ export default {
         this.roleTypes = response.data || []
       }).catch(reject => {
       })
+    },
+    downloadTemplate() {
+      this.$refs.downloadTemplate.dispatchEvent(new MouseEvent('click'))
     },
     // 根据登录用户角色获取企业列表
     getDeparts() {
