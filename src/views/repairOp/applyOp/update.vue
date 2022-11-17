@@ -388,6 +388,7 @@ export default {
         appointPersonShow: false,
         active: 2,
         DeviceFaultStore: null,
+        DeviceFault: null,
         flowDatas: [],
         logDatas: [],
         deviceModel: null,
@@ -472,6 +473,7 @@ export default {
     },
     // 应用知识库内容
     SavePhenomenon(row) {
+      this.DeviceFault = row
       if (this.logModel.processMethod != null) { this.logModel.processMethod = this.logModel.processMethod + ',' + row.repairMethod } else {
         this.logModel.processMethod = row.repairMethod
       }
@@ -583,7 +585,8 @@ export default {
       this.outsourceModel.status = 1
       this.outsourceModel.repairApplyId = this.model.repairNum
       this.outsourceModel.flowId = 3
-      // console.log(this.outsourceModel)
+      this.outsourceModel.repairApplyId = this.model.id
+      //console.log(this.outsourceModel)
       const data = this.outsourceModel
       this.outsourceApi.applyOutSource(data)
     },
@@ -598,10 +601,54 @@ export default {
         this.$message.error('请选择故障判定。')
         return
       }
-      this.logModel.opPersonId = this.user.userId
-      this.logModel.opPersonName = this.user.name
-      this.logModel.repairApplyId = this.model.id
-      this.logApi.create(this.logModel).then(res => {
+      // this.logModel.opPersonId = this.user.userId
+      // this.logModel.opPersonName = this.user.name
+      // this.logModel.repairApplyId = this.model.id
+      let data
+      if (this.DeviceFault != null) {
+        data = {
+          repairApplyId: this.model.id,
+          serialNumber: this.model.propertyCode,
+          opPersonId: this.user.userId,
+          opPersonName: this.user.name,
+          startTime: this.logModel.startTime,
+          endTime: this.logModel.endTime,
+          problem: this.logModel.problem,
+          phenomenon: this.logModel.phenomenon,
+          reason: this.logModel.reason,
+          alarmNumber: this.DeviceFault.alarmNumber,
+          alarmMessage: this.DeviceFault.alarmMessage,
+          descriptionOfAlarm: this.DeviceFault.descriptionOfAlarm,
+          processMethod: this.logModel.processMethod,
+          opLog: this.logModel.opLog,
+          faultJudge: this.logModel.problem,
+          result: this.logModel.result,
+          partList: this.partList
+        }
+      }
+      else {
+        data = {
+          repairApplyId: this.model.id,
+          serialNumber: this.model.propertyCode,
+          opPersonId: this.user.userId,
+          opPersonName: this.user.name,
+          startTime: this.logModel.startTime,
+          endTime: this.logModel.endTime,
+          problem: this.logModel.problem,
+          phenomenon: this.logModel.phenomenon,
+          reason: this.logModel.reason,
+          alarmNumber: null,
+          alarmMessage: null,
+          descriptionOfAlarm: null,
+          processMethod: this.logModel.processMethod,
+          opLog: this.logModel.opLog,
+          faultJudge: this.logModel.problem,
+          result: this.logModel.result,
+          partList: this.partList
+        }
+      }
+      console.log(data)
+      this.logApi.create(data).then(res => {
         this.getCheckLog(this.rpaId)
       })
     },
