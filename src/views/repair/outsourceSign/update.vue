@@ -1,11 +1,11 @@
 <template>
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-card>
-      <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
+      <el-form ref="form" label-position="right" :rules="rules" :label-width="labelWidth||'120px'">
         <div style="margin-left: 20px">
           <el-row>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
-              <el-form-item label="报修单号" prop="repairNum">
+              <el-form-item label="报修单号">
                 <span>{{ this.eqRepairApplyList.repairNum }}</span>
               </el-form-item>
             </el-col>
@@ -16,7 +16,7 @@
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="所属工段" prop="applyDeptId">
-                <span>{{ this.eqRepairApplyList.section }}</span>
+                <span>{{ this.eqRepairApplyList.applyDeptId }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
@@ -72,12 +72,7 @@
           <el-row>
             <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
               <el-form-item label="报修内容" prop="content">
-                <el-input
-                  v-model="model.content"
-                  type="textarea"
-                  readonly="readonly"
-                  :autosize="{ minRows: 2, maxRows: 4}"
-                />
+                <span>{{ this.eqRepairApplyList.content }}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -88,76 +83,32 @@
               </el-form-item>
             </el-col>
           </el-row>
-        </div>
-        <div v-if="appointPersonShow" style="margin-left: 20px;margin-top: 30px">
-          <el-row>
-            <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-              <el-form-item label="维修人员" prop="repairPerson">
-                <el-select v-model="this.eqRepairApplyList.repairPersonId" class="query-item" style="width: 150px" placeholder="请选择" clearable @change="selectPersonChanged">
-                  <el-option v-for="item in repairPersons" :key="item.key" :label="item.text" :value="item.key" />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-              <el-form-item label="维修开始时间" prop="startTime">
-                <span>{{ this.eqRepairApplyList.startTime }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-              <el-form-item label="维修结束时间" prop="endTime">
-                <span>{{ this.eqRepairApplyList.endTime }}</span>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-              <el-form-item label="故障判定" prop="problem">
-                <span>{{ this.eqRepairApplyList.problem }}</span>
-              </el-form-item>
-            </el-col>
-          </el-row>
 
-          <el-table :data="this.opLogList">
-            <el-table-column label="" prop="opLog" align="center" width="200" show-overflow-tooltip />
-            <el-table-column label="维修人员" prop="opPersonName" align="center" width="200" show-overflow-tooltip />
-            <el-table-column label="维修时间" prop="problem" align="center" width="200" show-overflow-tooltip />
-            <el-table-column label="维修开始时间" prop="startTime" align="center" width="150" show-overflow-tooltip />
-            <el-table-column label="维修结束时间" prop="endTime" align="center" width="200" show-overflow-tooltip />
-            <el-table-column show-overflow-tooltip />
-          </el-table>
           <el-row>
             <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-              <el-form-item label="维修记录" prop="startTime">
-                <span>{{ model.startTime }}</span>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-              <el-form-item label="维修次数" prop="startTime">
-                <span>{{ model.startTime }}</span>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-              <el-form-item label="签核栏" prop="startTime">
-                <span>{{ model.startTime }}</span>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-              <el-form-item label="签核意见" prop="checkContent">
-                <span>{{ model.checkContent }}</span>
+              <el-form-item label="签核意见" prop="remark">
+                <el-input
+                  v-model="model.remark"
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                />
               </el-form-item>
             </el-col>
           </el-row>
         </div>
+
+        <el-table :data="this.opLogList">
+          <el-table-column label="" prop="opLog" align="center" width="200" show-overflow-tooltip />
+          <el-table-column label="维修人员" prop="opPersonName" align="center" width="200" show-overflow-tooltip />
+          <el-table-column label="故障判定" prop="problem" align="center" width="200" show-overflow-tooltip />
+          <el-table-column label="维修开始时间" prop="startTime" align="center" width="150" show-overflow-tooltip />
+          <el-table-column label="维修结束时间" prop="endTime" align="center" width="200" show-overflow-tooltip />
+          <el-table-column show-overflow-tooltip />
+        </el-table>
 
       </el-form>
 
-      <div style="text-align: center;margin-bottom: 20px">
+      <div style="text-align: center;margin-bottom: 20px;margin-top: 20px">
         <el-button type="primary" @click="submitUpdatePass">通过</el-button>
         <!--      <el-button type="success" @click="sentEmail">发送邮件</el-button>-->
         <el-button type="danger" @click="submitUpdateBack">驳回</el-button>
@@ -269,7 +220,7 @@ export default {
         if (id === this.applyList[i].repairApplyId) {
           this.eqRepairApplyList.push(this.applyList[i].eqRepairApply)
         }
-        // console.log(this.eqRepairApplyList)
+        console.log(this.eqRepairApplyList)
       }
     },
     getOpLogList(id) {
@@ -280,14 +231,22 @@ export default {
     },
 
     // 通过
-    submitUpdatePass() {
-      this.model.status = '3'
-      this.submitUpdate()
+    async submitUpdatePass() {
+      const data = {
+        id: this.model.id,
+        remark: this.model.remark,
+        result: 1
+      }
+      this.curApi.sign(data)
     },
     //  驳回
     submitUpdateBack() {
-      this.model.status = '2'
-      this.submitUpdate()
+      const data = {
+        id: this.model.id,
+        remark: this.model.remark,
+        result: 0
+      }
+      this.curApi.sign(data)
     },
     sentEmail() {
       this.submitUpdate()
