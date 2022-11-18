@@ -173,6 +173,14 @@
               <el-input v-model="outsourceModel.estimatedFee" />
             </el-form-item>
           </el-col>
+          <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+            <el-form-item label="选择签核流程" prop="workFlow">
+              <el-select v-model="model.flowId" class="query-item" style="width: 150px" placeholder="签核流程" clearable
+                @clear="handleQuery">
+                <el-option v-for="item in workFlows" :key="item.key" :label="item.text" :value="item.key" />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="签核状态">
               待签核
@@ -381,6 +389,7 @@ export default {
         roleTypes: [],
         companies: [],
         roles: [],
+        workFlows: [],
         keyword: '',
         lackcase: null,
         repairPersons: [],
@@ -455,9 +464,17 @@ export default {
     this.getPersons()
     this.getPart()
     this.getProblem()
+    this.getWorkFlows()
   },
   methods: {
     ...crud,
+    // 获取流程下拉列表
+    getWorkFlows() {
+      api.system.workFlow.getSelectlist('1').then(response => {
+        this.workFlows = response.data || []
+      }).catch(reject => {
+      })
+    },
     // 获取知识库信息
     getDeviceFalut() {
       const that = this
