@@ -105,16 +105,16 @@
               <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="点检内容" prop="content" align="left" show-overflow-tooltip width="350" />
+          <el-table-column label="点检内容" prop="content" align="left" show-overflow-tooltip width="300" />
           <el-table-column label="状态" prop="result" align="center" :formatter="formatterType" show-overflow-tooltip />
           <el-table-column label="操作" align="center">
             <template slot-scope="{row}">
               <el-button v-if="row.isBind === '1' && row.scan !== true" type="primary" style="width: 120px" @click="handleScan(row)">点击扫码</el-button>
-              <el-input v-if="(row.isDigit === '1' && (row.isBind === '0' || (row.isBind === '1' && row.scan === true)))" v-model.trim="row.inputData" class="query-item" style="width: 120px" placeholder="请输入数据" clearable @clear="handleQuery" />
+              <el-input v-if="(row.isDigit === '1' && (row.isBind !== '1' || (row.isBind === '1' && row.scan === true)))" v-model.trim="row.inputData" class="query-item" style="width: 120px" placeholder="请输入数据" clearable @clear="handleQuery" />
             </template>
           </el-table-column>
-          <el-table-column fixed="right" align="center">
-            <template v-if="row.isBind === '0' || (row.isBind === '1' && row.scan === true)" slot-scope="{row}">
+          <el-table-column fixed="right" align="center" width="260">
+            <template v-if="row.isBind !== '1' || (row.isBind === '1' && row.scan === true)" slot-scope="{row}">
               <el-button type="success" :disabled="row.result==='V'" @click="handleOK(row)">OK</el-button>
               <el-button type="danger" @click="handleNG(row)">NG</el-button>
               <el-button type="primary" @click="sendEmail">发送提醒</el-button>

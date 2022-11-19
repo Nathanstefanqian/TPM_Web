@@ -61,11 +61,11 @@
           <el-table-column label="操作" align="center">
             <template slot-scope="{row}">
               <el-button v-if="row.isBind === '1' && row.scan !== true" type="primary" style="width: 120px" @click="handleScan(row)">点击扫码</el-button>
-              <el-input v-if="(row.isDigit === '1' && (row.isBind === '0' || (row.isBind === '1' && row.scan === true)))" v-model.trim="row.inputData" class="query-item" style="width: 120px" placeholder="请输入数据" clearable @clear="handleQuery" />
+              <el-input v-if="(row.isDigit === '1' && (row.isBind !== '1' || (row.isBind === '1' && row.scan === true)))" v-model.trim="row.inputData" class="query-item" style="width: 120px" placeholder="请输入数据" clearable @clear="handleQuery" />
             </template>
           </el-table-column>
           <el-table-column fixed="right" align="center">
-            <template v-if="row.isBind === '0' || (row.isBind === '1' && row.scan === true)" slot-scope="{row}">
+            <template v-if="row.isBind !== '1' || (row.isBind === '1' && row.scan === true)" slot-scope="{row}">
               <el-button type="success" :disabled="row.result==='V'" @click="handleOK(row)">OK</el-button>
               <el-button type="danger" @click="handleNG(row)">NG</el-button>
             </template>
@@ -185,7 +185,8 @@ export default {
     getContentDatas(id) {
       const cpage = { current: 1, size: 100 }
       const csort = this.contentSort
-      const cquery = { maintianId: id }
+      // const cquery = { maintianId: id }
+      const cquery = { maintainId: id }
       api.maintain.operateContent.getList(cquery, cpage, csort).then(res => {
         this.contentDatas = res.data.items
       })
