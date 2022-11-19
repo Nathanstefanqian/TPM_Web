@@ -42,7 +42,11 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报修单号" prop="repairNum" align="left" width="200" show-overflow-tooltip />
+      <el-table-column label="报修单号" prop="repairNum" align="left" width="200" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <el-link type="success" v-on:click="handleDetail(scope.row)"> {{ scope.row.repairNum }} </el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="设备编号" prop="deviceNum" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="制造编号" prop="productCode" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="所属部门" prop="deptName" align="center" width="120" show-overflow-tooltip />
@@ -56,7 +60,8 @@
           <!--          </el-tooltip>-->
           <el-tooltip transition="false" :hide-after="1000" class="item" content="签核" placement="top-end">
             <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)">
-              <i class="vue-icon-update" /></el-button>
+              <i class="vue-icon-update" />
+            </el-button>
           </el-tooltip>
           <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">-->
           <!--            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>-->

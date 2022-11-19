@@ -40,7 +40,11 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报修单号" prop="repairNum" align="left" width="200" show-overflow-tooltip />
+      <el-table-column label="报修单号" prop="repairNum" align="left" width="200" show-overflow-tooltip>
+        <template slot-scope="scope">
+          <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="设备编号" prop="deviceNum" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="制造编号" prop="productCode" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="所属部门" prop="deptName" align="center" width="120" show-overflow-tooltip />
