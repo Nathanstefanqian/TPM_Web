@@ -110,6 +110,21 @@
             <el-input v-model="logModel.processMethod" />
           </el-form-item>
         </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="报警号">
+            <el-input v-model="alarmNumber" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="报警信息">
+            <el-input v-model="alarmMessage" />
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="报警信息说明">
+            <el-input v-model="descriptionOfAlarm" />
+          </el-form-item>
+        </el-col>
       </el-row>
       <el-row>
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
@@ -400,6 +415,12 @@ export default {
         DeviceFault: null,
         flowDatas: [],
         logDatas: [],
+        //报警号
+        alarmNumber: null,
+        //报警信息
+        alarmMessage: null,
+        //报警信息说明
+        descriptionOfAlarm: null,
         deviceModel: null,
         newCheckPerson: '',
         newCheckPersonName: '',
@@ -479,7 +500,7 @@ export default {
     getDeviceFalut() {
       const that = this
       const data = {
-        alarmNumber: null,
+        alarmNumber: this.alarmNumber,
         serialNumber: this.model.propertyCode,
         keyword: this.keyword
       }
@@ -490,7 +511,9 @@ export default {
     },
     // 应用知识库内容
     SavePhenomenon(row) {
-      this.DeviceFault = row
+      this.alarmMessage = row.alarmMessage
+      this.alarmNumber = row.alarmNumber
+      this.descriptionOfAlarm = row.descriptionOfAlarm
       if (this.logModel.processMethod != null) { this.logModel.processMethod = this.logModel.processMethod + ',' + row.repairMethod } else {
         this.logModel.processMethod = row.repairMethod
       }
@@ -621,48 +644,25 @@ export default {
       // this.logModel.opPersonId = this.user.userId
       // this.logModel.opPersonName = this.user.name
       // this.logModel.repairApplyId = this.model.id
-      let data
-      if (this.DeviceFault != null) {
-        data = {
-          repairApplyId: this.model.id,
-          serialNumber: this.model.propertyCode,
-          opPersonId: this.user.userId,
-          opPersonName: this.user.name,
-          startTime: this.logModel.startTime,
-          endTime: this.logModel.endTime,
-          problem: this.logModel.problem,
-          phenomenon: this.logModel.phenomenon,
-          reason: this.logModel.reason,
-          alarmNumber: this.DeviceFault.alarmNumber,
-          alarmMessage: this.DeviceFault.alarmMessage,
-          descriptionOfAlarm: this.DeviceFault.descriptionOfAlarm,
-          processMethod: this.logModel.processMethod,
-          opLog: this.logModel.opLog,
-          faultJudge: this.logModel.problem,
-          result: this.logModel.result,
-          partList: this.partList
-        }
-      }
-      else {
-        data = {
-          repairApplyId: this.model.id,
-          serialNumber: this.model.propertyCode,
-          opPersonId: this.user.userId,
-          opPersonName: this.user.name,
-          startTime: this.logModel.startTime,
-          endTime: this.logModel.endTime,
-          problem: this.logModel.problem,
-          phenomenon: this.logModel.phenomenon,
-          reason: this.logModel.reason,
-          alarmNumber: null,
-          alarmMessage: null,
-          descriptionOfAlarm: null,
-          processMethod: this.logModel.processMethod,
-          opLog: this.logModel.opLog,
-          faultJudge: this.logModel.problem,
-          result: this.logModel.result,
-          partList: this.partList
-        }
+
+      const data = {
+        repairApplyId: this.model.id,
+        serialNumber: this.model.propertyCode,
+        opPersonId: this.user.userId,
+        opPersonName: this.user.name,
+        startTime: this.logModel.startTime,
+        endTime: this.logModel.endTime,
+        problem: this.logModel.problem,
+        phenomenon: this.logModel.phenomenon,
+        reason: this.logModel.reason,
+        alarmNumber: this.alarmNumber,
+        alarmMessage: this.alarmMessage,
+        descriptionOfAlarm: this.descriptionOfAlarm,
+        processMethod: this.logModel.processMethod,
+        opLog: this.logModel.opLog,
+        faultJudge: this.logModel.problem,
+        result: this.logModel.result,
+        partList: this.partList
       }
       console.log(data)
       this.logApi.create(data).then(res => {
