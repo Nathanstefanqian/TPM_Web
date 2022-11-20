@@ -89,3 +89,11 @@ export function getOpLog(id) {
   })
 }
 
+// 条件查询
+export function query(data) {
+  return request({
+    url: '/eqRepairOutsource/query',
+    method: 'post',
+    data
+  })
+}
