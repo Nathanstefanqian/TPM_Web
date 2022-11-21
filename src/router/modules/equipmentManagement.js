@@ -19,6 +19,13 @@ export default {
       meta: { title: '设备信息维护' }
     },
     {
+      path: 'deviceFaultsStore',
+      component: () => import('@/views/equipmentManagement/deviceFaultsStore/index'),
+      name: 'deviceFaultsStore',
+      access: 'deviceFaultsStore',
+      meta: { title: '维修知识库' }
+    },
+    {
       path: 'transfer',
       component: () => import('@/views/equipmentManagement/transfer/index'),
       name: 'transfer',
