@@ -42,7 +42,7 @@
       </el-table-column>
       <el-table-column label="报修单号" prop="repairNum" align="left" width="200" show-overflow-tooltip>
         <template slot-scope="scope">
-          <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
+          <el-link type="success" v-on:click="handleDetail(scope.row)"> {{ scope.row.repairNum }} </el-link>
         </template>
       </el-table-column>
       <el-table-column label="设备编号" prop="deviceNum" align="center" width="200" show-overflow-tooltip />

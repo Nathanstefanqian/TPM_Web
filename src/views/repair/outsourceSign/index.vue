@@ -6,55 +6,22 @@
         <!--        <el-select v-model="query.deptId" class="query-item" style="width: 150px" placeholder="查询单位" clearable @clear="handleQuery">-->
         <!--          <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key" />-->
         <!--        </el-select>-->
-        <el-input
-          v-model="applyCode"
-          class="query-item"
-          style="width: 120px"
-          placeholder="报修单号"
-          clearable
-          @clear="handleQuery"
-        />
-        <el-input
-          v-model="productCode"
-          class="query-item"
-          style="width: 120px"
-          placeholder="制造编号"
-          clearable
-          @clear="handleQuery"
-        />
+        <el-input v-model="applyCode" class="query-item" style="width: 120px" placeholder="报修单号" clearable
+          @clear="handleQuery" />
+        <el-input v-model="productCode" class="query-item" style="width: 120px" placeholder="制造编号" clearable
+          @clear="handleQuery" />
 
-        <el-date-picker
-          v-model="startTime"
-          type="datetime"
-          placeholder="开始日期"
-          clearable
-          @clear="handleQuery"
-        />
-        <el-date-picker
-          v-model="endTime"
-          type="datetime"
-          placeholder="结束日期"
-          clearable
-          @clear="handleQuery"
-        />
+        <el-date-picker v-model="startTime" type="datetime" placeholder="开始日期" clearable @clear="handleQuery" />
+        <el-date-picker v-model="endTime" type="datetime" placeholder="结束日期" clearable @clear="handleQuery" />
 
-        <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除</el-button>
+        <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除
+        </el-button>
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="searchlist">查询</el-button>
         <!--        <el-button class="tool tool-create" type="danger" icon="vue-icon-create" @click="handleCreate">报修申请</el-button>-->
       </div>
     </div>
-    <el-table
-      ref="listTable"
-      v-loading="loading.table"
-      v-adaptive="{ bottomOffset: 55 }"
-      height="200px"
-      :data="datas"
-      :default-sort="sort"
-      border
-      fit
-      highlight-current-row
-      @sort-change="handleSort"
-    >
+    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 55 }" height="200px" :data="datas"
+      :default-sort="sort" border fit highlight-current-row @sort-change="handleSort">
       <el-table-column type="selection" align="center" width="35" />
       <el-table-column label="序号" type="index" align="center" width="65" fixed>
         <template slot-scope="scope">
@@ -64,7 +31,8 @@
       <el-table-column label="报修单号" prop="eqRepairApply.repairNum" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="制造编号" prop="eqRepairApply.productCode" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="设备类型" prop="eqRepairApply.deviceType" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="资产编号" prop="eqRepairApply.propertyCode" align="center" width="150" show-overflow-tooltip />
+      <el-table-column label="资产编号" prop="eqRepairApply.propertyCode" align="center" width="150"
+        show-overflow-tooltip />
       <el-table-column label="所属单位" prop="eqRepairApply.deptName" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="报修人员" prop="outDept" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="报修日期" prop="createTime" align="center" width="200" show-overflow-tooltip />
@@ -78,11 +46,14 @@
           <!--          </el-tooltip>-->
           <el-tooltip transition="false" :hide-after="1000" class="item" content="签核" placement="top-end">
             <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)">
-              <i class="vue-icon-update" /></el-button>
+              <i class="vue-icon-update" />
+            </el-button>
           </el-tooltip>
           <el-tooltip transition="false" :hide-after="1000" class="item" content="维修" placement="top-end">
-            <el-button type="primary" plain class="button-operate button-create" size="mini" @click="handleUpdate2(row)">
-              <i class="vue-icon-create" /></el-button>
+            <el-button type="primary" plain class="button-operate button-create" size="mini"
+              @click="handleUpdate2(row)">
+              <i class="vue-icon-create" />
+            </el-button>
           </el-tooltip>
           <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">-->
           <!--            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>-->
@@ -90,13 +61,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      :hidden="page.total === 0"
-      :total="page.total"
-      :page.sync="page.current"
-      :limit.sync="page.size"
-      @pagination="getDatas"
-    />
+    <pagination :hidden="page.total === 0" :total="page.total" :page.sync="page.current" :limit.sync="page.size"
+      @pagination="getDatas" />
     <dialog-create ref="dialogCreate" />
     <dialog-update ref="dialogUpdate" />
     <dialog-update2 ref="dialogUpdate2" />
@@ -116,7 +82,6 @@ export default {
   name: 'RepairApply',
   components: {
     Pagination: () => import('@/components/Pagination'),
-    DialogCreate: () => import('./create'),
     DialogUpdate: () => import('./update'),
     DialogUpdate2: () => import('./update2'),
     DialogDetail: () => import('./detail')
