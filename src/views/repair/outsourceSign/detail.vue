@@ -1,109 +1,115 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-' + dialogClass" :title="dialogTitle"
-    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth || '120px'">
+  <el-dialog
+    v-loading="loading"
+    :custom-class="'dialog-fullscreen dialog-' + dialogClass"
+    :title="dialogTitle"
+    :visible.sync="visible"
+    :modal="false"
+    :modal-append-to-body="false"
+  >
+    <el-form ref="form" label-position="right" :label-width="labelWidth || '120px'">
       <el-row>
         <el-col>
           <el-form-item label="报修单号">
-            {{ model.repairNum }}
+            {{ this.eqRepairApplyList[0].repairNum }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="报修人工号id">
-            {{ model.applyPersonId }}
+            {{ this.eqRepairApplyList[0].applyPersonId }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="报修人">
-            {{ model.applyPersonName }}
+            {{ this.eqRepairApplyList[0].applyPersonName }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="所属工段">
-            {{ model.section }}
+            {{ this.eqRepairApplyList[0].section }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="所属部门id">
-            {{ model.deptId }}
+            {{ this.eqRepairApplyList[0].deptId }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="所属部门名称">
-            {{ model.deptName }}
+            {{ this.eqRepairApplyList[0].deptName }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="制造编号">
-            {{ model.productCode }}
+            {{ this.eqRepairApplyList[0].productCode }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="制造日期">
-            {{ model.productDate }}
+            {{ this.eqRepairApplyList[0].productDate }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="设备编号">
-            {{ model.deviceNum }}
+            {{ this.eqRepairApplyList[0].deviceNum }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="设备型号">
-            {{ model.deviceType }}
+            {{ this.eqRepairApplyList[0].deviceType }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="资产编号">
-            {{ model.propertyCode }}
+            {{ this.eqRepairApplyList[0].propertyCode }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="报修等级">
-            {{ model.level }}
+            {{ this.eqRepairApplyList[0].level }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="报修类别">
-            {{ model.category }}
+            {{ this.eqRepairApplyList[0].category }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="报修内容">
-            {{ model.content }}
+            {{ this.eqRepairApplyList[0].content }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="报修时间">
-            {{ model.repairTime }}
+            {{ this.eqRepairApplyList[0].repairTime }}
           </el-form-item>
         </el-col>
       </el-row>
@@ -121,14 +127,18 @@ import api from '@/api'
 
 export default {
   data() {
-    const curModels = models.repair.apply
-    const curApi = api.repair.apply
+    const curModels = models.repair.outsource
+    const curApi = api.repair.outsource
     return {
       ...getDefaultDetailViewData(), ...curModels, curApi,
       ...{
         dialogTitle: '详情',
         model: curModels.detail,
-        functions: []
+        functions: [],
+        applyList: [],
+        eqRepairApplyList: [],
+        len: 0
+
       }
     }
   },
@@ -137,7 +147,51 @@ export default {
   },
   methods: {
     ...crud,
+    getApplyList(id) {
+      this.eqRepairApplyList = []
+      this.curApi.getinfo().then(response => {
+        this.applyList = response.data
+        for (let i = 0; i < response.data.length; i++) {
+          if (id === this.applyList[i].id) {
+            this.eqRepairApplyList.push(this.applyList[i].eqRepairApply)
+          }
+        }
+        console.log(this.eqRepairApplyList)
+      })
+    },
+
+    getFlowDataList(id) {
+      this.curApi.getFlowData(id).then(response => {
+        this.flowDataList = response.data
+        this.length = response.data.length
+        // console.log(this.flowDataList)
+      })
+    },
+
+    getOpLogList(id) {
+      this.curApi.getOpLog(id).then(response => {
+        this.opLogList = response.data
+        // console.log(this.opLogList)
+      })
+    },
+
+    // 初始化数据之前 row：行绑定数据
+    async initDetailBefore(row) {
+      this.getFlowDataList(row.repairApplyId)
+      this.getOpLogList(row.repairApplyId)
+      this.getApplyList(row.id)
+      //
+    },
+    // 初始化数据之后 row：行绑定数据；data：接口返回数据
+    initDetailAfter(row, data) {
+      // console.log(data)
+      this.model = data
+      if (this.model.checkNextName === '维保主管审核') {
+        this.appointPersonShow = true
+      }
+    }
   }
+
 }
 </script>
 
