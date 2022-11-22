@@ -2,11 +2,9 @@
   <div class="app-container list">
     <div ref="toolbar" class="toolbar">
       <div class="tool-group">
-        <el-input v-model.trim="query.repairApplyId" class="query-item" style="width: 120px" placeholder="报修单id"
-          clearable @clear="handleQuery" />
-        <el-input v-model.trim="query.serialNumber" class="query-item" style="width: 120px" placeholder="设备制造编号"
-          clearable @clear="handleQuery" />
-        <el-input v-model.trim="query.deviceName" class="query-item" style="width: 120px" placeholder="设备名称" clearable
+        <el-input v-model.trim="query.deviceModel" class="query-item" style="width: 120px" placeholder="设备型号" clearable
+          @clear="handleQuery" />
+        <el-input v-model.trim="query.alarmNumber" class="query-item" style="width: 120px" placeholder="报警号" clearable
           @clear="handleQuery" />
         <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除
         </el-button>
@@ -28,9 +26,6 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报修单id" prop="repairApplyId" align="center" width="280" show-overflow-tooltip />
-      <el-table-column label="设备制造编号" prop="serialNumber" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="设备名称" prop="deviceName" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="设备型号" prop="deviceModel" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="控制器" prop="controller" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="报警号" prop="alarmNumber" align="center" width="120" show-overflow-tooltip />
