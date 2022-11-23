@@ -27,7 +27,18 @@
         </el-select>
         <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除</el-button>
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
-        <el-button class="tool tool-create" type="primary" icon="vue-icon-create">批量上传</el-button>
+        <!-- <el-button class="tool tool-create" type="primary" icon="vue-icon-create">批量上传</el-button> -->
+        <el-upload
+          class="inline-block"
+          action="http://localhost:8889/api/v1/file/addPlan"
+          :headers="headers"
+          :multiple="false"
+          :on-change="uploadVideoProcess"
+          :on-success="handleUploadSuccess"
+          :show-file-list="false"
+        >
+          <el-button class="tool tool-create" icon="vue-icon-create" type="primary">批量上传</el-button>
+        </el-upload>
         <!--        <el-link class="tool tool-query" @click="downloadfile()">下载模板</el-link>-->
 
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
@@ -103,7 +114,8 @@ export default {
         departs: [],
         zhixis: [],
         factories: [],
-        processDepts: []
+        processDepts: [],
+        headers: { token: null }
       },
       queryInfos: [{
         key: '1',
@@ -119,7 +131,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['enums', 'user'])
+    ...mapGetters(['enums', 'user','token'])
   },
   created() {
     this.clearAndInitQuery()
@@ -129,6 +141,8 @@ export default {
     this.getZhixis()
     this.getFactories()
     this.getProcessDepts()
+    this.headers.token = this.token
+    console.log('token:', this.token)
   },
   methods: {
     ...crud,
@@ -168,7 +182,57 @@ export default {
         this.processDepts = response.data || []
       }).catch(reject => {
       })
-    }
+    },
+    handleUploadSuccess(res, file) {
+      this.loading = false
+      switch (res.code) {
+        case 20000:
+          this.message = res.message
+          file.status === 'success'
+          this.loading = true
+          api.maintain.plan.getList(this.queryReal, this.page, this.sort).then(response => {
+            this.datas = response.data.items
+            this.page.total = response.data.total
+            // 钩子，获取数据后执行。无返回值
+            if (this.getDatasAfter) this.getDatasAfter()
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
+          break
+        case 40000:
+        case 40100:
+        case 40103:
+        case 50000:
+          this.message = res.message
+          break
+        case 40400:
+          this.message = '上传发生错误'
+          break
+      }
+      this.$notify({
+        title: '',
+        dangerouslyUseHTMLString: true,
+        message: this.message
+      })
+    },
+    uploadVideoProcess(file, fileList) {
+        if(file.status === 'ready'){
+          this.progressFlag = true; // 显示进度条
+          this.loadProgress = 0;
+          const interval = setInterval(() => {
+            if(this.loadProgress >=99){
+              clearInterval(interval)
+              return
+            }
+            this.loadProgress += 1
+          }, 20);
+        }
+          if (file.status === 'success') {
+            this.progressFlag = false; // 显示进度条
+            this.loadProgress = 100;
+          }
+      }
   }
 }
 </script>
@@ -220,5 +284,9 @@ export default {
 
 /deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner::before {
   background-color: #FFF;
+}
+
+.inline-block {
+  display: inline-block;
 }
 </style>

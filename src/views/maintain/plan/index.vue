@@ -66,7 +66,7 @@ import crud from '@/utils/crud'
 import api from '@/api'
 
 export default {
-  name: 'Role',
+  name: 'Plan',
   components: {
     Pagination: () => import('@/components/Pagination'),
     DialogCreate: () => import('./create'),
