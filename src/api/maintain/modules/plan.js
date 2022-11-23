@@ -78,3 +78,12 @@ export function addPlan() {
     method: 'post'
   })
 }
+
+// 点检项目计划详情界面，获取content
+export function getContentList() {
+  return request({
+    url: '/eqMaintainPlanContent/list',
+    method: 'post',
+    data:{}
+  })
+}

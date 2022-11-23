@@ -2,11 +2,9 @@
   <div class="app-container list">
     <div ref="toolbar" class="toolbar">
       <div class="tool-group">
-        <el-input v-model.trim="query.repairApplyId" class="query-item" style="width: 120px" placeholder="报修单id"
-          clearable @clear="handleQuery" />
-        <el-input v-model.trim="query.serialNumber" class="query-item" style="width: 120px" placeholder="设备制造编号"
-          clearable @clear="handleQuery" />
-        <el-input v-model.trim="query.deviceName" class="query-item" style="width: 120px" placeholder="设备名称" clearable
+        <el-input v-model.trim="query.deviceModel" class="query-item" style="width: 120px" placeholder="设备型号" clearable
+          @clear="handleQuery" />
+        <el-input v-model.trim="query.alarmNumber" class="query-item" style="width: 120px" placeholder="报警号" clearable
           @clear="handleQuery" />
         <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除
         </el-button>
@@ -15,7 +13,7 @@
         <a v-show="false" id="downfile" download href="http://localhost:8889/api/v1/deviceFaultsStore/download">下载模板</a>
         <el-upload style="display: inline-block" class="upload-demo" ref="upload"
           action="http://localhost:8889/api/v1/deviceFaultsStore/insert" :limit="1" accept=".xls,.xlsx,.csv"
-          :on-exceed="handleExceed">
+          :on-exceed="handleExceed" :on-success="handleSuccess">
           <el-button class="tool tool-query" type="primary" icon="el-icon-upload">上传</el-button>
         </el-upload>
       </div>
@@ -28,18 +26,14 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报修单id" prop="repairApplyId" align="center" width="280" show-overflow-tooltip />
-      <el-table-column label="设备制造编号" prop="serialNumber" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="设备名称" prop="deviceName" align="center" width="150" show-overflow-tooltip />
-      <el-table-column label="设备型号" prop="deviceModel" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="控制器" prop="controller" align="center" width="150" show-overflow-tooltip />
-      <el-table-column label="报警号" prop="alarmNumber" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="设备型号" prop="deviceModel" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="控制器" prop="controller" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="报警号" prop="alarmNumber" align="center" width="150" show-overflow-tooltip />
       <el-table-column label="报警信息" prop="alarmMessage" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="报警信息说明" prop="descriptionOfAlarm" align="center" width="150" show-overflow-tooltip />
-      <el-table-column label="维修方法" prop="repairMethod" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="维修方法" prop="repairMethod" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="维修记录" prop="repairRecord" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="故障判定" prop="faultJudge" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="故障标签" prop="keyword" align="center" show-overflow-tooltip />
+      <el-table-column label="故障判定" prop="faultJudge" align="center" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
           <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
@@ -76,7 +70,7 @@ export default {
     return {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
       ...{
-        page: { total: 0, current: 1, size: 10 },
+        page: { total: 0, current: 1, size: 20 },
         sort: { prop: 'serialNumber', order: 'descending' },
       },
       datas:[]
@@ -91,6 +85,9 @@ export default {
   },
   methods: {
     ...crud,
+    handleSuccess(){
+      this.getDatas()
+    },
      handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },

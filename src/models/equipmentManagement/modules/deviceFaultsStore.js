@@ -73,9 +73,8 @@ const base = {
 }
 
 const queryEmpty = {
-  repairApplyId: null,
-  serialNumber: null,
-  deviceName: null,
+  deviceModel: null,
+  alarmNumber: null,
 }
 
 const query = _.cloneDeep(queryEmpty)
