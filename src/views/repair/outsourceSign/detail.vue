@@ -7,117 +7,72 @@
     :modal="false"
     :modal-append-to-body="false"
   >
-    <el-form ref="form" label-position="right" :label-width="labelWidth || '120px'">
+    <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth || '120px'">
       <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修单号">
-            {{ this.eqRepairApplyList[0].repairNum }}
+            {{ model.repairNum }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col>
-          <el-form-item label="报修人工号id">
-            {{ this.eqRepairApplyList[0].applyPersonId }}
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="所属部门">
+            {{ model.deptName }}
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="报修人">
-            {{ this.eqRepairApplyList[0].applyPersonName }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="所属工段">
-            {{ this.eqRepairApplyList[0].section }}
+            {{ model.section }}
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="所属部门id">
-            {{ this.eqRepairApplyList[0].deptId }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="所属部门名称">
-            {{ this.eqRepairApplyList[0].deptName }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="制造编号">
-            {{ this.eqRepairApplyList[0].productCode }}
+            {{ model.productCode }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col>
-          <el-form-item label="制造日期">
-            {{ this.eqRepairApplyList[0].productDate }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="设备编号">
-            {{ this.eqRepairApplyList[0].deviceNum }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="设备型号">
-            {{ this.eqRepairApplyList[0].deviceType }}
+            {{ model.deviceType }}
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="资产编号">
-            {{ this.eqRepairApplyList[0].propertyCode }}
+            {{ model.propertyCode }}
+          </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="报修时间">
+            {{ model.repairTime }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col>
-          <el-form-item label="报修等级">
-            {{ this.eqRepairApplyList[0].level }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="报修类别">
-            {{ this.eqRepairApplyList[0].category }}
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="报修人">
+            {{ model.applyPersonName }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="报修内容">
-            {{ this.eqRepairApplyList[0].content }}
+            {{ model.content }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="报修时间">
-            {{ this.eqRepairApplyList[0].repairTime }}
+          <el-form-item label="签核状态">
+            {{ model.checkStatusName }}
           </el-form-item>
         </el-col>
       </el-row>
-
     </el-form>
   </el-dialog>
 </template>
-
 <script>
 import { mapGetters } from 'vuex'
 import getDefaultDetailViewData from '@/utils/viewData/detail'

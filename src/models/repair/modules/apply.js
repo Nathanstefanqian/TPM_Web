@@ -31,7 +31,8 @@ const base = {
   repairCheckPersonId: null,
   flowId: null,
   myRoleId: null,
-  myUserId: null
+  myUserId: null,
+  checkStatusName: null
 }
 
 const queryEmpty = {

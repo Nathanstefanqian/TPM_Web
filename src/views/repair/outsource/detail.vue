@@ -1,95 +1,58 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-' + dialogClass" :title="dialogTitle"
-    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+  <el-dialog
+    v-loading="loading"
+    :custom-class="'dialog-fullscreen dialog-' + dialogClass"
+    :title="dialogTitle"
+    :visible.sync="visible"
+    :modal="false"
+    :modal-append-to-body="false"
+  >
     <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth || '120px'">
       <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修单号">
             {{ model.repairNum }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col>
-          <el-form-item label="报修人工号id">
-            {{ model.applyPersonId }}
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="所属部门">
+            {{ model.deptName }}
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="报修人">
-            {{ model.applyPersonName }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="所属工段">
             {{ model.section }}
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="所属部门id">
-            {{ model.deptId }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="所属部门名称">
-            {{ model.deptName }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="制造编号">
             {{ model.productCode }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col>
-          <el-form-item label="制造日期">
-            {{ model.productDate }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="设备编号">
-            {{ model.deviceNum }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="设备型号">
             {{ model.deviceType }}
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="资产编号">
             {{ model.propertyCode }}
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="报修等级">
-            {{ model.level }}
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="报修时间">
+            {{ model.repairTime }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col>
-          <el-form-item label="报修类别">
-            {{ model.category }}
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="报修人">
+            {{ model.applyPersonName }}
           </el-form-item>
         </el-col>
       </el-row>
@@ -102,16 +65,14 @@
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="报修时间">
-            {{ model.repairTime }}
+          <el-form-item label="签核状态">
+            {{ model.checkStatusName }}
           </el-form-item>
         </el-col>
       </el-row>
-
     </el-form>
   </el-dialog>
 </template>
-
 <script>
 import { mapGetters } from 'vuex'
 import getDefaultDetailViewData from '@/utils/viewData/detail'
@@ -136,7 +97,7 @@ export default {
     ...mapGetters(['enums', 'user'])
   },
   methods: {
-    ...crud,
+    ...crud
   }
 }
 </script>
