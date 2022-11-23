@@ -196,6 +196,11 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+            <el-form-item label="附件" prop="opDescription">
+              <MultipleFile file-type="outsourceApplyFile" :file-list="fileList" />
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="签核状态">
               待签核
@@ -383,8 +388,12 @@ import { cloneDeep } from 'lodash'
 import adaptive from '@/directive/el-table'
 
 export default {
+  components: {
+    MultipleFile: () => import('@/components/Upload/MultipleFile')
+  },
   directives: { adaptive },
   data() {
+    const BASE_URL = process.env.VUE_APP_BASE_API
     const curModels = models.repair.applySign
     const curApi = api.repair.applySign
     const logModels = models.repair.operate
@@ -392,6 +401,9 @@ export default {
     const outsourceModels = models.repair.outsource
     const outsourceApi = api.repair.outsource
     return {
+      fileType: 'repairApplyFile',
+      uploadUrl: BASE_URL + '/file/uploadSingleFile',
+      fileList: [],
       ...getDefaultUpdateViewData(), ...curModels, curApi, rules,
       ...{
         page: { total: 0, current: 1, size: 10 },
@@ -491,7 +503,7 @@ export default {
     ...crud,
     // 获取流程下拉列表
     getWorkFlows() {
-      api.system.workFlow.getSelectlist('1').then(response => {
+      api.system.workFlow.getSelectlist('2').then(response => {
         this.workFlows = response.data || []
       }).catch(reject => {
       })
@@ -624,9 +636,10 @@ export default {
     outsource() {
       this.outsourceModel.status = 1
       this.outsourceModel.repairApplyId = this.model.repairNum
-      this.outsourceModel.flowId = 3
+      this.outsourceModel.flowId = this.model.flowId
       this.outsourceModel.repairApplyId = this.model.id
-      //console.log(this.outsourceModel)
+      this.outsourceModel.fileList = this.fileList
+      // console.log(this.outsourceModel)
       const data = this.outsourceModel
       this.outsourceApi.applyOutSource(data)
     },

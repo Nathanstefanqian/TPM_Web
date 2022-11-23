@@ -11,7 +11,7 @@
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
         <el-button class="tool tool-query" type="primary" icon="el-icon-download" @click="handleDown">下载模板</el-button>
         <a v-show="false" id="downfile" download href="http://localhost:8889/api/v1/deviceFaultsStore/download">下载模板</a>
-        <el-upload style="display: inline-block" class="upload-demo" ref="upload"
+        <el-upload :show-file-list="false" style="display: inline-block" class="upload-demo" ref="upload"
           action="http://localhost:8889/api/v1/deviceFaultsStore/insert" :limit="1" accept=".xls,.xlsx,.csv"
           :on-exceed="handleExceed" :on-success="handleSuccess">
           <el-button class="tool tool-query" type="primary" icon="el-icon-upload">上传</el-button>
@@ -70,7 +70,7 @@ export default {
     return {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
       ...{
-        page: { total: 0, current: 1, size: 20 },
+        page: { total: 0, current: 1, size: 10 },
         sort: { prop: 'serialNumber', order: 'descending' },
       },
       datas:[]

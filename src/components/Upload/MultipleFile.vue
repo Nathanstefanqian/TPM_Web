@@ -1,19 +1,8 @@
 <template>
-  <el-upload
-    class="upload-demo"
-    :data="{type:fileType}"
-    :action="uploadUrl"
-    :on-preview="handlePreview"
-    :on-remove="handleRemove"
-    :before-remove="beforeRemove"
-    multiple
-    :limit="3"
-    :on-exceed="handleExceed"
-    :file-list="fileList"
-    :on-success="handleUploadSuccess"
-  >
+  <el-upload class="upload-demo" :data="{ type: fileType }" :action="uploadUrl" :on-preview="handlePreview"
+    :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="5" :on-exceed="handleExceed"
+    :on-success="handleUploadSuccess">
     <el-button size="small" type="primary">点击上传</el-button>
-    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
   </el-upload>
 </template>
 
@@ -43,7 +32,7 @@ export default {
       console.log(file)
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+      this.$message.warning(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
