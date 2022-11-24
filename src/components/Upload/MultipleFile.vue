@@ -1,8 +1,17 @@
 <template>
-  <el-upload class="upload-demo" :data="{ type: fileType }" :action="uploadUrl" :on-preview="handlePreview"
-    :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="5" :on-exceed="handleExceed"
-    :on-success="handleUploadSuccess">
-    <el-button size="small" type="primary">点击上传</el-button>
+  <el-upload
+    class="upload-demo"
+    :data="{ type: fileType }"
+    :action="uploadUrl"
+    :on-preview="handlePreview"
+    :on-remove="handleRemove"
+    :before-remove="beforeRemove"
+    multiple
+    :limit="5"
+    :on-exceed="handleExceed"
+    :on-success="handleUploadSuccess"
+  >
+    <el-button icon="el-icon-upload" size="small" type="primary">点击上传</el-button>
   </el-upload>
 </template>
 

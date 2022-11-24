@@ -20,6 +20,7 @@ export function get(id) {
     method: 'get'
   })
 }
+
 // 根据repairApplyid获取数据
 export function getFlowData(id) {
   return request({
@@ -27,6 +28,7 @@ export function getFlowData(id) {
     method: 'get'
   })
 }
+
 // 根据repairApplyid获取日志数据
 export function getCheckLog(id) {
   return request({
@@ -59,6 +61,7 @@ export function create(data) {
     data
   })
 }
+
 // 添加数据
 export function changeCheckPerson(data) {
   return request({
@@ -67,6 +70,7 @@ export function changeCheckPerson(data) {
     data
   })
 }
+
 // 更新数据
 export function update(data) {
   return request({
@@ -92,6 +96,15 @@ export function getRoleTypes() {
     method: 'get'
   })
 }
+
+// 查看是否有附件
+export function hasFile(id) {
+  return request({
+    url: `/eqRepairApplyFile/${id}/hasFile`,
+    method: 'get'
+  })
+}
+
 // //保存签核记录
 // export function updateSign() {
 //   return request({

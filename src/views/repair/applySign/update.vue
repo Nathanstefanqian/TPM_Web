@@ -67,8 +67,8 @@
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
-          <el-form-item label=" " prop="opDescription">
-            <el-link>查看附件</el-link>
+          <el-form-item label="附件" prop="opDescription">
+            <el-link @click="getFileList">查看附件</el-link>
           </el-form-item>
         </el-col>
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
@@ -200,6 +200,7 @@ export default {
     const outsourceModels = models.repair.outsource
     const outsourceApi = api.repair.outsource
     return {
+      hasFile: false,
       ...getDefaultUpdateViewData(),
       ...curModels,
       curApi,
@@ -248,6 +249,23 @@ export default {
   },
   methods: {
     ...crud,
+    // 下载附件
+    getFileList() {
+      this.curApi.hasFile(this.model.id).then(
+        (res) => {
+          if (res) {
+            window.open(process.env.VUE_APP_BASE_API + `/eqRepairApplyFile/${this.model.id}/getFileList`)
+          } else {
+            this.$message({
+              message: '无附件',
+              type: 'warning'
+            })
+          }
+        }
+      ).catch((err) => {
+        this.$emit(err)
+      })
+    },
     // 重写submitUpdate方法
     submitUpdate(result) {
       this.$refs.form.validate((valid) => {
@@ -294,7 +312,8 @@ export default {
             }
           }
         })
-        .catch((reject) => { })
+        .catch((reject) => {
+        })
     },
     // 通过
     submitUpdatePass() {
@@ -355,7 +374,8 @@ export default {
           this.repairPersons = response.data || []
           this.checkPersons = cloneDeep(response.data)
         })
-        .catch((reject) => { })
+        .catch((reject) => {
+        })
     },
     getFlowData(repairApplyId) {
       api.repair.applySign
@@ -371,7 +391,8 @@ export default {
             }
           }
         })
-        .catch((reject) => { })
+        .catch((reject) => {
+        })
     },
     selectPersonChanged(value) {
       for (var i = 0; i < this.repairPersons.length; i++) {
@@ -391,7 +412,8 @@ export default {
         .then((response) => {
           this.logDatas = response.data || []
         })
-        .catch((reject) => { })
+        .catch((reject) => {
+        })
     },
     // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
