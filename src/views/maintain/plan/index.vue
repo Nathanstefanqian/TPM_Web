@@ -30,7 +30,7 @@
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
       </div>
     </div>
-    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 55 }" height="200px" :data="datas" :default-sort="sort" border fit highlight-current-row @sort-change="handleSort">
+    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 55 }" height="200px" :data="datas" border fit highlight-current-row>
       <el-table-column type="selection" align="center" width="35" />
       <el-table-column label="序号" type="index" align="center" width="65" fixed>
         <template slot-scope="scope">
@@ -231,6 +231,7 @@ export default {
       formData.append('file', param.file)
       api.maintain.plan.addPlan(formData).then(response => {
         console.log('导入成功')
+        this.getDatas()
         // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
       }).catch(response => {
         console.log('导入失败')
