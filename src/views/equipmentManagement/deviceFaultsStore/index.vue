@@ -142,6 +142,7 @@ export default {
       formData.append('file', param.file)
       insertExcel(formData).then(response => {
         console.log('导入成功')
+        this.getDatas()
         // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
       }).catch(response => {
         console.log('导入失败')
