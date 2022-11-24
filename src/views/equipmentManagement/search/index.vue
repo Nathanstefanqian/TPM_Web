@@ -30,7 +30,7 @@
         <!-- <el-button class="tool tool-create" type="primary" icon="vue-icon-create">批量上传</el-button> -->
         <el-upload
           class="inline-block"
-          action="http://localhost:8889/api/v1/file/addPlan"
+          :action="uploadUrl"
           :headers="headers"
           :multiple="false"
           :on-change="uploadVideoProcess"
@@ -127,7 +127,8 @@ export default {
         key: '3',
         text: '设备履历'
       }],
-      queryinfo: ''
+      queryinfo: '',
+      uploadUrl: process.env.VUE_APP_BASE_API + '/equipment/addBatch'
     }
   },
   computed: {

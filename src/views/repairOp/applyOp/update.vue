@@ -3,54 +3,54 @@
     :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth || '120px'">
       <el-row>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="所属部门" prop="applyDeptId">
             <span>{{ model.deptName }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="所属工段" prop="applyDeptId">
             <span>{{ model.section }}</span>
           </el-form-item>
         </el-col>
 
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="制造编号" prop="productCode">
             <span>{{ model.productCode }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="设备编号" prop="propertyCode">
             <span>{{ model.deviceNum }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="制造日期" prop="productCode">
             <span>{{ model.productDate }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="设备型号" prop="propertyCode">
             <span>{{ model.deviceType }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="资产编号" prop="propertyCode">
             <span>{{ model.propertyCode }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="报修等级" prop="level">
             <span>{{ model.level }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="报修类别" prop="factory">
             <span>{{ model.category }}</span>
           </el-form-item>
         </el-col>
 
-        <el-col :xl="6" :lg="12" :md="12" :sm="12" :xs="24">
+        <el-col :xl="6" :lg="8" :md="12" :sm="12" :xs="24">
           <el-form-item label="报修内容" prop="content">
             <span>{{ model.content }}</span>
 
@@ -62,7 +62,7 @@
             <!--            />-->
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :xl="4" :lg="10" :md="10" :sm="12" :xs="24">
           <el-form-item prop="opDescription">
             <el-link>查看附件</el-link>
           </el-form-item>
@@ -77,7 +77,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :xl="4" :lg="7" :md="10" :sm="12" :xs="24">
           <el-form-item label="故障标签">
             <el-input v-model="keyword" placeholder="请输入设备名/维修方法/维修记录" />
             <!-- <el-autocomplete class="inline-input" v-model="logModel.phenomenon" :fetch-suggestions="querySearch"
@@ -106,21 +106,23 @@
               <el-button slot="reference" @click="getDeviceFalut">查询</el-button>
             </el-popover>
           </el-form-item>
+        </el-col>
+        <el-col :xl="4" :lg="7" :md="10" :sm="12" :xs="24">
           <el-form-item label="维修方法">
             <el-input v-model="logModel.processMethod" />
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :xl="4" :lg="7" :md="10" :sm="12" :xs="24">
           <el-form-item label="报警号">
             <el-input v-model="alarmNumber" />
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :xl="4" :lg="7" :md="10" :sm="12" :xs="24">
           <el-form-item label="报警信息">
             <el-input v-model="alarmMessage" />
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :xl="4" :lg="7" :md="10" :sm="12" :xs="24">
           <el-form-item label="报警信息说明">
             <el-input v-model="descriptionOfAlarm" />
           </el-form-item>
@@ -241,6 +243,7 @@
           <el-table-column label="库存数量" prop="stock" align="center" width="200" show-overflow-tooltip />
           <el-table-column />
           <el-table-column fixed="right" align="center" width="300">
+            <!-- eslint-disable-next-line -->
             <template slot="header" slot-scope="scope">
               <el-input v-model="search" size="mini" placeholder="输入配件名搜索" />
             </template>
@@ -293,6 +296,7 @@
           <el-table-column label="库存数量" prop="stock" align="center" width="200" show-overflow-tooltip />
           <el-table-column />
           <el-table-column fixed="right" align="center" width="300">
+            <!-- eslint-disable-next-line -->
             <template slot="header" slot-scope="scope">
               <el-input v-model="search" size="mini" placeholder="输入配件名搜索" />
             </template>

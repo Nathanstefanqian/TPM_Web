@@ -71,3 +71,11 @@ export function getRoleTypes() {
     method: 'get'
   })
 }
+
+// Excel批量上传设备
+export function addDevices() {
+  return request({
+    url: `/equipment/addBatch`,
+    method: 'post'
+  })
+}

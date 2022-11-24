@@ -2,53 +2,53 @@
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
       <el-row>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="所属部门" prop="applyDeptId">
             <span>{{ model.deptName }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="所属工段" prop="applyDeptId">
             <span>{{ model.section }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="制造编号" prop="productCode">
             <span>{{ model.productCode }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="设备编号" prop="propertyCode">
             <span>{{ model.deviceNum }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="制造日期" prop="productCode">
             <span>{{ model.productDate }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="设备型号" prop="propertyCode">
             <span>{{ model.deviceType }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="资产编号" prop="propertyCode">
             <span>{{ model.propertyCode }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="报修等级" prop="level">
             <span>{{ model.level }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :lg="5" :xs="24">
           <el-form-item label="报修类别" prop="factory">
             <span>{{ model.category }}</span>
           </el-form-item>
         </el-col>
 
-        <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
+        <el-col :xl="12" :lg="8" :md="12" :sm="12" :xs="24">
           <el-form-item label="报修内容" prop="content">
             <span>{{ model.content }}</span>
 
@@ -60,7 +60,7 @@
             <!--            />-->
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
+        <el-col :xl="4" :lg="10" :md="10" :sm="12" :xs="24">
           <el-form-item label=" " prop="opDescription">
             <el-link>查看附件</el-link>
           </el-form-item>
