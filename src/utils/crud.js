@@ -96,6 +96,8 @@ function submitCreate() {
     const data = _.pick(this.model, Object.keys(this.createReal))
     this.curApi.create(data).then(() => {
       // 钩子，添加提交后执行。无返回值
+      this.$refs['form'].resetFields()
+      this.visible = false
       if (this.submitCreateAfter) this.submitCreateAfter()
       // 重新加载列表页
       this.$parent.getDatas()
@@ -125,6 +127,8 @@ function submitCreateWithNewID() {
     const data = _.pick(this.model, Object.keys(this.createReal))
     this.curApi.create(data).then((response) => {
       // that.curModels.id = response.data
+      this.$refs['form'].resetFields()
+      this.visible = false
       console.log(response)
       // 钩子，添加提交后执行。无返回值
       if (this.submitCreateAfter) this.submitCreateAfter(response.data)
@@ -198,6 +202,8 @@ function submitUpdate() {
     // 拷贝数据提交
     const data = _.pick(this.model, Object.keys(this.updateReal))
     this.curApi.update(data).then(() => {
+      this.$refs['form'].resetFields()
+      this.visible = false
       // 钩子，编辑提交后执行。无返回值
       if (this.submitUpdateAfter) this.submitUpdateAfter()
       // 重新加载列表页

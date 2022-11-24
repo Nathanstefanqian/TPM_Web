@@ -18,12 +18,23 @@
           clearable
           @clear="handleQuery"
         />
-        <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除
+        <el-button
+          class="tool tool-query"
+          type="primary"
+          icon="el-icon-refresh"
+          @click="clearAndInitQuery()"
+        >清除
         </el-button>
-        <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
+        <el-button
+          class="tool tool-query"
+          type="primary"
+          icon="el-icon-search"
+          @click="handleQuery"
+        >查询</el-button>
         <a href="/excels/点检保养计划模板.xlsx">
           <el-button
             size="medium"
+            type="primary"
             class="tool tool-create"
           >下载模板</el-button>
         </a>
@@ -39,7 +50,11 @@
           :on-exceed="handleExceed"
           :on-success="handleSuccess"
         >
-          <el-button class="tool tool-query" type="primary" icon="el-icon-upload">上传</el-button>
+          <el-button
+            class="tool tool-query"
+            type="primary"
+            icon="el-icon-upload"
+          >上传</el-button>
         </el-upload>
       </div>
     </div>
@@ -56,23 +71,88 @@
       @sort-change="handleSort"
     >
       <el-table-column type="selection" align="center" width="35" />
-      <el-table-column label="序号" type="index" align="center" width="40" fixed>
+      <el-table-column
+        label="序号"
+        type="index"
+        align="center"
+        width="40"
+        fixed
+      >
         <template slot-scope="scope">
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="设备型号" prop="deviceModel" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="控制器" prop="controller" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="报警号" prop="alarmNumber" align="center" width="150" show-overflow-tooltip />
-      <el-table-column label="报警信息" prop="alarmMessage" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="报警信息说明" prop="descriptionOfAlarm" align="center" width="150" show-overflow-tooltip />
-      <el-table-column label="维修方法" prop="repairMethod" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="维修记录" prop="repairRecord" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="故障判定" prop="faultJudge" align="center" show-overflow-tooltip />
+      <el-table-column
+        label="设备型号"
+        prop="deviceModel"
+        align="center"
+        width="200"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="控制器"
+        prop="controller"
+        align="center"
+        width="200"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="报警号"
+        prop="alarmNumber"
+        align="center"
+        width="150"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="报警信息"
+        prop="alarmMessage"
+        align="center"
+        width="120"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="报警信息说明"
+        prop="descriptionOfAlarm"
+        align="center"
+        width="150"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="维修方法"
+        prop="repairMethod"
+        align="center"
+        width="200"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="维修记录"
+        prop="repairRecord"
+        align="center"
+        width="200"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        label="故障判定"
+        prop="faultJudge"
+        align="center"
+        show-overflow-tooltip
+      />
       <el-table-column fixed="right" label="操作" align="center" width="180">
-        <template slot-scope="{row}">
-          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
-            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)">
+        <template slot-scope="{ row }">
+          <el-tooltip
+            transition="false"
+            :hide-after="1000"
+            class="item"
+            content="删除"
+            placement="top-end"
+          >
+            <el-button
+              type="danger"
+              plain
+              class="button-operate button-delete"
+              size="mini"
+              @click="handleDelete(row)"
+            >
               <i class="vue-icon-delete" />
             </el-button>
           </el-tooltip>
@@ -90,66 +170,76 @@
 </template>
 <script type="text/javascript" src="./js/xlsx.core.min.js"></script>
 <script>
-import { mapGetters } from 'vuex'
-import adaptive from '@/directive/el-table'
-import getDefaultListViewData from '@/utils/viewData/list'
-import models from '@/models'
-import crud from '@/utils/crud'
-import api from '@/api'
-import XLSX from 'xlsx'
-import {insertExcel} from "@/api/equipmentManagement/modules/deviceFaultsStore";
+import { mapGetters } from "vuex";
+import adaptive from "@/directive/el-table";
+import getDefaultListViewData from "@/utils/viewData/list";
+import models from "@/models";
+import crud from "@/utils/crud";
+import api from "@/api";
+import XLSX from "xlsx";
+import { insertExcel } from "@/api/equipmentManagement/modules/deviceFaultsStore";
 export default {
-  name: 'Role',
+  name: "Role",
   components: {
-    Pagination: () => import('@/components/Pagination'),
+    Pagination: () => import("@/components/Pagination"),
   },
   directives: { adaptive },
   data() {
-    const curModels = models.equipmentManagement.deviceFaultsStore
-    const curApi = api.equipmentManagement.deviceFaultsStore
-    const curPermission = this.$store.getters.access.equipmentManagement.deviceFaultsStore
+    const curModels = models.equipmentManagement.deviceFaultsStore;
+    const curApi = api.equipmentManagement.deviceFaultsStore;
+    const curPermission =
+      this.$store.getters.access.equipmentManagement.deviceFaultsStore;
     return {
-      ...getDefaultListViewData(), ...curModels, curApi, curPermission,
+      ...getDefaultListViewData(),
+      ...curModels,
+      curApi,
+      curPermission,
       ...{
         page: { total: 0, current: 1, size: 10 },
-        sort: { prop: 'serialNumber', order: 'descending' },
+        sort: { prop: "serialNumber", order: "descending" },
       },
-      datas:[]
-    }
+      datas: [],
+    };
   },
   computed: {
-    ...mapGetters(['enums', 'user'])
+    ...mapGetters(["enums", "user"]),
   },
   created() {
-    this.clearAndInitQuery()
-    this.getDatas()
+    this.clearAndInitQuery();
+    this.getDatas();
   },
   methods: {
     ...crud,
-    handleSuccess(){
-      this.getDatas()
+    handleSuccess() {
+      this.getDatas();
     },
-     handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-      },
-    handleDown(){
-     let downfile=document.querySelector('#downfile')
-     downfile.click()
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
+      );
+    },
+    handleDown() {
+      let downfile = document.querySelector("#downfile");
+      downfile.click();
     },
     // 上传excel
-    uploadExcel(param){
-      const formData = new FormData()
-      formData.append('file', param.file)
-      insertExcel(formData).then(response => {
-        console.log('导入成功')
-        this.getDatas()
-        // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
-      }).catch(response => {
-        console.log('导入失败')
-      })
-    }
-}
-}
+    uploadExcel(param) {
+      const formData = new FormData();
+      formData.append("file", param.file);
+      insertExcel(formData)
+        .then((response) => {
+          console.log("导入成功");
+          this.getDatas();
+          // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
+        })
+        .catch((response) => {
+          console.log("导入失败");
+        });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -157,8 +247,8 @@ export default {
   padding-left: 5px;
   background-color: #e8e8e8;
 
-  +.function-level-2 {
-    border-top: none
+  + .function-level-2 {
+    border-top: none;
   }
 }
 
@@ -166,7 +256,7 @@ export default {
   margin-left: 30px;
   border-top: dashed 1px #a0a0a0;
 
-  +.function-level-3 {
+  + .function-level-3 {
     padding-left: 55px;
   }
 }
@@ -183,21 +273,30 @@ export default {
   cursor: not-allowed !important;
 }
 
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
-  background-color: #409EFF !important;
-  border-color: #409EFF !important;
+/deep/
+  .disabled-checkbox
+  .el-checkbox__input.is-disabled.is-checked
+  .el-checkbox__inner {
+  background-color: #409eff !important;
+  border-color: #409eff !important;
   cursor: not-allowed !important;
 
   &::after {
-    border-color: #FFF !important;
+    border-color: #fff !important;
   }
 }
 
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked+span.el-checkbox__label {
-  color: #409EFF !important;
+/deep/
+  .disabled-checkbox
+  .el-checkbox__input.is-disabled.is-checked
+  + span.el-checkbox__label {
+  color: #409eff !important;
 }
 
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner::before {
-  background-color: #FFF;
+/deep/
+  .disabled-checkbox
+  .el-checkbox__input.is-disabled.is-indeterminate
+  .el-checkbox__inner::before {
+  background-color: #fff;
 }
 </style>

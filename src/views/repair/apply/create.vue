@@ -1,23 +1,58 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
-    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth || '120px'">
+  <el-dialog
+    v-loading="loading"
+    :custom-class="'dialog-fullscreen dialog-' + dialogClass"
+    :title="dialogTitle"
+    :visible.sync="visible"
+    :modal="false"
+    :modal-append-to-body="false"
+    @close="resetForm()"
+  >
+    <el-form
+      ref="form"
+      label-position="right"
+      :rules="rules"
+      :model="model"
+      :label-width="labelWidth || '120px'"
+    >
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="所属部门" prop="applyDeptId">
-            <el-select v-model="model.deptId" class="query-item" style="width: 150px" placeholder="申请部门" clearable
-              @clear="handleQuery">
-              <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key"
-                @click.native="onChangeDepart(item.text)" />
+          <el-form-item label="所属部门" prop="deptId">
+            <el-select
+              v-model="model.deptId"
+              class="query-item"
+              style="width: 150px"
+              placeholder="申请部门"
+              clearable
+              @clear="handleQuery"
+            >
+              <el-option
+                v-for="item in departs"
+                :key="item.key"
+                :label="item.text"
+                :value="item.key"
+                @click.native="onChangeDepart(item.text)"
+              />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="所属工段" prop="applyDeptId">
-            <el-select v-model="model.section" class="query-item" style="width: 150px" placeholder="所属工段" clearable
-              @clear="handleQuery">
-              <el-option v-for="item in sections" :key="item.key" :label="item.text" :value="item.key"
-                @click.native="onChangeDepart(item.text)" />
+          <el-form-item label="所属工段" prop="section">
+            <el-select
+              v-model="model.section"
+              class="query-item"
+              style="width: 150px"
+              placeholder="所属工段"
+              clearable
+              @clear="handleQuery"
+            >
+              <el-option
+                v-for="item in sections"
+                :key="item.key"
+                :label="item.text"
+                :value="item.key"
+                @click.native="onChangeDepart(item.text)"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -30,18 +65,26 @@
       </el-row>
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="制造日期" prop="productCode">
-            <el-date-picker v-model="model.productDate" align="center" placeholder="选择日期" type="datetime"
-              value-format="yyyy-MM-dd" class="query-item" style="width: 200px" @change="handleChangeQueryDate" />
+          <el-form-item label="制造日期" prop="productDate">
+            <el-date-picker
+              v-model="model.productDate"
+              align="center"
+              placeholder="选择日期"
+              type="datetime"
+              value-format="yyyy-MM-dd"
+              class="query-item"
+              style="width: 200px"
+              @change="handleChangeQueryDate"
+            />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="设备编号" prop="propertyCode">
+          <el-form-item label="设备编号" prop="deviceNum">
             <el-input v-model="model.deviceNum" />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="设备型号" prop="propertyCode">
+          <el-form-item label="设备型号" prop="deviceType">
             <el-input v-model="model.deviceType" />
           </el-form-item>
         </el-col>
@@ -56,24 +99,45 @@
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修等级" prop="level">
             <el-select v-model="model.level" filterable clearable>
-              <el-option v-for="item in levels" :key="item.key" :label="item.text" :value="item.key"
-                @click.native="onChangeZhixi(item.text)" />
+              <el-option
+                v-for="item in levels"
+                :key="item.key"
+                :label="item.text"
+                :value="item.key"
+                @click.native="onChangeZhixi(item.text)"
+              />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修类别" prop="factory">
             <el-select v-model="model.category" filterable clearable>
-              <el-option v-for="item in categories" :key="item.key" :label="item.text" :value="item.key"
-                @click.native="onChangeFactory(item.text)" />
+              <el-option
+                v-for="item in categories"
+                :key="item.key"
+                :label="item.text"
+                :value="item.key"
+                @click.native="onChangeFactory(item.text)"
+              />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="选择签核流程" prop="workFlow">
-            <el-select v-model="model.flowId" class="query-item" style="width: 150px" placeholder="签核流程" clearable
-              @clear="handleQuery">
-              <el-option v-for="item in workFlows" :key="item.key" :label="item.text" :value="item.key" />
+            <el-select
+              v-model="model.flowId"
+              class="query-item"
+              style="width: 150px"
+              placeholder="签核流程"
+              clearable
+              @clear="handleQuery"
+            >
+              <el-option
+                v-for="item in workFlows"
+                :key="item.key"
+                :label="item.text"
+                :value="item.key"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -81,7 +145,11 @@
       <el-row>
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
           <el-form-item label="报修内容" prop="content">
-            <el-input v-model="model.content" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" />
+            <el-input
+              v-model="model.content"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4 }"
+            />
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
@@ -93,7 +161,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button type="primary" @click="submitCreate">提交</el-button>
-      <el-button @click="visible = false">取消</el-button>
+      <el-button @click="cancel()">取消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -118,7 +186,10 @@ export default {
       fileType: 'repairApplyFile',
       uploadUrl: BASE_URL + '/file/uploadSingleFile',
       fileList: [],
-      ...getDefaultCreateViewData(), ...curModels, curApi, rules,
+      ...getDefaultCreateViewData(),
+      ...curModels,
+      curApi,
+      rules,
       ...{
         dialogTitle: '设备保修申请',
         model: curModels.create,
@@ -131,23 +202,30 @@ export default {
         factories: [],
         processDepts: [],
         sections: [],
-        levels: [{
-          key: '一般',
-          text: '一般'
-        }, {
-          key: '加急',
-          text: '加急'
-        }],
-        categories: [{
-          key: '设备维修',
-          text: '设备维修'
-        }, {
-          key: '量测设备维修',
-          text: '量测设备维修'
-        }, {
-          key: '辅助治具维修',
-          text: '辅助治具维修'
-        }]
+        levels: [
+          {
+            key: '一般',
+            text: '一般'
+          },
+          {
+            key: '加急',
+            text: '加急'
+          }
+        ],
+        categories: [
+          {
+            key: '设备维修',
+            text: '设备维修'
+          },
+          {
+            key: '量测设备维修',
+            text: '量测设备维修'
+          },
+          {
+            key: '辅助治具维修',
+            text: '辅助治具维修'
+          }
+        ]
       }
     }
   },
@@ -156,6 +234,15 @@ export default {
   },
   methods: {
     ...crud,
+    resetForm() {
+      this.$refs['form'].resetFields()
+    },
+    cancel() {
+      // 重置form表单
+      this.$refs['form'].resetFields()
+      // 关闭dialog
+      this.visible = false
+    },
     async initCreateBefore() {
       this.roleTypes = this.$parent.roleTypes
       this.departs = this.$parent.departs
@@ -168,7 +255,7 @@ export default {
       // 页面刷新，丢失数据
       // this.getRoles(this.model.roleType, this.model.companyId)
     },
-    //重写提交方法
+    // 重写提交方法
     submitCreate() {
       this.$refs.form.validate((valid) => {
         if (!valid) return false
@@ -183,23 +270,30 @@ export default {
         // 拷贝数据提交
         const data = _.pick(this.model, Object.keys(this.createReal))
         data.fileList = this.fileList
-        this.curApi.create(data).then(() => {
-          // 钩子，添加提交后执行。无返回值
-          if (this.submitCreateAfter) this.submitCreateAfter()
-          // 重新加载列表页
-          this.$parent.getDatas()
-          this.loading = false
-        }).catch(() => {
-          this.loading = false
-        })
+        this.curApi
+          .create(data)
+          .then(() => {
+            // 钩子，添加提交后执行。无返回值
+            this.$refs['form'].resetFields()
+            this.visible = false
+            if (this.submitCreateAfter) this.submitCreateAfter()
+            // 重新加载列表页
+            this.$parent.getDatas()
+            this.loading = false
+          })
+          .catch(() => {
+            this.loading = false
+          })
       })
     },
     // 获取流程下拉列表
     getWorkFlows() {
-      api.system.workFlow.getSelectlist('1').then(response => {
-        this.workFlows = response.data || []
-      }).catch(reject => {
-      })
+      api.system.workFlow
+        .getSelectlist('1')
+        .then((response) => {
+          this.workFlows = response.data || []
+        })
+        .catch((reject) => {})
     },
     onChangeDepart(val) {
       this.model.deptName = val
@@ -216,7 +310,8 @@ export default {
     // 切换角色类型
     changeRoleTypeHandle() {
       // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
-      this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.roleType >= 3
+      this.rules.companyId[0].required =
+        this.user.roleType <= 2 && this.model.roleType >= 3
       // 重置模型类
       this.model.companyId = null
       this.roles = []
@@ -236,9 +331,11 @@ export default {
     },
     // 获取角色列表
     getRoles(roleType, companyId) {
-      return api.system.role.getSelectlist(roleType, companyId).then(response => {
-        this.roles = response.data || []
-      })
+      return api.system.role
+        .getSelectlist(roleType, companyId)
+        .then((response) => {
+          this.roles = response.data || []
+        })
     },
     // submitCreateBefore() {
     //   this.model.applyPersonId = this.user.id // 绑定当前用户
@@ -257,6 +354,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>
 
