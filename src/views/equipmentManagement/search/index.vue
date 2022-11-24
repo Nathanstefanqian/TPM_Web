@@ -191,15 +191,7 @@ export default {
           this.message = res.message
           file.status === 'success'
           this.loading = true
-          api.maintain.plan.getList(this.queryReal, this.page, this.sort).then(response => {
-            this.datas = response.data.items
-            this.page.total = response.data.total
-            // 钩子，获取数据后执行。无返回值
-            if (this.getDatasAfter) this.getDatasAfter()
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
+          this.getDatas()
           break
         case 40000:
         case 40100:
