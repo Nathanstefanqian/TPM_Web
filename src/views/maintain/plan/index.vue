@@ -8,7 +8,8 @@
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
         <el-upload
           class="inline-block"
-          action="http://localhost:8889/api/v1/file/addPlan"
+          action=""
+          :http-request="uploadExcel"
           :headers="headers"
           :multiple="false"
           :on-change="uploadVideoProcess"
@@ -24,7 +25,7 @@
             class="tool tool-create"
           >下载模板</el-button>
         </a>
-        <el-progress v-show="progressFlag" :percentage="loadProgress"></el-progress>
+        <el-progress v-show="progressFlag" :percentage="loadProgress" />
         <!--        <el-button class="tool tool-create" type="primary" icon="vue-icon-create" @click="handleCreate">批量上传</el-button>-->
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
       </div>
@@ -40,7 +41,7 @@
       <el-table-column label="点检信息" prop="maintainType" align="center" width="120" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
-          <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="项目内容" placement="top-end">
             <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>
           </el-tooltip>
           <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
@@ -64,6 +65,7 @@ import getDefaultListViewData from '@/utils/viewData/list'
 import models from '@/models'
 import crud from '@/utils/crud'
 import api from '@/api'
+// import { insertExcel } from '@/api/equipmentManagement/modules/deviceFaultsStore'
 
 export default {
   name: 'Plan',
@@ -90,8 +92,8 @@ export default {
         factories: [],
         processDepts: [],
         persons: [],
-        loadProgress:0,
-        progressFlag:false,
+        loadProgress: 0,
+        progressFlag: false,
         headers: { token: null },
         message: null
       },
@@ -207,22 +209,33 @@ export default {
       })
     },
     uploadVideoProcess(file, fileList) {
-        if(file.status === 'ready'){
-          this.progressFlag = true; // 显示进度条
-          this.loadProgress = 0;
-          const interval = setInterval(() => {
-            if(this.loadProgress >=99){
-              clearInterval(interval)
-              return
-            }
-            this.loadProgress += 1
-          }, 20);
-        }
-          if (file.status === 'success') {
-            this.progressFlag = false; // 显示进度条
-            this.loadProgress = 100;
+      if (file.status === 'ready') {
+        this.progressFlag = true // 显示进度条
+        this.loadProgress = 0
+        const interval = setInterval(() => {
+          if (this.loadProgress >= 99) {
+            clearInterval(interval)
+            return
           }
-      },
+          this.loadProgress += 1
+        }, 20)
+      }
+      if (file.status === 'success') {
+        this.progressFlag = false // 显示进度条
+        this.loadProgress = 100
+      }
+    },
+    // 上传excel
+    uploadExcel(param) {
+      const formData = new FormData()
+      formData.append('file', param.file)
+      api.maintain.plan.addPlan(formData).then(response => {
+        console.log('导入成功')
+        // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
+      }).catch(response => {
+        console.log('导入失败')
+      })
+    }
 
   }
 }

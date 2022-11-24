@@ -2,24 +2,59 @@
   <div class="app-container list">
     <div ref="toolbar" class="toolbar">
       <div class="tool-group">
-        <el-input v-model.trim="query.deviceModel" class="query-item" style="width: 120px" placeholder="设备型号" clearable
-          @clear="handleQuery" />
-        <el-input v-model.trim="query.alarmNumber" class="query-item" style="width: 120px" placeholder="报警号" clearable
-          @clear="handleQuery" />
+        <el-input
+          v-model.trim="query.deviceModel"
+          class="query-item"
+          style="width: 120px"
+          placeholder="设备型号"
+          clearable
+          @clear="handleQuery"
+        />
+        <el-input
+          v-model.trim="query.alarmNumber"
+          class="query-item"
+          style="width: 120px"
+          placeholder="报警号"
+          clearable
+          @clear="handleQuery"
+        />
         <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除
         </el-button>
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
-        <el-button class="tool tool-query" type="primary" icon="el-icon-download" @click="handleDown">下载模板</el-button>
-        <a v-show="false" id="downfile" download href="http://localhost:8889/api/v1/deviceFaultsStore/download">下载模板</a>
-        <el-upload :show-file-list="false" style="display: inline-block" class="upload-demo" ref="upload"
-          action="http://localhost:8889/api/v1/deviceFaultsStore/insert" :limit="1" accept=".xls,.xlsx,.csv"
-          :on-exceed="handleExceed" :on-success="handleSuccess">
+        <a href="/excels/点检保养计划模板.xlsx">
+          <el-button
+            size="medium"
+            class="tool tool-create"
+          >下载模板</el-button>
+        </a>
+        <el-upload
+          ref="upload"
+          :show-file-list="false"
+          style="display: inline-block"
+          class="upload-demo"
+          action="sss"
+          :http-request="uploadExcel"
+          :limit="1"
+          accept=".xls,.xlsx,.csv"
+          :on-exceed="handleExceed"
+          :on-success="handleSuccess"
+        >
           <el-button class="tool tool-query" type="primary" icon="el-icon-upload">上传</el-button>
         </el-upload>
       </div>
     </div>
-    <el-table ref="listTable" v-loading="loading.table" v-adaptive="{ bottomOffset: 55 }" height="200px" :data="datas"
-      :default-sort="sort" border fit highlight-current-row @sort-change="handleSort">
+    <el-table
+      ref="listTable"
+      v-loading="loading.table"
+      v-adaptive="{ bottomOffset: 55 }"
+      height="200px"
+      :data="datas"
+      :default-sort="sort"
+      border
+      fit
+      highlight-current-row
+      @sort-change="handleSort"
+    >
       <el-table-column type="selection" align="center" width="35" />
       <el-table-column label="序号" type="index" align="center" width="40" fixed>
         <template slot-scope="scope">
@@ -44,8 +79,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination :hidden="page.total === 0" :total="page.total" :page.sync="page.current" :limit.sync="page.size"
-      @pagination="getDatas" />
+    <pagination
+      :hidden="page.total === 0"
+      :total="page.total"
+      :page.sync="page.current"
+      :limit.sync="page.size"
+      @pagination="getDatas"
+    />
   </div>
 </template>
 <script type="text/javascript" src="./js/xlsx.core.min.js"></script>
@@ -57,6 +97,7 @@ import models from '@/models'
 import crud from '@/utils/crud'
 import api from '@/api'
 import XLSX from 'xlsx'
+import {insertExcel} from "@/api/equipmentManagement/modules/deviceFaultsStore";
 export default {
   name: 'Role',
   components: {
@@ -95,6 +136,17 @@ export default {
      let downfile=document.querySelector('#downfile')
      downfile.click()
     },
+    // 上传excel
+    uploadExcel(param){
+      const formData = new FormData()
+      formData.append('file', param.file)
+      insertExcel(formData).then(response => {
+        console.log('导入成功')
+        // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
+      }).catch(response => {
+        console.log('导入失败')
+      })
+    }
 }
 }
 </script>

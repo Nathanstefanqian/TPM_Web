@@ -72,18 +72,26 @@ export function getRoleTypes() {
   })
 }
 // 上传Excel
-export function addPlan() {
+
+export function addPlan(data) {
   return request({
-    url: `/file/addPlan`,
-    method: 'post'
+    url: '/eqMaintainPlan/addPlan',
+    method: 'post',
+    data
   })
 }
+// export function addPlan() {
+//   return request({
+//     url: `/file/addPlan`,
+//     method: 'post'
+//   })
+// }
 
 // 点检项目计划详情界面，获取content
 export function getContentList() {
   return request({
     url: '/eqMaintainPlanContent/list',
     method: 'post',
-    data:{}
+    data: {}
   })
 }
