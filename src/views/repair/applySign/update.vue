@@ -191,6 +191,7 @@ import crud from '@/utils/crud'
 import api from '@/api'
 import { cloneDeep } from 'lodash'
 import adaptive from '@/directive/el-table'
+import download from '@/utils/download'
 
 export default {
   directives: { adaptive },
@@ -254,7 +255,13 @@ export default {
       this.curApi.hasFile(this.model.id).then(
         (res) => {
           if (res) {
-            window.open(process.env.VUE_APP_BASE_API + `/eqRepairApplyFile/${this.model.id}/getFileList`)
+            const a = document.createElement('a')
+            a.href = process.env.VUE_APP_BASE_API + `/eqRepairApplyFile/${this.model.id}/getFileList`
+            a.download
+            a.style.display = 'none'
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
           } else {
             this.$message({
               message: '无附件',
@@ -263,7 +270,10 @@ export default {
           }
         }
       ).catch((err) => {
-        this.$emit(err)
+        this.$message({
+          message: err,
+          type: 'error'
+        })
       })
     },
     // 重写submitUpdate方法
