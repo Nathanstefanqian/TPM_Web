@@ -72,15 +72,21 @@
             <el-popover
               placement="right"
               width="400"
-              trigger="click">
-              <el-table :data="fileList"
-                        stripe
-                        max-height="200">
+              trigger="click"
+            >
+              <el-table
+                :data="fileList"
+                stripe
+                max-height="300"
+              >
                 <el-table-column width="150" property="fileName" label="附件名" align="center">
                   <template slot-scope="scope">
-                    <el-image v-if="isImage(scope.row.fileName)"
-                              :src="'http://localhost:8889/api/v1' +(scope.row.filePath)"
-                              :preview-src-list="srcList"/>
+                    <el-image
+                      v-if="isImage(scope.row.fileName)"
+                      ref="myImg"
+                      :src="'http://localhost:8889/api/v1' +(scope.row.filePath)"
+                      :preview-src-list="srcList"
+                    />
                     <el-link v-else @click="getFileList(scope.row.filePath)">
                       <template>{{ scope.row.fileName }}</template>
                     </el-link>
@@ -88,16 +94,20 @@
                 </el-table-column>
                 <el-table-column width="100" label="类型" align="center">
                   <template slot-scope="scope">
-                    <el-tag type="success" v-if="isImage(scope.row.fileName)">图片</el-tag>
-                    <el-tag type="primary" v-else>文件</el-tag>
+                    <el-tag v-if="isImage(scope.row.fileName)" type="success">图片</el-tag>
+                    <el-tag v-else type="primary">文件</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column width="100" label="操作" align="center">
                   <template slot-scope="scope">
-                    <el-button size="mini" type="primary" v-if="isImage(scope.row.fileName)"
-                               @click="getFileList(scope.row.filePath)">预览
+                    <el-button
+                      v-if="isImage(scope.row.fileName)"
+                      size="mini"
+                      type="primary"
+                      @click="doPreviewImg()"
+                    >预览
                     </el-button>
-                    <el-button size="mini" type="primary" v-else @click="getFileList(scope.row.filePath)">下载
+                    <el-button v-else size="mini" type="primary" @click="getFileList(scope.row.filePath)">下载
                     </el-button>
                   </template>
                 </el-table-column>
@@ -109,7 +119,7 @@
         </el-col>
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
           <el-form-item label="备注信息">
-            <el-input v-model="remark" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }"/>
+            <el-input v-model="remark" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -125,7 +135,7 @@
               clearable
               @change="selectPersonChanged"
             >
-              <el-option v-for="item in repairPersons" :key="item.key" :label="item.text" :value="item.key"/>
+              <el-option v-for="item in repairPersons" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -180,11 +190,11 @@
           <span>{{ scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IP" prop="checkIp" align="left" width="120" show-overflow-tooltip/>
-      <el-table-column label="签核人员" prop="checkPerson" align="center" width="200" show-overflow-tooltip/>
-      <el-table-column label="签核时间" prop="checkTime" align="center" width="200" show-overflow-tooltip/>
-      <el-table-column label="操作" prop="checkInfo" align="center" width="120" show-overflow-tooltip/>
-      <el-table-column label="备注" prop="checkContent" align="center" show-overflow-tooltip/>
+      <el-table-column label="IP" prop="checkIp" align="left" width="120" show-overflow-tooltip />
+      <el-table-column label="签核人员" prop="checkPerson" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="签核时间" prop="checkTime" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="操作" prop="checkInfo" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="备注" prop="checkContent" align="center" show-overflow-tooltip />
     </el-table>
     <!--    修改操作人窗口-->
     <el-dialog
@@ -204,7 +214,7 @@
           clearable
           @change="selectCheckPersonChanged"
         >
-          <el-option v-for="(item, index) in checkPersons" :key="index" :label="item.text" :value="index"/>
+          <el-option v-for="(item, index) in checkPersons" :key="index" :label="item.text" :value="index" />
         </el-select>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -219,25 +229,22 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import getDefaultUpdateViewData from '@/utils/viewData/update'
 import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
-import {cloneDeep} from 'lodash'
+import { cloneDeep } from 'lodash'
 import adaptive from '@/directive/el-table'
-import download from '@/utils/download'
-import {getEqRepairApplyFile} from "@/api/repair/modules/applySign";
 
 export default {
-  directives: {adaptive},
+  directives: { adaptive },
   data() {
     const curModels = models.repair.applySign
     const curApi = api.repair.applySign
     const outsourceModels = models.repair.outsource
     const outsourceApi = api.repair.outsource
-    const baseUrl = process.env.VUE_APP_BASE_API
     return {
       hasFile: false,
       fileList: [],
@@ -247,7 +254,6 @@ export default {
       curApi,
       rules,
       ...{
-        _baseUrl: {...baseUrl},
         dialogTitle: '报修签核',
         model: curModels.update,
         roleTypes: [],
@@ -268,7 +274,7 @@ export default {
         newCheckPersonName: '',
         newCheckPersonid: '',
         changeCheckPersonVisible: false,
-        sort: {prop: 'checkTime', order: 'descending'},
+        sort: { prop: 'checkTime', order: 'descending' },
         flowNode: {
           id: null,
           name: null,
@@ -291,10 +297,14 @@ export default {
   },
   methods: {
     ...crud,
+    // 图片预览
+    doPreviewImg() {
+      this.$refs.myImg.showViewer = true
+    },
     // 判断是否是图片
     isImage(str) {
-      const reg = /.(png|jpg|gif|jpeg|webp|svg)$/;
-      return reg.test(str);
+      const reg = /.(png|jpg|gif|jpeg|webp|svg)$/
+      return reg.test(str)
     },
     // 获取附件数据
     getEqRepairApplyFile() {
@@ -317,13 +327,11 @@ export default {
           console.log(err)
         }
       )
-    }
-    ,
+    },
     // 下载附件
     getFileList(url, fileName) {
       window.open(process.env.VUE_APP_BASE_API + url)
-    }
-    ,
+    },
     // 重写submitUpdate方法
     submitUpdate(result) {
       this.$refs.form.validate((valid) => {
@@ -356,9 +364,8 @@ export default {
             this.loading = false
           })
       })
-    }
-    ,
-// 获取canAssign
+    },
+    // 获取canAssign
     getcanAssign(x) {
       api.repair.applySign
         .getFlowData(x)
@@ -373,9 +380,8 @@ export default {
         })
         .catch((reject) => {
         })
-    }
-    ,
-// 通过
+    },
+    // 通过
     submitUpdatePass() {
       if (this.canAssign && this.model.repairPersonId == null) {
         this.$message.error('请选择维修人员。')
@@ -389,16 +395,14 @@ export default {
       this.model.checkMemo = ''
       this.active++
       this.submitUpdate(1)
-    }
-    ,
-//  驳回
+    },
+    //  驳回
     submitUpdateBack() {
       this.model.status = '2'
       // todo  备注信息
       this.model.checkMemo = ''
       this.submitUpdate(0)
-    }
-    ,
+    },
     handleChangePerson(item) {
       this.changeCheckPersonVisible = true
       this.flowNode.id = item.id
@@ -408,8 +412,7 @@ export default {
       this.flowNode.checkType = item.checkType
       this.flowNode.checkOrder = item.checkOrder
       this.flowNode.repairApplyId = item.repairApplyId
-    }
-    ,
+    },
     submitUpdateChangePerson() {
       this.flowNode.checkId = this.newCheckPersonid
       console.log(this.flowNode)
@@ -426,12 +429,10 @@ export default {
         // 刷新签核记录
         this.getCheckLog(this.flowNode.repairApplyId)
       })
-    }
-    ,
+    },
     sentEmail() {
       this.submitUpdate()
-    }
-    ,
+    },
     getPersons() {
       api.system.user
         .getSelectlist()
@@ -441,8 +442,7 @@ export default {
         })
         .catch((reject) => {
         })
-    }
-    ,
+    },
     getFlowData(repairApplyId) {
       api.repair.applySign
         .getFlowData(repairApplyId)
@@ -459,8 +459,7 @@ export default {
         })
         .catch((reject) => {
         })
-    }
-    ,
+    },
     selectPersonChanged(value) {
       for (var i = 0; i < this.repairPersons.length; i++) {
         // console.log('i:' + this.repairPersons[i].text)
@@ -468,13 +467,11 @@ export default {
           this.model.repairPersonName = this.repairPersons[i].text
         }
       }
-    }
-    ,
+    },
     selectCheckPersonChanged(value) {
       this.newCheckPersonName = this.repairPersons[value].text
       this.newCheckPersonid = this.repairPersons[value].key
-    }
-    ,
+    },
     getCheckLog(repairApplyId) {
       api.repair.applySign
         .getCheckLog(repairApplyId)
@@ -483,9 +480,8 @@ export default {
         })
         .catch((reject) => {
         })
-    }
-    ,
-// 初始化数据之前 row：行绑定数据
+    },
+    // 初始化数据之前 row：行绑定数据
     async initUpdateBefore(row) {
       // 流程数据
       this.getFlowData(row.id)
@@ -501,17 +497,15 @@ export default {
       //   this.model.roleType = 4
       //   this.model.companyId = this.user.companyId
       // }
-    }
-    ,
-// 初始化数据之后 row：行绑定数据；data：接口返回数据
+    },
+    // 初始化数据之后 row：行绑定数据；data：接口返回数据
     initUpdateAfter(row, data) {
       console.log(data)
       this.model = data
       // if (this.model.checkNextName === '维保主管审核') {
       //   this.appointPersonShow = true
       // }
-    }
-    ,
+    },
     submitUpdateAfter() {
       console.log('updateafter' + this.flowNode.repairApplyId)
       // this.getCheckLog(this.flowNode.repairApplyId)
