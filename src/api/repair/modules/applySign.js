@@ -6,9 +6,9 @@ export function getList(query, page, sort) {
     url: '/eqRepairApply/listSign',
     method: 'post',
     data: {
-      page: { current: page.current, size: page.size },
-      sort: sort === null ? null : { property: sort.prop, direction: sort.order },
-      query: { ...query }
+      page: {current: page.current, size: page.size},
+      sort: sort === null ? null : {property: sort.prop, direction: sort.order},
+      query: {...query}
     }
   })
 }
@@ -101,6 +101,14 @@ export function getRoleTypes() {
 export function hasFile(id) {
   return request({
     url: `/eqRepairApplyFile/${id}/hasFile`,
+    method: 'get'
+  })
+}
+
+// 获取附件数据
+export function getEqRepairApplyFile(id) {
+  return request({
+    url: `/eqRepairApplyFile/1a7e8ddc629d459f83000978a57cb60c/getEqRepairApplyFile`,
     method: 'get'
   })
 }
