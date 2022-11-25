@@ -191,7 +191,6 @@ import crud from '@/utils/crud'
 import api from '@/api'
 import { cloneDeep } from 'lodash'
 import adaptive from '@/directive/el-table'
-import download from '@/utils/download'
 
 export default {
   directives: { adaptive },

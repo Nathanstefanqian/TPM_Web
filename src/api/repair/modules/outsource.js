@@ -97,3 +97,28 @@ export function query(data) {
     data
   })
 }
+
+// 完成维修
+export function finishOp(id) {
+  return request({
+    url: `/eqRepairOutsource/${id}/finishOp`,
+    method: 'post'
+  })
+}
+
+// 获取委外维修记录
+export function getOutsourceOpLog(id) {
+  return request({
+    url: `/eqRepairOutsourceOpLog/${id}/getOutsourceOpLog`,
+    method: 'get'
+  })
+}
+
+// 委外维修记录保存
+export function createOutsourceOpLog(data) {
+  return request({
+    url: '/eqRepairOutsourceOpLog/create',
+    method: 'post',
+    data
+  })
+}

@@ -34,7 +34,8 @@ function handleQuery() {
   this.page.current = 1
   // 钩子，查询之前数据处理
   if (this.queryBefore) {
-    if (!this.queryBefore()) return false
+    if (!this.queryBefore())
+      return false
   }
   this.queryReal = _.cloneDeep(this.query)
   this.getDatas()

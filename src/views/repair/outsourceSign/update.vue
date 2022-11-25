@@ -10,7 +10,7 @@
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
-              <el-form-item label="保修人员" prop="applyPersonName">
+              <el-form-item label="报修人员" prop="applyPersonName">
                 <span>{{ this.eqRepairApplyList[0].applyPersonName }}</span>
               </el-form-item>
             </el-col>
