@@ -6,73 +6,73 @@
           <el-row>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="报修单号">
-                <span>{{ this.eqRepairApplyList[0].repairNum }}</span>
+                <span>{{ this.applyList.eqRepairApply.repairNum }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="报修人员" prop="applyPersonName">
-                <span>{{ this.eqRepairApplyList[0].applyPersonName }}</span>
+                <span>{{ this.applyList.eqRepairApply.applyPersonName }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="所属工段" prop="section">
-                <span>{{ this.eqRepairApplyList[0].section }}</span>
+                <span>{{ this.applyList.eqRepairApply.section }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="所属单位" prop="deptName">
-                <span>{{ this.eqRepairApplyList[0].deptName }}</span>
+                <span>{{ this.applyList.eqRepairApply.deptName }}</span>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="制造编号" prop="productCode">
-                <span>{{ this.eqRepairApplyList[0].productCode }}</span>
+                <span>{{ this.applyList.eqRepairApply.productCode }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="制造日期" prop="productDate">
-                <span>{{ this.eqRepairApplyList[0].productDate }}</span>
+                <span>{{ this.applyList.eqRepairApply.productDate }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="设备编号" prop="deviceNum">
-                <span>{{ this.eqRepairApplyList[0].deviceNum }}</span>
+                <span>{{ this.applyList.eqRepairApply.deviceNum }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="设备型号" prop="deviceType">
-                <span>{{ this.eqRepairApplyList[0].deviceType }}</span>
+                <span>{{ this.applyList.eqRepairApply.deviceType }}</span>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="资产编号" prop="propertyCode">
-                <span>{{ this.eqRepairApplyList[0].propertyCode }}</span>
+                <span>{{ this.applyList.eqRepairApply.propertyCode }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="报修等级" prop="level">
-                <span>{{ this.eqRepairApplyList[0].level }}</span>
+                <span>{{ this.applyList.eqRepairApply.level }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:250px">
               <el-form-item label="报修类别" prop="category">
-                <span>{{ this.eqRepairApplyList[0].category }}</span>
+                <span>{{ this.applyList.eqRepairApply.category }}</span>
               </el-form-item>
             </el-col>
             <el-col :xl="3" :lg="4" :md="10" :sm="12" :xs="24" style="width:300px">
               <el-form-item label="报修日期" prop="repairTime">
-                <span>{{ this.eqRepairApplyList[0].repairTime }}</span>
+                <span>{{ this.applyList.eqRepairApply.repairTime }}</span>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
               <el-form-item label="报修内容" prop="content">
-                <span>{{ this.eqRepairApplyList[0].content }}</span>
+                <span>{{ this.applyList.eqRepairApply.content }}</span>
               </el-form-item>
             </el-col>
           </el-row>
@@ -84,6 +84,19 @@
             </el-col>
           </el-row>
 
+          <el-row>
+            <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+              <el-form-item label="委外人员">
+                <el-select
+                  v-model="outsourceUser"
+                  class="query-item"
+                  placeholder="请选择"
+                >
+                  <el-option v-for="item in outsourceUserList" :key="item.id" :label="item.name" :value="item.id" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-row>
             <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
               <el-form-item label="签核意见" prop="remark">
@@ -117,37 +130,15 @@
 
     </el-card>
     <el-card style="margin-top: 10px">
-      <el-steps
-        align-center
-        :space="400"
-        :active="1"
-        finish-status="success"
-      >
-        <el-step
-          v-for="(item, index) in flowDataList"
-          :key="index"
-          :title="item.name"
-          :description="item.checkPersonName"
-        >
-          <div slot="description">
-            <div>
-              <span> {{ item.checkPersonName }}</span>
+      <div style="margin-top: 30px">
+        <el-steps align-center :space="400" :active="active" finish-status="success">
+          <el-step v-for="(item, index) in flowDataList" :key="index" :title="item.name" :description="item.name">
+            <div slot="description">
+              <div>{{ item.name }}</div>
+              <el-button v-if="active === index" type="default" @click="handleChangePerson(item)">修改</el-button>
             </div>
-            <el-button
-              v-if="active === index"
-              type="default"
-              @click="handleChangePerson(item)"
-            >修改</el-button>
-          </div>
-          <!--          <template v-slot:description>-->
-          <!--            <div>丁工(wb001)待审核</div>-->
-          <!--            <el-button type="default" >修改</el-button>-->
-          <!--          </template>-->
-        </el-step>
-        <!--        <el-step title="维修" description="待维修"></el-step>-->
-      </el-steps>
-      <div style="text-align: center;margin-top: 30px">
-        <el-button type="primary" @click="submitUpdatePass">变更当前节点审核人</el-button>
+          </el-step>
+        </el-steps>
       </div>
     </el-card>
   </el-dialog>
@@ -160,6 +151,7 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import { getOutsourceUser } from '@/api/system/modules/user'
 
 export default {
   data() {
@@ -177,11 +169,14 @@ export default {
         appointPersonShow: false,
         applyList: [],
         opLogList: [],
-        eqRepairApplyList: [],
+        canAssign: false,
+        a: [],
         flowDataList: [],
+        outsourceUserList: [],
         len: 0,
-        length: 0
-
+        length: 0,
+        outsourceUser: null,
+        active: 2
       }
     }
   },
@@ -189,10 +184,31 @@ export default {
     ...mapGetters(['enums', 'user'])
   },
   created() {
-    // this.getApplyList()
+    this.getOutsourceUser()
   },
   methods: {
     ...crud,
+    getcanAssign(x) {
+      api.repair.applySign
+        .getFlowData(x)
+        .then((response) => {
+          this.a = response.data || []
+          for (var i = 0; i < this.a.length; i++) {
+            if (this.a[i].checkNowId === this.user.userId) {
+              this.canAssign = this.a[i].canAssign
+              console.log('this.canAssign', this.canAssign)
+            }
+          }
+        })
+        .catch((reject) => {
+        })
+    },
+    getOutsourceUser() {
+      api.system.user.getOutsourceUser().then(response => {
+        this.outsourceUserList = response.data
+        console.log(response.data)
+      })
+    },
     submitUpdate(result) {
       this.$refs.form.validate((valid) => {
         if (!valid) return false
@@ -227,23 +243,19 @@ export default {
 
     //
     getApplyList(id) {
-      this.eqRepairApplyList = []
       this.curApi.getinfo().then(response => {
-        this.applyList = response.data
         for (let i = 0; i < response.data.length; i++) {
-          if (id === this.applyList[i].id) {
-            this.eqRepairApplyList.push(this.applyList[i].eqRepairApply)
+          if (id === response.data[i].id) {
+            this.applyList = response.data[i]
           }
         }
-        console.log(this.eqRepairApplyList)
       })
     },
-
     getFlowDataList(id) {
       this.curApi.getFlowData(id).then(response => {
         this.flowDataList = response.data
         this.length = response.data.length
-        // console.log(this.flowDataList)
+        console.log(this.flowDataList)
       })
     },
 
@@ -259,9 +271,11 @@ export default {
       const data = {
         id: this.model.id,
         remark: this.model.remark,
-        result: 1
+        result: 1,
+        repairManId: this.outsourceUser
       }
       this.curApi.sign(data)
+      this.active++
     },
     //  驳回
     submitUpdateBack() {

@@ -64,3 +64,11 @@ export function resetPassword(data) {
     data: data
   })
 }
+
+// 获取委外人员信息
+export function getOutsourceUser() {
+  return request({
+    url: '/system/user/getOutsourceUser',
+    method: 'get'
+  })
+}

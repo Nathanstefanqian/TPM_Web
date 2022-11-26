@@ -97,7 +97,6 @@
             <el-table-column show-overflow-tooltip />
           </el-table>
         </el-card>
-
         <!--        <el-row>-->
         <!--          <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">-->
         <!--            <el-form-item label="委外维修" prop="content">-->
@@ -168,11 +167,9 @@
           </el-table>
         </el-card>
       </el-form>
-
       <div style="text-align: center;margin-bottom: 20px;margin-top: 20px">
         <el-button type="danger" @click="finish">结案申请</el-button>
       </div>
-
     </el-card>
   </el-dialog>
 </template>

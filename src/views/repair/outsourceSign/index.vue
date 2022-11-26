@@ -159,7 +159,9 @@ export default {
       applyCode: null,
       productCode: null,
       startTime: null,
-      endTime: null
+      endTime: null,
+      canAssign: false,
+      a: []
     }
   },
   computed: {
@@ -176,6 +178,8 @@ export default {
     console.log('roleid：' + this.user.roleId)
     console.log('userid：' + this.user.userId)
     this.getDatas()
+    this.getcanAssign(this.user.userId)
+
     // this.getRoleTypes()
     // this.getDeparts()
     // this.getZhixis()
@@ -184,6 +188,22 @@ export default {
     // this.getSections()
   },
   methods: {
+    // 获取canAssign
+    getcanAssign(x) {
+      api.repair.applySign
+        .getFlowData(x)
+        .then((response) => {
+          this.a = response.data || []
+          for (var i = 0; i < this.a.length; i++) {
+            if (this.a[i].checkNowId === this.user.userId) {
+              this.canAssign = this.a[i].canAssign
+              console.log('this.canAssign', this.canAssign)
+            }
+          }
+        })
+        .catch((reject) => {
+        })
+    },
     async searchlist() {
       const data = {
         applyCode: this.applyCode,
