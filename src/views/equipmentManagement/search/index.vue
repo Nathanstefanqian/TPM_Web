@@ -39,6 +39,12 @@
         >
           <el-button class="tool tool-create" icon="vue-icon-create" type="primary">批量上传</el-button>
         </el-upload>
+        <a href="/excels/设备信息模板.xlsx">
+          <el-button
+            size="medium"
+            class="tool tool-create"
+          >下载模板</el-button>
+        </a>
         <!--        <el-link class="tool tool-query" @click="downloadfile()">下载模板</el-link>-->
 
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
@@ -203,11 +209,14 @@ export default {
           this.message = '上传发生错误'
           break
       }
-      this.$notify({
-        title: '',
-        dangerouslyUseHTMLString: true,
-        message: this.message
-      })
+      // this.$notify({
+      //   title: '',
+      //   dangerouslyUseHTMLString: true,
+      //   message: this.message
+      // })
+      this.$message.warning(
+        this.message
+      )
     },
     uploadVideoProcess(file, fileList) {
         if(file.status === 'ready'){
@@ -226,6 +235,7 @@ export default {
             this.loadProgress = 100;
           }
       }
+      
   }
 }
 </script>
