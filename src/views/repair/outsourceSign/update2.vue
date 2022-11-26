@@ -184,7 +184,6 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
-import { createOutsourceOpLog } from '@/api/repair/modules/outsource'
 
 export default {
   data() {
