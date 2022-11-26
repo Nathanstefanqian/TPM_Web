@@ -68,8 +68,54 @@
         </el-col>
         <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
           <el-form-item label="附件" prop="opDescription">
-            <el-link @click="getFileList">查看附件</el-link>
+            <!--            <el-link @click="getFileList">查看附件</el-link>-->
+            <el-popover
+              placement="right"
+              width="400"
+              trigger="click"
+            >
+              <el-table
+                :data="fileList"
+                stripe
+                max-height="300"
+              >
+                <el-table-column width="150" property="fileName" label="附件名" align="center">
+                  <template slot-scope="scope">
+                    <el-image
+                      v-if="isImage(scope.row.fileName)"
+                      ref="myImg"
+                      :src="'http://localhost:8889/api/v1' +(scope.row.filePath)"
+                      :preview-src-list="srcList"
+                    />
+                    <el-link v-else @click="getFileList(scope.row.filePath)">
+                      <template>{{ scope.row.fileName }}</template>
+                    </el-link>
+                  </template>
+                </el-table-column>
+                <el-table-column width="100" label="类型" align="center">
+                  <template slot-scope="scope">
+                    <el-tag v-if="isImage(scope.row.fileName)" type="success">图片</el-tag>
+                    <el-tag v-else type="primary">文件</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column width="100" label="操作" align="center">
+                  <template slot-scope="scope">
+                    <el-button
+                      v-if="isImage(scope.row.fileName)"
+                      size="mini"
+                      type="primary"
+                      @click="doPreviewImg()"
+                    >预览
+                    </el-button>
+                    <el-button v-else size="mini" type="primary" @click="getFileList(scope.row.filePath)">下载
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-link slot="reference" @click="getEqRepairApplyFile">查看附件</el-link>
+            </el-popover>
           </el-form-item>
+
         </el-col>
         <el-col :xl="12" :lg="12" :md="12" :sm="12" :xs="24">
           <el-form-item label="备注信息">
@@ -201,6 +247,8 @@ export default {
     const outsourceApi = api.repair.outsource
     return {
       hasFile: false,
+      fileList: [],
+      srcList: [],
       ...getDefaultUpdateViewData(),
       ...curModels,
       curApi,
@@ -249,31 +297,40 @@ export default {
   },
   methods: {
     ...crud,
-    // 下载附件
-    getFileList() {
-      this.curApi.hasFile(this.model.id).then(
-        (res) => {
-          if (res) {
-            const a = document.createElement('a')
-            a.href = process.env.VUE_APP_BASE_API + `/eqRepairApplyFile/${this.model.id}/getFileList`
-            a.download
-            a.style.display = 'none'
-            document.body.appendChild(a)
-            a.click()
-            document.body.removeChild(a)
-          } else {
-            this.$message({
-              message: '无附件',
-              type: 'warning'
-            })
+    // 图片预览
+    doPreviewImg() {
+      this.$refs.myImg.showViewer = true
+    },
+    // 判断是否是图片
+    isImage(str) {
+      const reg = /.(png|jpg|gif|jpeg|webp|svg)$/
+      return reg.test(str)
+    },
+    // 获取附件数据
+    getEqRepairApplyFile() {
+      this.loading = true
+      this.curApi.getEqRepairApplyFile(this.model.id).then(
+        res => {
+          this.loading = false
+          if (res.code === 20000) {
+            this.fileList = res.data
+            this.fileList.forEach(
+              item => {
+                if (this.isImage(item.fileName)) {
+                  this.srcList.push(process.env.VUE_APP_BASE_API + item.filePath)
+                }
+              })
           }
         }
-      ).catch((err) => {
-        this.$message({
-          message: err,
-          type: 'error'
-        })
-      })
+      ).catch(
+        err => {
+          console.log(err)
+        }
+      )
+    },
+    // 下载附件
+    getFileList(url, fileName) {
+      window.open(process.env.VUE_APP_BASE_API + url)
     },
     // 重写submitUpdate方法
     submitUpdate(result) {

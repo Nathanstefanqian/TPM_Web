@@ -39,6 +39,12 @@
         >
           <el-button class="tool tool-create" icon="vue-icon-create" type="primary">批量上传</el-button>
         </el-upload>
+        <a href="/excels/设备信息模板.xlsx">
+          <el-button
+            size="medium"
+            class="tool tool-create"
+          >下载模板</el-button>
+        </a>
         <!--        <el-link class="tool tool-query" @click="downloadfile()">下载模板</el-link>-->
 
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
@@ -132,7 +138,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['enums', 'user','token'])
+    ...mapGetters(['enums', 'user', 'token'])
   },
   created() {
     this.clearAndInitQuery()
@@ -203,29 +209,33 @@ export default {
           this.message = '上传发生错误'
           break
       }
-      this.$notify({
-        title: '',
-        dangerouslyUseHTMLString: true,
-        message: this.message
-      })
+      // this.$notify({
+      //   title: '',
+      //   dangerouslyUseHTMLString: true,
+      //   message: this.message
+      // })
+      this.$message.warning(
+        this.message
+      )
     },
     uploadVideoProcess(file, fileList) {
-        if(file.status === 'ready'){
-          this.progressFlag = true; // 显示进度条
-          this.loadProgress = 0;
-          const interval = setInterval(() => {
-            if(this.loadProgress >=99){
-              clearInterval(interval)
-              return
-            }
-            this.loadProgress += 1
-          }, 20);
-        }
-          if (file.status === 'success') {
-            this.progressFlag = false; // 显示进度条
-            this.loadProgress = 100;
+      if (file.status === 'ready') {
+        this.progressFlag = true // 显示进度条
+        this.loadProgress = 0
+        const interval = setInterval(() => {
+          if (this.loadProgress >= 99) {
+            clearInterval(interval)
+            return
           }
+          this.loadProgress += 1
+        }, 20)
       }
+      if (file.status === 'success') {
+        this.progressFlag = false // 显示进度条
+        this.loadProgress = 100
+      }
+    }
+
   }
 }
 </script>

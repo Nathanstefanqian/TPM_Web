@@ -105,6 +105,14 @@ export function hasFile(id) {
   })
 }
 
+// 获取附件数据
+export function getEqRepairApplyFile(id) {
+  return request({
+    url: `/eqRepairApplyFile/${id}/getEqRepairApplyFile`,
+    method: 'get'
+  })
+}
+
 // //保存签核记录
 // export function updateSign() {
 //   return request({

@@ -194,11 +194,14 @@ export default {
           this.message = '上传发生错误'
           break
       }
-      this.$notify({
-        title: '',
-        dangerouslyUseHTMLString: true,
-        message: this.message
-      })
+      // this.$notify({
+      //   title: '',
+      //   dangerouslyUseHTMLString: true,
+      //   message: this.message
+      // })
+      this.$message.warning(
+        this.message
+      )
     },
     uploadVideoProcess(file, fileList) {
       if (file.status === 'ready') {
