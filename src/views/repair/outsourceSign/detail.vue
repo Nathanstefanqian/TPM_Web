@@ -7,66 +7,74 @@
     :modal="false"
     :modal-append-to-body="false"
   >
-    <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth || '120px'">
+    <el-form ref="form" label-position="right" :label-width="labelWidth || '120px'">
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修单号">
-            {{ model.repairNum }}
+            {{ this.applyList.eqRepairApply.repairNum }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="所属部门">
-            {{ model.deptName }}
+            {{ this.applyList.eqRepairApply.deptName }}
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="所属工段">
-            {{ model.section }}
+            {{ this.applyList.eqRepairApply.section }}
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="制造编号">
-            {{ model.productCode }}
+            {{ this.applyList.eqRepairApply.productCode }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="设备型号">
-            {{ model.deviceType }}
+            {{ this.applyList.eqRepairApply.deviceType }}
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="资产编号">
-            {{ model.propertyCode }}
+            {{ this.applyList.eqRepairApply.propertyCode }}
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修时间">
-            {{ model.repairTime }}
+            {{ this.applyList.eqRepairApply.repairTime }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="报修人">
-            {{ model.applyPersonName }}
+            {{ this.applyList.eqRepairApply.applyPersonName }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="报修内容">
-            {{ model.content }}
+            {{ this.applyList.eqRepairApply.content }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="签核状态">
-            {{ model.checkStatusName }}
+            {{ this.applyList.eqRepairApply.checkType }}
           </el-form-item>
         </el-col>
       </el-row>
@@ -91,7 +99,6 @@ export default {
         model: curModels.detail,
         functions: [],
         applyList: [],
-        eqRepairApplyList: [],
         len: 0
 
       }
@@ -103,15 +110,13 @@ export default {
   methods: {
     ...crud,
     getApplyList(id) {
-      this.eqRepairApplyList = []
       this.curApi.getinfo().then(response => {
-        this.applyList = response.data
         for (let i = 0; i < response.data.length; i++) {
-          if (id === this.applyList[i].id) {
-            this.eqRepairApplyList.push(this.applyList[i].eqRepairApply)
+          if (id === response.data[i].id) {
+            this.applyList = response.data[i]
+            console.log(this.applyList)
           }
         }
-        console.log(this.eqRepairApplyList)
       })
     },
 
