@@ -30,7 +30,8 @@
         <!-- <el-button class="tool tool-create" type="primary" icon="vue-icon-create">批量上传</el-button> -->
         <el-upload
           class="inline-block"
-          :action="uploadUrl"
+          action=""
+          :http-request="uploadExcel"
           :headers="headers"
           :multiple="false"
           :on-change="uploadVideoProcess"
@@ -209,11 +210,6 @@ export default {
           this.message = '上传发生错误'
           break
       }
-      // this.$notify({
-      //   title: '',
-      //   dangerouslyUseHTMLString: true,
-      //   message: this.message
-      // })
       this.$message.warning(
         this.message
       )
@@ -234,6 +230,20 @@ export default {
         this.progressFlag = false // 显示进度条
         this.loadProgress = 100
       }
+    },
+    // 上传excel
+    uploadExcel(param) {
+      const formData = new FormData()
+      formData.append('file', param.file)
+      api.equipmentManagement.search.addDevices(formData).then(response => {
+        this.progressFlag = false
+        console.log('导入成功')
+        this.getDatas()
+        // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
+      }).catch(response => {
+        this.progressFlag = false
+        console.log('导入失败')
+      })
     }
 
   }
