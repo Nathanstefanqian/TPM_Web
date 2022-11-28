@@ -1,7 +1,8 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
-      <el-row v-if="user.roleType<=2">
+  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
+    :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+    <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth || '120px'">
+      <el-row v-if="user.roleType <= 2">
         <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="角色类型" prop="type">
             <el-select v-model="model.type" clearable @change="changeRoleTypeHandle()">
@@ -10,14 +11,14 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="user.roleType>=3">
+      <el-row v-if="user.roleType >= 3">
         <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="角色类型">
             {{ (rt = roleTypes.find(s => s.key === 4)) == null ? null : rt.text }}
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="model.type>=3&&user.roleType<=2">
+      <el-row v-if="model.type >= 3 && user.roleType <= 2">
         <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="所属企业" prop="companyId">
             <el-select v-model="model.companyId" clearable>
@@ -43,8 +44,11 @@
       <el-row>
         <el-col :sm="24">
           <el-form-item label="权限配置">
-            <div v-for="(func,index) in functions" :key="index" :class="`function-level-${func.level}`">
-              <span class="item"><el-checkbox v-model="func.checked" :indeterminate="func.indeterminate" :label="func.id" @change="checked=>functionCheckedChangeHandle(checked,func)">{{ func.title }}</el-checkbox></span>
+            <div v-for="(func, index) in functions" :key="index" :class="`function-level-${func.level}`">
+              <span class="item">
+                <el-checkbox v-model="func.checked" :indeterminate="func.indeterminate" :label="func.id"
+                  @change="checked => functionCheckedChangeHandle(checked, func)">{{ func.title }}</el-checkbox>
+              </span>
             </div>
           </el-form-item>
         </el-col>
@@ -117,8 +121,8 @@ export default {
       // 1、2类角色用户，选择了3、4类角色，验证所属企业下拉框
       this.rules.companyId[0].required = this.user.roleType <= 2 && this.model.type >= 3
       // 获取系统功能
-      if (this.model.type) {
-        await this.getFunctions(this.model.type)
+      if (this.user.roleType) {
+        await this.getFunctions(this.user.roleType)
       }
     },
     // 权限选中以及级联选中初始化
@@ -192,11 +196,11 @@ export default {
   padding-left: 5px;
   background-color: #e8e8e8;
 
-  + .function-level-2 {
+  +.function-level-2 {
     border-top: none
   }
 
-  + .function-level-3 {
+  +.function-level-3 {
     padding-left: 30px;
   }
 }
@@ -205,7 +209,7 @@ export default {
   margin-left: 30px;
   border-top: dashed 1px #a0a0a0;
 
-  + .function-level-3 {
+  +.function-level-3 {
     padding-left: 55px;
   }
 }
@@ -232,7 +236,7 @@ export default {
   }
 }
 
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked + span.el-checkbox__label {
+/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked+span.el-checkbox__label {
   color: #409EFF !important;
 }
 
