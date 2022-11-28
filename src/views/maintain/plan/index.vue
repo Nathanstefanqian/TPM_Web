@@ -38,7 +38,7 @@
         </template>
       </el-table-column>
       <el-table-column label="设备型号" prop="deviceType" align="center" show-overflow-tooltip />
-      <el-table-column label="点检信息" prop="maintainType" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="类型" prop="maintainType" align="center" width="120" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
           <el-tooltip transition="false" :hide-after="1000" class="item" content="项目内容" placement="top-end">
@@ -194,14 +194,11 @@ export default {
           this.message = '上传发生错误'
           break
       }
-      // this.$notify({
-      //   title: '',
-      //   dangerouslyUseHTMLString: true,
-      //   message: this.message
-      // })
+
       this.$message.warning(
         this.message
       )
+      this.progressFlag = false
     },
     uploadVideoProcess(file, fileList) {
       if (file.status === 'ready') {
@@ -225,10 +222,12 @@ export default {
       const formData = new FormData()
       formData.append('file', param.file)
       api.maintain.plan.addPlan(formData).then(response => {
+        this.progressFlag = false
         console.log('导入成功')
         this.getDatas()
         // this.form.picUrl = process.env.VUE_APP_BASE_API + response.imgUrl
       }).catch(response => {
+        this.progressFlag = false
         console.log('导入失败')
       })
     }
