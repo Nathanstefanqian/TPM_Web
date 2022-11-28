@@ -3,12 +3,12 @@
     <div ref="toolbar" class="toolbar">
       <div class="tool-group">
         <el-radio-group v-model="rdInterval" @change="handleQueryInterval">
-          <el-radio-button label="日">日点检</el-radio-button>
-          <el-radio-button label="周">周保养</el-radio-button>
-          <el-radio-button label="月">月保养</el-radio-button>
-          <el-radio-button label="半年"> 半年保养</el-radio-button>
-          <el-radio-button label="年">年保养</el-radio-button>
-          <el-radio-button label="报修">设备报修点检</el-radio-button>
+          <el-radio-button label="日点检">日点检</el-radio-button>
+          <el-radio-button label="周点检">周点检</el-radio-button>
+          <el-radio-button label="月点检">月点检</el-radio-button>
+          <el-radio-button label="半年点检">半年点检</el-radio-button>
+          <el-radio-button label="年点检">年点检</el-radio-button>
+          <el-radio-button label="设备报修点检">设备报修点检</el-radio-button>
         </el-radio-group>
       </div>
     </div>
@@ -132,7 +132,7 @@ export default {
         tableHeight: null,
         beizhu: ''
       },
-      rdInterval: '日',
+      rdInterval: '日点检',
       queryInfos: [{
         key: '1',
         text: '设备基本信息'
