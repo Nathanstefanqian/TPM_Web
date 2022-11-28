@@ -115,7 +115,7 @@ export default {
     return {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
       ...{
-        sort: { prop: 'id', order: 'ascending' },
+        sort: { prop: 'e_device_no', order: 'ascending' },
         roleTypes: [],
         companies: [],
         departs: [],
