@@ -18,12 +18,19 @@ export default {
       access: 'checkOperate',
       meta: { title: '点检操作' }
     },
+    // {
+    //   path: 'maintainOperate',
+    //   component: () => import('@/views/maintain/maintainOperate/index'),
+    //   name: 'maintainOperate',
+    //   access: 'maintainOperate',
+    //   meta: { title: '保养操作' }
+    // },
     {
-      path: 'maintainOperate',
+      path: 'exceptionRework',
       component: () => import('@/views/maintain/maintainOperate/index'),
-      name: 'maintainOperate',
-      access: 'maintainOperate',
-      meta: { title: '保养操作' }
+      name: 'exceptionRework',
+      access: 'exceptionRework',
+      meta: { title: '点检补做' }
     },
     {
       path: 'exception',

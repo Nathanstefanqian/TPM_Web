@@ -16,7 +16,8 @@
       <div style="display: flex; flex-direction: row; flex-wrap: wrap">
         <div v-for="o in datas" :key="o.productCode" :span="8">
           <el-card :body-style="{ padding: '10px' }">
-            <div style="padding: 14px; background: #20a0ff">
+            <!--            <div style="padding: 14px; background: #20a0ff">-->
+            <div style="padding: 14px" :class="o.status === '2' ? 'blue' : 'yellow'">
               <span style="color: #ffffff">{{ o.deviceNo }}</span>
               <div class="bottom clearfix">
                 <el-button type="text" class="button" @click="checkDevice(o)">操作按钮</el-button>
@@ -130,7 +131,8 @@ export default {
         description: '',
         randomKey: Math.random(),
         tableHeight: null,
-        beizhu: ''
+        beizhu: '',
+        spanColor: 'yellow'
       },
       rdInterval: '日',
       queryInfos: [{
@@ -232,9 +234,10 @@ export default {
           data: row.inputData
         }
         api.maintain.operate.updateResult(data).then(res => {
-          console.log(res)
           // 刷新数据
           this.getContentDatas(row.maintainId)
+          // 刷新父窗口
+          this.getDatas()
           this.$message({
             type: 'success',
             message: '提交成功'
@@ -273,6 +276,8 @@ export default {
           type: 'success',
           message: '提交成功'
         })
+        // 刷新父窗口
+        this.getDatas()
       })
     },
 
@@ -294,43 +299,44 @@ export default {
           type: 'success',
           message: '提交成功'
         })
+        // 刷新父窗口
+        this.getDatas()
+      })
+    },
+    // 根据登录用户角色获取角色类型列表
+    getRoleTypes() {
+      api.system.role.getRoleTypes().then(response => {
+        this.roleTypes = response.data || []
+      }).catch(reject => {
+      })
+    },
+    // 根据登录用户角色获取企业列表
+    getDeparts() {
+      api.depart.getSelectlist().then(response => {
+        this.departs = response.data || []
+      }).catch(reject => {
+      })
+    },
+    // 根据登录用户角色获取企业列表
+    getZhixis() {
+      api.zhixi.getSelectlist().then(response => {
+        this.zhixis = response.data || []
+      }).catch(reject => {
+      })
+    },
+    // 根据登录用户角色获取企业列表
+    getFactories() {
+      api.factory.getSelectlist().then(response => {
+        this.factories = response.data || []
+      }).catch(reject => {
+      })
+    },
+    getProcessDepts() {
+      api.processDept.getSelectlist().then(response => {
+        this.processDepts = response.data || []
+      }).catch(reject => {
       })
     }
-
-    // // 根据登录用户角色获取角色类型列表
-    // getRoleTypes() {
-    //   api.system.role.getRoleTypes().then(response => {
-    //     this.roleTypes = response.data || []
-    //   }).catch(reject => {
-    //   })
-    // },
-    // // 根据登录用户角色获取企业列表
-    // getDeparts() {
-    //   api.depart.getSelectlist().then(response => {
-    //     this.departs = response.data || []
-    //   }).catch(reject => {
-    //   })
-    // },
-    // // 根据登录用户角色获取企业列表
-    // getZhixis() {
-    //   api.zhixi.getSelectlist().then(response => {
-    //     this.zhixis = response.data || []
-    //   }).catch(reject => {
-    //   })
-    // },
-    // // 根据登录用户角色获取企业列表
-    // getFactories() {
-    //   api.factory.getSelectlist().then(response => {
-    //     this.factories = response.data || []
-    //   }).catch(reject => {
-    //   })
-    // },
-    // getProcessDepts() {
-    //   api.processDept.getSelectlist().then(response => {
-    //     this.processDepts = response.data || []
-    //   }).catch(reject => {
-    //   })
-    // }
   }
 }
 </script>
@@ -360,6 +366,13 @@ export default {
   .item {
     padding-right: 20px;
   }
+}
+
+.yellow {
+  background-color: #EABA72;
+}
+.blue {
+  background-color: #20a0ff;
 }
 
 /deep/ .disabled-checkbox {

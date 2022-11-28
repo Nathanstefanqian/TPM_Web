@@ -68,7 +68,7 @@ export function update(data) {
 // 删除、批量删除数据
 export function del(data) {
   return request({
-    url: '/eqMaintain/delete',
+    url: '/eqMaintainException/delete',
     method: 'delete',
     data: data
   })
