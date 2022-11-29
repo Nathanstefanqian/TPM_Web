@@ -46,10 +46,15 @@
             <el-input v-model="model.deviceNo" />
           </el-form-item>
         </el-col>
+        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+          <el-form-item label="作业信息" prop="opInfo">
+            <el-input v-model="model.opInfo" />
+          </el-form-item>
+        </el-col>
       </el-row>
       <el-row>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="职系" prop="ezhixi">
+          <el-form-item label="职系" prop="zhixiId">
             <el-select
               v-model="model.zhixiId"
               filterable
@@ -105,8 +110,8 @@
           </el-form-item>
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="作业说明" prop="opDescription">
-            <el-input v-model="model.opDescription" />
+          <el-form-item label="附件" prop="opDescription">
+            <MultipleFile file-type="repairApplyFile" :file-list="fileList" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -127,10 +132,17 @@ import crud from '@/utils/crud'
 import api from '@/api'
 
 export default {
+  components: {
+    MultipleFile: () => import('@/components/Upload/MultipleFile')
+  },
   data() {
+    const BASE_URL = process.env.VUE_APP_BASE_API
     const curModels = models.equipmentManagement.transfer
     const curApi = api.equipmentManagement.transfer
     return {
+      fileType: 'repairApplyFile',
+      uploadUrl: BASE_URL + '/file/uploadSingleFile',
+      fileList: [],
       ...getDefaultCreateViewData(),
       ...curModels,
       curApi,

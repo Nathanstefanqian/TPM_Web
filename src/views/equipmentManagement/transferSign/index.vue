@@ -40,8 +40,12 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="单号" prop="transferNo" align="center" width="200" show-overflow-tooltip >
+        <template slot-scope="scope">
+          <el-link type="success" v-on:click="handleDetail(scope.row)"> {{ scope.row.transferNo }} </el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="申请单位" prop="applyDeptName" align="left" width="100" show-overflow-tooltip />
-      <el-table-column label="单号" prop="transferNo" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="制造编号" prop="productCode" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="设备编号" prop="deviceNo" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="作业说明" prop="opDescription" align="center" show-overflow-tooltip />

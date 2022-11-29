@@ -46,6 +46,7 @@
             class="tool tool-create"
           >下载模板</el-button>
         </a>
+        <el-progress v-show="progressFlag" :percentage="loadProgress" />
         <!--        <el-link class="tool tool-query" @click="downloadfile()">下载模板</el-link>-->
 
         <!--        <el-button   :loading="loading.deletes" class="tool tool-delete" type="danger" icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>-->
@@ -122,7 +123,10 @@ export default {
         zhixis: [],
         factories: [],
         processDepts: [],
-        headers: { token: null }
+        loadProgress: 0,
+        progressFlag: false,
+        headers: { token: null },
+        message: null
       },
       queryInfos: [{
         key: '1',

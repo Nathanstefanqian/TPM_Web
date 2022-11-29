@@ -80,12 +80,6 @@ export function addPlan(data) {
     data
   })
 }
-// export function addPlan() {
-//   return request({
-//     url: `/file/addPlan`,
-//     method: 'post'
-//   })
-// }
 
 // 点检项目计划详情界面，获取content
 export function getContentList() {

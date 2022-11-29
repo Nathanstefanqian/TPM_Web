@@ -1,55 +1,85 @@
 <template>
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth||'120px'">
-      <el-row v-if="user.roleType<=2">
+      <el-row >
         <el-col>
-          <el-form-item label="角色类型">
-            {{ model.role.typeText }}
+          <el-form-item label="单号">
+            {{ model.transferNo }}
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="model.role.type>=3&&user.roleType<=2">
+      <el-row >
         <el-col>
-          <el-form-item label="所属企业">
-            {{ model.role.company.name }}
+          <el-form-item label="申请单位">
+            {{ model.applyDeptName }}
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row >
         <el-col>
-          <el-form-item label="用户角色">
-            {{ model.role.name }}
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
-          <el-form-item label="用户名">
-            {{ model.userName }}
+          <el-form-item label="制造编号">
+            {{ model.productCode }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="姓名">
-            {{ model.userName }}
+          <el-form-item label="设备型号">
+            {{ model.deviceNo }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="用户状态">
-            {{ model.stateText }}
+          <el-form-item label="作业信息">
+            {{ model.opInfo }}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item label="备注">
-            {{ model.remark }}
+          <el-form-item label="职系">
+            {{ model. zhixi }}
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="厂区">
+            {{ model.factory }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="加工部">
+            {{ model.processDeptName }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="作业说明">
+            {{ model.opDescription }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="申请人姓名">
+            {{ model.applyPersonName }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="申请时间">
+            {{ model.appplyTime }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+
     </el-form>
   </el-dialog>
 </template>
@@ -63,8 +93,8 @@ import api from '@/api'
 
 export default {
   data() {
-    const curModels = models.system.user
-    const curApi = api.system.user
+    const curModels = models.equipmentManagement.transfer
+    const curApi = api.equipmentManagement.transfer
     return {
       ...getDefaultDetailViewData(), ...curModels, curApi,
       ...{
