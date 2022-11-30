@@ -27,6 +27,8 @@
         </el-select>
         <el-button class="tool tool-query" type="primary" icon="el-icon-refresh" @click="clearAndInitQuery()">清除</el-button>
         <el-button class="tool tool-query" type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
+        <el-button :loading="loading.deletes" class="tool tool-delete" type="danger"
+          icon="vue-icon-delete" @click="handleDeletes">批量删除</el-button>
         <!-- <el-button class="tool tool-create" type="primary" icon="vue-icon-create">批量上传</el-button> -->
         <el-upload
           class="inline-block"
@@ -75,6 +77,12 @@
           <!--          </el-tooltip>-->
           <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">
             <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>
+          </el-tooltip>
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除"
+            placement="top-end">
+            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)">
+              <i class="vue-icon-delete" />
+            </el-button>
           </el-tooltip>
           <!--          <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">-->
           <!--            <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>-->
