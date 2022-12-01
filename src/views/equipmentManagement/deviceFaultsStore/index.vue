@@ -31,7 +31,7 @@
           icon="el-icon-search"
           @click="handleQuery"
         >查询</el-button>
-        <a href="/excels/点检保养计划模板.xlsx">
+        <a href="/excels/维修知识库模板v1.0.xlsx">
           <el-button
             size="medium"
             type="primary"
