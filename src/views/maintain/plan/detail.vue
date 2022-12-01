@@ -53,7 +53,7 @@ export default {
       this.getContentInfo()
     },
     async getContentInfo(){
-      const a = await this.curApi.getContentList()
+      const a = await this.curApi.getContentList(this.model.id)
       this.contentList=a.data.items
       for (var i = 0; i < this.contentList.length; i++) {
         if (this.contentList[i].maintainId === this.model.id) {
