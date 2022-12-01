@@ -82,12 +82,12 @@ export function addPlan(data) {
 }
 
 // 点检项目计划详情界面，获取content
-export function getContentList(matainId) {
+export function getContentList(maintainId) {
   return request({
     url: '/eqMaintainPlanContent/list',
     method: 'post',
     data: {
-      query: {matainId}
+      query: {maintainId}
     }
   })
 }
