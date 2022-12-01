@@ -32,10 +32,17 @@ export default {
     },
     {
       path: 'workFlow',
-      component: () => import('@/views/system//workFlow/index'),
+      component: () => import('@/views/system/workFlow/index'),
       name: 'workFlow',
       access: 'user',
       meta: { title: '签核流程管理' }
+    },
+    {
+      path: 'department',
+      component: () => import('@/views/system/department/index'),
+      name: 'department',
+      access: 'user',
+      meta: { title: '部门信息管理' }
     }
   ]
 }
