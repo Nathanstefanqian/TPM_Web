@@ -21,14 +21,6 @@ export function get(id) {
   })
 }
 
-// // 获得下拉列表的数据
-// export function getSelectlist() {
-//   return request({
-//     url: '/sysDept/selectlist',
-//     method: 'get'
-//   })
-// }
-
 // 添加数据
 export function create(data) {
   return request({
@@ -56,3 +48,10 @@ export function del(data) {
   })
 }
 
+// // 获得下拉列表的数据
+// export function getSelectParentlist() {
+//   return request({
+//     url: '/sysDept/selectlist',
+//     method: 'get'
+//   })
+// }

@@ -20,6 +20,7 @@
         <el-table-column label="部门名称" prop="name" align="center" width="200" show-overflow-tooltip />
         <el-table-column label="所属部门" prop="parentId" align="center" width="200" show-overflow-tooltip />
         <el-table-column label="状态" prop="status" align="center" width="100" :formatter="formatterStatus" show-overflow-tooltip />
+        <el-table-column label="类型" prop="type" align="center" width="100" :formatter="formatterType" show-overflow-tooltip />
         <el-table-column label="负责人" prop="personCode" align="center" width="200" show-overflow-tooltip />
         <el-table-column label="联系电话" prop="phone" width="100" show-overflow-tooltip />
         <el-table-column label="描述" prop="des" align="left" show-overflow-tooltip />
@@ -38,9 +39,9 @@
         </el-table-column>
       </el-table>
       <pagination :hidden="page.total===0" :total="page.total" :page.sync="page.current" :limit.sync="page.size" @pagination="getDatas" />
-<!--      <dialog-create ref="dialogCreate" />-->
-<!--      <dialog-update ref="dialogUpdate" />-->
-<!--      <dialog-detail ref="dialogDetail" />-->
+      <dialog-create ref="dialogCreate" />
+      <dialog-update ref="dialogUpdate" />
+      <dialog-detail ref="dialogDetail" />
     </div>
 </template>
 
@@ -56,9 +57,9 @@ export default {
   name: 'Department',
   components: {
     Pagination: () => import('@/components/Pagination'),
-    // DialogCreate: () => import('./create'),
-    // DialogUpdate: () => import('./update'),
-    // DialogDetail: () => import('./detail')
+    DialogCreate: () => import('./create'),
+    DialogUpdate: () => import('./update'),
+    DialogDetail: () => import('./detail')
   },
   directives: { adaptive },
   data() {
@@ -87,6 +88,9 @@ export default {
     ...crud,
     formatterStatus(rows) {
       return rows.status === '0' ? '正常' : '停用'
+    },
+    formatterType(rows) {
+      return rows.status === '0' ? '部门' : '待定'
     },
     // 根据登录用户角色获取角色类型列表
     getRoleTypes() {

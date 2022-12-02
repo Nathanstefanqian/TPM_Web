@@ -42,7 +42,7 @@ export default {
       component: () => import('@/views/system/department/index'),
       name: 'department',
       access: 'user',
-      meta: { title: '部门信息管理' }
+      meta: { title: '部门管理' }
     }
   ]
 }
