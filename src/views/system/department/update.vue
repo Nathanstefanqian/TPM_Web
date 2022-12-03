@@ -53,7 +53,9 @@
       <el-row>
         <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="负责人" prop="personCode">
-            <el-input v-model="model.personCode" />
+            <el-select v-model="model.personCode" filterable clearable>
+              <el-option v-for="item in users" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -101,17 +103,13 @@ export default {
         companies: [],
         departs: [],
         statusTypes: [{value: '0', label: '正常'}, {value: '1', label: '停用'}],
-        optionTypes: []
+        optionTypes: [{value: '0', label: '部门'}],
+        users: []
       }
     }
   },
   computed: {
     ...mapGetters(['enums', 'user'])
-  },
-  created() {
-    this.getParentDeparts()
-    this.getStatus()
-    this.getDepartTypes()
   },
   methods: {
     ...crud,
@@ -123,27 +121,27 @@ export default {
       //   this.model.roleType = 4
       //   this.model.companyId = this.user.companyId
       // }
+      this.getParentDeparts()
+      this.getUsers()
     },
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
     initUpdateAfter(row, data) {
       this.model = data
       // this.model.roleType = data.role.type
       // this.model.companyId = data.role.company.id
-      return this.getParentDeparts(this.model.roleType, this.model.companyId)
+      // return this.getParentDeparts(this.model.roleType, this.model.companyId)
     },
     // 获取父级部门列表
-    getParentDeparts(roleType, companyId) {
-      // return api.system.department.getSelectParentlist().then(response => {
-      //   this.departs = response.data || []
-      // })
+    getParentDeparts() {
+      return api.system.department.getSelectParentList().then(response => {
+        this.departs = response.data || []
+      })
     },
-    // 获取部门状态列表
-    getStatus() {
-
-    },
-    // 获取机构类型列表
-    getDepartTypes() {
-
+    // 获取负责人列表
+    getUsers() {
+      return api.system.department.getSelectUserList().then(response => {
+        this.users = response.data || []
+      })
     }
   }
 }

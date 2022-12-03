@@ -11,8 +11,6 @@
       <el-row>
         <el-col>
           <el-form-item label="流程类型" prop="type">
-            <!--            <el-radio v-model="model.type" label="1" border>报修</el-radio>-->
-            <!--            <el-radio v-model="model.type" label="2" border>委外</el-radio>-->
             <el-select v-model="model.type" style="width: 200px" filterable clearable>
               <el-option v-for="item in flowTypes" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
@@ -34,6 +32,7 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import {getFlowTypes} from "../../../api/system/modules/workFlow";
 
 export default {
   data() {
@@ -44,13 +43,7 @@ export default {
       ...{
         dialogTitle: '添加流程',
         model: curModels.create,
-        flowTypes: [{
-          key: 1,
-          text: '报修'
-        }, {
-          key: 2,
-          text: '委外'
-        }]
+        flowTypes: []
         // roleTypes: [],
         // companies: []
       }
@@ -66,6 +59,7 @@ export default {
   methods: {
     ...crud,
     async initCreateBefore() {
+      this.getFlowTypes()
       // this.roleTypes = this.$parent.roleTypes
       // this.companies = this.$parent.companies
       // if (this.user.roleType === 3) {
@@ -93,7 +87,12 @@ export default {
     //     await this.getFunctions(this.model.type)
     //   }
     // },
-
+    // 获取流程类型下拉列表
+    getFlowTypes() {
+      return api.system.workFlow.getFlowTypes().then(response => {
+        this.flowTypes = response.data || []
+      })
+    },
     // 提交前处理
     submitCreateBefore() {
       this.model.accesses = (this.functions || []).filter(s => s.checked).map(f => {

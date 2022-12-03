@@ -53,7 +53,9 @@
       <el-row>
         <el-col :xl="6" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="负责人" prop="personCode">
-            <el-input v-model="model.personCode" />
+            <el-select v-model="model.personCode" filterable clearable>
+              <el-option v-for="item in users" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -86,6 +88,7 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import {getSelectParentList, getSelectUserList} from "../../../api/system/modules/department";
 
 export default {
   data() {
@@ -98,17 +101,15 @@ export default {
         model: curModels.create,
         roleTypes: [],
         companies: [],
-        roles: []
+        statusTypes: [{value: '0', label: '正常'}, {value: '1', label: '停用'}],
+        optionTypes: [{value: '0', label: '部门'}],
+        users: [],
+        departs: []
       }
     }
   },
   computed: {
     ...mapGetters(['enums', 'user'])
-  },
-  created() {
-    this.getParentDeparts()
-    this.getStatus()
-    this.getDepartTypes()
   },
   methods: {
     ...crud,
@@ -119,7 +120,8 @@ export default {
       //   this.model.roleType = 4
       //   this.model.companyId = this.user.companyId
       // }
-      // this.getRoles(this.model.roleType, this.model.companyId)
+      this.getUsers()
+      this.getParentDeparts()
     },
     // 切换角色类型
     changeRoleTypeHandle() {
@@ -143,18 +145,16 @@ export default {
       // }
     },
     // 获取父级部门列表
-    getParentDeparts(roleType, companyId) {
-      // return api.system.department.getSelectParentlist().then(response => {
-      //   this.departs = response.data || []
-      // })
+    getParentDeparts() {
+      return api.system.department.getSelectParentList().then(response => {
+        this.departs = response.data || []
+      })
     },
-    // 获取部门状态列表
-    getStatus() {
-
-    },
-    // 获取机构类型列表
-    getDepartTypes() {
-
+    // 获取负责人列表
+    getUsers() {
+      return api.system.department.getSelectUserList().then(response => {
+        this.users = response.data || []
+      })
     },
     // 清空部分数据
     submitCreateAfter() {

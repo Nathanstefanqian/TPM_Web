@@ -48,10 +48,18 @@ export function del(data) {
   })
 }
 
-// // 获得下拉列表的数据
-// export function getSelectParentlist() {
-//   return request({
-//     url: '/sysDept/selectlist',
-//     method: 'get'
-//   })
-// }
+// 下拉选择所属部门的数据
+export function getSelectParentList() {
+  return request({
+    url: '/sysDept/selectlist',
+    method: 'get'
+  })
+}
+
+// 下拉选择负责人的数据
+export function getSelectUserList() {
+  return request({
+    url: '/system/user/selectlist',
+    method: 'get'
+  })
+}

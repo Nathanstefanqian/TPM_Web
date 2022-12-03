@@ -11,8 +11,6 @@
       <el-row>
         <el-col>
           <el-form-item label="流程类型" prop="type">
-            <!--            <el-radio v-model="model.type" :label="1" border>报修</el-radio>-->
-            <!--            <el-radio v-model="model.type" :label="2" border>委外</el-radio>-->
             <el-select v-model="model.type" style="width: 200px" filterable clearable>
               <el-option v-for="item in flowTypes" :key="item.key" :label="item.text" :value="item.key" />
             </el-select>
@@ -99,13 +97,7 @@ export default {
         roles: [],
         flowDatas: [],
         flowId: null,
-        flowTypes: [{
-          key: 1,
-          text: '报修'
-        }, {
-          key: 2,
-          text: '委外'
-        }]
+        flowTypes: []
       }
     }
   },
@@ -122,6 +114,7 @@ export default {
       this.model = data
       this.flowId = this.model.id
       this.getFlowNode(this.model.id)
+      this.getFlowTypes()
     },
     // 获取流程各节点
     getFlowNode(id) {
@@ -179,7 +172,13 @@ export default {
           this.getFlowNode(this.model.id)
         })
       })
-    }
+    },
+    // 获取流程类型下拉列表
+    getFlowTypes() {
+      return api.system.workFlow.getFlowTypes().then(response => {
+        this.flowTypes = response.data || []
+      })
+    },
 
   }
 }

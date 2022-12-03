@@ -18,10 +18,10 @@
         </el-table-column>
         <el-table-column label="部门代码" prop="deptCode" align="center" width="200" show-overflow-tooltip />
         <el-table-column label="部门名称" prop="name" align="center" width="200" show-overflow-tooltip />
-        <el-table-column label="所属部门" prop="parentId" align="center" width="200" show-overflow-tooltip />
+        <el-table-column label="所属部门" prop="parentName" align="center" width="200" show-overflow-tooltip />
         <el-table-column label="状态" prop="status" align="center" width="100" :formatter="formatterStatus" show-overflow-tooltip />
         <el-table-column label="类型" prop="type" align="center" width="100" :formatter="formatterType" show-overflow-tooltip />
-        <el-table-column label="负责人" prop="personCode" align="center" width="200" show-overflow-tooltip />
+        <el-table-column label="负责人" prop="personName" align="center" width="200" show-overflow-tooltip />
         <el-table-column label="联系电话" prop="phone" width="100" show-overflow-tooltip />
         <el-table-column label="描述" prop="des" align="left" show-overflow-tooltip />
         <el-table-column fixed="right" label="操作" align="center" width="180">
@@ -81,31 +81,31 @@ export default {
   created() {
     this.clearAndInitQuery()
     this.getDatas()
-    this.getRoleTypes()
-    if (this.user.roleType <= 2) this.getCompanies()
+    // this.getRoleTypes()
+    // if (this.user.roleType <= 2) this.getCompanies()
   },
   methods: {
     ...crud,
     formatterStatus(rows) {
-      return rows.status === '0' ? '正常' : '停用'
+      return rows.status === '0' ? '正常' : (rows.status === '1' ? '停用' : null)
     },
     formatterType(rows) {
-      return rows.status === '0' ? '部门' : '待定'
+      return rows.type === '0' ? '部门' : null
     },
-    // 根据登录用户角色获取角色类型列表
-    getRoleTypes() {
-      api.system.role.getRoleTypes().then(response => {
-        this.roleTypes = response.data || []
-      }).catch(reject => {
-      })
-    },
-    // 根据登录用户角色获取企业列表
-    getCompanies() {
-      api.company.getSelectlist().then(response => {
-        this.companies = response.data || []
-      }).catch(reject => {
-      })
-    }
+    // // 根据登录用户角色获取角色类型列表
+    // getRoleTypes() {
+    //   api.system.role.getRoleTypes().then(response => {
+    //     this.roleTypes = response.data || []
+    //   }).catch(reject => {
+    //   })
+    // },
+    // // 根据登录用户角色获取企业列表
+    // getCompanies() {
+    //   api.company.getSelectlist().then(response => {
+    //     this.companies = response.data || []
+    //   }).catch(reject => {
+    //   })
+    // }
   }
 }
 </script>

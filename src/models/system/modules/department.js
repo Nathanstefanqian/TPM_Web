@@ -16,7 +16,9 @@ const base = {
   createBy: null,
   createTime: null,
   updateBy: null,
-  updateTime: null
+  updateTime: null,
+  parentName: null,
+  personName: null
 }
 
 const queryEmpty = { name: null, state: null }

@@ -18,7 +18,7 @@
       <el-row>
         <el-col>
           <el-form-item label="所属部门">
-            {{ model.parentId }}
+            {{ model.parentName }}
           </el-form-item>
         </el-col>
       </el-row>
@@ -32,21 +32,21 @@
       <el-row>
         <el-col>
           <el-form-item label="状态">
-            {{ model.status === '0' ? '正常' : '停用'}}
+            {{ model.status === '0' ? '正常' : (model.status === '1' ? '停用' : null)}}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="类型">
-            {{ model.type === '0' ? '部门' : '待定'}}
+            {{ model.type === '0' ? '部门' : null}}
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col>
           <el-form-item label="负责人">
-            {{ model.personCode }}
+            {{ model.personName }}
           </el-form-item>
         </el-col>
       </el-row>
