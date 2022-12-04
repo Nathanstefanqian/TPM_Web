@@ -100,7 +100,7 @@ export default {
     return {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
       ...{
-        sort: { prop: 'appply_time', order: 'descending' },
+        sort: { prop: 'apply_time', order: 'descending' },
         roleTypes: [],
         companies: [],
         departs: [],

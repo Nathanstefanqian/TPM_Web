@@ -17,7 +17,7 @@ const base = {
   opDescription: null,
   applyPersonId: null,
   applyPersonName: null,
-  appplyTime: null,
+  applyTime: null,
   checkStatus: null,
   checkStatusName: null
 
@@ -57,7 +57,7 @@ const createReal = {
   opDescription: null,
   applyPersonId: null,
   applyPersonName: null,
-  appplyTime: null,
+  applyTime: null,
   checkStatus: null,
   checkStatusName: null
 }
@@ -82,7 +82,7 @@ const updateReal = {
   opDescription: null,
   applyPersonId: null,
   applyPersonName: null,
-  appplyTime: null,
+  applyTime: null,
   checkStatus: null
 }
 

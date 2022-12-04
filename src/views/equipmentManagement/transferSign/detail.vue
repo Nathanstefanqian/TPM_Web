@@ -74,7 +74,7 @@
       <el-row>
         <el-col>
           <el-form-item label="申请时间">
-            {{ model.appplyTime }}
+            {{ model.applyTime }}
           </el-form-item>
         </el-col>
       </el-row>

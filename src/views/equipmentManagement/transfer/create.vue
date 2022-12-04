@@ -16,12 +16,11 @@
       :label-width="labelWidth || '120px'"
     >
       <el-row>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="申请部门" prop="applyDeptId">
             <el-select
               v-model="model.applyDeptId"
               class="query-item"
-              style="width: 150px"
               placeholder="申请部门"
               clearable
               @clear="handleQuery"
@@ -36,25 +35,25 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="制造编号" prop="productCode">
             <el-input v-model="model.productCode" />
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="设备编号" prop="deviceNo">
             <el-input v-model="model.deviceNo" />
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="作业信息" prop="opInfo">
             <el-input v-model="model.opInfo" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="职系" prop="zhixiId">
+        <el-col :lg="6" :xs="24">
+          <el-form-item label="职系" prop="zhixi">
             <el-select
               v-model="model.zhixiId"
               filterable
@@ -66,12 +65,13 @@
                 :key="item.key"
                 :label="item.text"
                 :value="item.key"
+                style="width: 240px"
                 @click.native="onChangeZhixi(item.text)"
               />
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="厂区" prop="factory">
             <el-select
               v-model="model.factoryId"
@@ -84,17 +84,20 @@
                 :key="item.key"
                 :label="item.text"
                 :value="item.key"
+                style="width: 240px"
                 @click.native="onChangeFactory(item.text)"
               />
             </el-select>
+            <!-- <el-select v-model="model.factoryId" placeholder="请选择" :popper-append-to-body="false">
+              <el-option v-for="item in factories" :key="item.key" :label="item.text" :value="item.key" />
+            </el-select> -->
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="加工部" prop="eprocessDept">
+        <el-col :lg="6" :xs="24">
+          <el-form-item label="加工部" prop="processDept">
             <el-select
               v-model="model.processDeptId"
               class="query-item"
-              style="width: 150px"
               placeholder="请选择"
               clearable
               @clear="handleQuery"
@@ -109,9 +112,47 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :lg="6" :xs="24">
+          <el-form-item label="作业说明" prop="opDescription">
+            <el-input v-model="model.opDescription" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="6" :xs="24">
+          <el-form-item label="申请人" prop="applyPersonName">
+            <el-input v-model="model.applyPersonName" :disabled="true" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="6" :xs="24">
+          <el-form-item label="申请时间" prop="applyTime">
+            <el-date-picker
+              v-model="model.applyTime"
+              align="center"
+              placeholder="选择日期"
+              type="datetime"
+              value-format="yyyy-MM-dd"
+              class="query-item"
+              style="width: 200px"
+              @change="handleChangeQueryDate"
+            />
+          </el-form-item>
+        </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="附件" prop="opDescription">
-            <MultipleFile file-type="repairApplyFile" :file-list="fileList" />
+          <el-form-item label="选择签核流程" prop="flowId">
+            <el-select
+              v-model="model.flowId"
+              class="query-item"
+              style="width: 150px"
+              placeholder="签核流程"
+              clearable
+              @clear="handleQuery"
+            >
+              <el-option
+                v-for="item in workFlows"
+                :key="item.key"
+                :label="item.text"
+                :value="item.key"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -132,17 +173,10 @@ import crud from '@/utils/crud'
 import api from '@/api'
 
 export default {
-  components: {
-    MultipleFile: () => import('@/components/Upload/MultipleFile')
-  },
   data() {
-    const BASE_URL = process.env.VUE_APP_BASE_API
     const curModels = models.equipmentManagement.transfer
     const curApi = api.equipmentManagement.transfer
     return {
-      fileType: 'repairApplyFile',
-      uploadUrl: BASE_URL + '/file/uploadSingleFile',
-      fileList: [],
       ...getDefaultCreateViewData(),
       ...curModels,
       curApi,
@@ -150,6 +184,7 @@ export default {
       ...{
         dialogTitle: '设备报废转移申请',
         model: curModels.create,
+        workFlows: [],
         roleTypes: [],
         companies: [],
         roles: [],
@@ -163,16 +198,31 @@ export default {
   computed: {
     ...mapGetters(['enums', 'user'])
   },
+  created() {
+    this.model.applyPersonId = this.user.id // 绑定当前用户
+    this.model.applyPersonName = this.user.name // 绑定当前用户
+    // this.model.flowId = '2'
+  },
   methods: {
     ...crud,
     async initCreateBefore() {
       this.roleTypes = this.$parent.roleTypes
+      console.log(this.roleTypes)
       this.departs = this.$parent.departs
       this.zhixis = this.$parent.zhixis
       this.factories = this.$parent.factories
       this.processDepts = this.$parent.processDepts
+      this.getWorkFlows()
       // 页面刷新，丢失数据
       // this.getRoles(this.model.roleType, this.model.companyId)
+    },
+    getWorkFlows() {
+      api.system.workFlow
+        .getSelectlist('3')
+        .then((response) => {
+          this.workFlows = response.data || []
+        })
+        .catch((reject) => {})
     },
     onChangeDepart(val) {
       this.model.applyDeptName = val
@@ -216,12 +266,6 @@ export default {
           this.roles = response.data || []
         })
     },
-    // submitCreateBefore() {
-    //   this.model.applyPersonId = this.user.id // 绑定当前用户
-    //   this.model.applyPersonName = this.user.name // 绑定当前用户
-    //   console.log('userid' + this.user.id)
-    //   console.log('name' + this.user.name + '|' + this.user.displayName)
-    // },
     submitCreateAfter() {
       // 清空部分数据
       this.model.productCode = null
