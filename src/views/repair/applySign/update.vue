@@ -434,6 +434,7 @@ export default {
         .getCheckLog(repairApplyId)
         .then((response) => {
           this.logDatas = response.data || []
+          console.log('this.logDatas', this.logDatas)
         })
         .catch((reject) => {
         })

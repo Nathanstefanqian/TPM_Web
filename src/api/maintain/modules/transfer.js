@@ -55,36 +55,3 @@ export function del(data) {
     data: data
   })
 }
-// 部门下拉框
-export function sysDept1(data) {
-  return request({
-    url: '/sysDept/selectlist',
-    method: 'get',
-    data: data
-  })
-}
-// 厂区下拉框
-export function factory(data) {
-  return request({
-    url: '/factory/selectlist',
-    method: 'get',
-    data: data
-  })
-}
-// 加工部下拉框
-export function processDept(data) {
-  return request({
-    url: '/processDept/selectlist',
-    method: 'get',
-    data: data
-  })
-}
-// 职系下拉框
-export function zhixi(data) {
-  return request({
-    url: '/zhixi/selectlist',
-    method: 'get',
-    data: data
-  })
-}
-

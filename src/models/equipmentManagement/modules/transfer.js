@@ -59,6 +59,7 @@ const createReal = {
   applyPersonName: null,
   applyTime: null,
   checkStatus: null,
+  flowId: null,
   checkStatusName: null
 }
 

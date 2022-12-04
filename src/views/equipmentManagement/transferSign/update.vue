@@ -2,42 +2,47 @@
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :rules="rules" :model="model" :label-width="labelWidth||'120px'">
       <el-row>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="申请部门" prop="applyDeptId">
             <span>{{ model.applyDeptName }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="制造编号：" prop="productCode">
             <span>{{ model.productCode }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="设备编号" prop="deviceNo">
             <span>{{ model.deviceNo }}</span>
+          </el-form-item>
+        </el-col>
+        <el-col :lg="6" :xs="24">
+          <el-form-item label="职系" prop="ezhixi">
+            <span>{{ model.zhixi }}</span>
           </el-form-item>
         </el-col>
 
       </el-row>
       <el-row>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="职系" prop="ezhixi">
-            <span>{{ model.zhixi }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="厂区" prop="factory">
             <span>{{ model.factory }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="加工部" prop="eprocessDept">
             <span>{{ model.processDeptName }}</span>
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
+        <el-col :lg="6" :xs="24">
           <el-form-item label="作业说明" prop="opDescription">
             <span>{{ model.opDescription }}</span>
+          </el-form-item>
+        </el-col>
+        <el-col :lg="6" :xs="24">
+          <el-form-item label="申请人" prop="opDescription">
+            <span>{{ model.applyPersonName }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -48,6 +53,30 @@
       <el-button type="danger" @click="submitUpdateBack">驳回</el-button>
       <el-button @click="visible = false">取消</el-button>
     </div>
+
+    <el-table
+      ref="listTable"
+      v-loading="loading.table"
+      v-adaptive="{ bottomOffset: 0 }"
+      height="200px"
+      width="600px"
+      :data="logDatas.items"
+      :default-sort="sort"
+      border
+      fit
+      highlight-current-row
+      @sort-change="handleSort"
+    >
+      <el-table-column label="序号" type="index" align="center" width="65" fixed>
+        <template slot-scope="scope">
+          <span>{{ scope.$index + 1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="签核人员" prop="checkPerson" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="签核时间" prop="checkTime" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="操作" prop="checkInfo" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="备注" prop="checkContent" align="center" show-overflow-tooltip />
+    </el-table>
   </el-dialog>
 </template>
 
@@ -58,8 +87,10 @@ import models from '@/models'
 import rules from './rules'
 import crud from '@/utils/crud'
 import api from '@/api'
+import adaptive from '@/directive/el-table'
 
 export default {
+  directives: { adaptive },
   data() {
     const curModels = models.equipmentManagement.transfer
     const curApi = api.equipmentManagement.transfer
@@ -68,9 +99,23 @@ export default {
       ...{
         dialogTitle: '报废/转移签核',
         model: curModels.update,
+        flowDatas: [],
+        active: 2,
         roleTypes: [],
         companies: [],
-        roles: []
+        roles: [],
+        logDatas: [],
+        eqTransferId: null,
+        sort: { prop: 'checkTime', order: 'descending' },
+        flowNode: {
+          id: null,
+          // flowId: null,
+          eqTransferId: null,
+          checkPerson: null,
+          checkInfo: null,
+          checkTime: null,
+          checkContent: null
+        }
       }
     }
   },
@@ -81,21 +126,39 @@ export default {
     ...crud,
     // 初始化数据之前 row：行绑定数据
     submitUpdatePass() {
-      if (this.user.roleType === 1) {
-        this.model.checkStatus = this.user.roleType + '1'
-      }
-      this.submitUpdate()
+      // if (this.user.roleType === 1) {
+      //   this.model.checkStatus = this.user.roleType + '1'
+      // }
+      // this.submitUpdate(1)
+      api.equipmentManagement.transfer
+        .updateSign(this.eqTransferId,1)
+        .then((response) => {
+          console.log('通过')
+        })
+        .catch((reject) => {
+        })
     },
     submitUpdateBack() {
-      if (this.user.roleType === 1) {
-        this.model.checkStatus = this.user.roleType + '0'
-      }
-      this.submitUpdate()
+      // if (this.user.roleType === 1) {
+      //   this.model.checkStatus = this.user.roleType + '0'
+      // }
+      // this.submitUpdate(2)
+      api.equipmentManagement.transfer
+        .updateSign(this.eqTransferId,0)
+        .then((response) => {
+          console.log('驳回')
+        })
+        .catch((reject) => {
+        })
     },
     sentEmail() {
       this.submitUpdate()
     },
     async initUpdateBefore(row) {
+      // 流程数据
+      this.getFlowData(row.id)
+      // 签核记录数据
+      // this.getCheckLog(row.id)
       this.rules.password[0].required = false
       this.roleTypes = this.$parent.roleTypes
       this.companies = this.$parent.companies
@@ -136,6 +199,39 @@ export default {
       return api.system.role.getSelectlist(roleType, companyId).then(response => {
         this.roles = response.data || []
       })
+    },
+    getFlowData(eqTransferId) {
+      api.equipmentManagement.transfer
+        .getFlowData(eqTransferId)
+        .then((response) => {
+          this.flowDatas = response.data || []
+          console.log('this.flowDatas', this.flowDatas)
+          const a = this.flowDatas
+          this.eqTransferId=a[0].eqTransferId
+          console.log('this.eqTransferId',this.eqTransferId)
+          this.getCheckLog(this.eqTransferId)
+          // this.eqTransferId=a[0].eqTransferId
+          // console.log(this.eqTransferId)
+          // console.log('this.appointPersonShow',this.appointPersonShow)
+          // 设置界面上流程的激活的序号
+          // for (const flowData of this.flowDatas) {
+          //   if (this.user.userId === flowData.checkId) {
+          //     this.active = flowData.checkOrder - 1
+          //   }
+          // }
+        })
+        .catch((reject) => {
+        })
+    },
+    getCheckLog(eqTransferId) {
+      api.equipmentManagement.transfer
+        .getCheckLog(eqTransferId)
+        .then((response) => {
+          this.logDatas = response.data || []
+          console.log('this.logDatas', this.logDatas)
+        })
+        .catch((reject) => {
+        })
     }
   }
 }

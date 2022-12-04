@@ -40,9 +40,9 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单号" prop="transferNo" align="center" width="200" show-overflow-tooltip >
+      <el-table-column label="单号" prop="transferNo" align="center" width="200" show-overflow-tooltip>
         <template slot-scope="scope">
-          <el-link type="success" v-on:click="handleDetail(scope.row)"> {{ scope.row.transferNo }} </el-link>
+          <el-link type="success" @click="handleDetail(scope.row)"> {{ scope.row.transferNo }} </el-link>
         </template>
       </el-table-column>
       <el-table-column label="申请单位" prop="applyDeptName" align="left" width="100" show-overflow-tooltip />
@@ -51,7 +51,8 @@
       <el-table-column label="作业说明" prop="opDescription" align="center" show-overflow-tooltip />
       <el-table-column label="厂区" prop="factory" align="center" width="120" show-overflow-tooltip />
       <el-table-column label="加工部" prop="processDeptName" align="center" width="120" show-overflow-tooltip />
-      <el-table-column label="状态" prop="checkStatusName" width="120" align="left" show-overflow-tooltip />
+      <el-table-column label="当前状态" prop="checkNowName" show-overflow-tooltip />
+      <el-table-column label="下一级审批名称" prop="checkNextName" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
           <!--          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->

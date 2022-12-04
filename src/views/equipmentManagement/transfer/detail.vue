@@ -1,21 +1,21 @@
 <template>
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth||'120px'">
-      <el-row >
+      <el-row>
         <el-col>
           <el-form-item label="单号">
             {{ model.transferNo }}
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row >
+      <el-row>
         <el-col>
           <el-form-item label="申请单位">
             {{ model.applyDeptName }}
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row >
+      <el-row>
         <el-col>
           <el-form-item label="制造编号">
             {{ model.productCode }}
@@ -78,8 +78,20 @@
           </el-form-item>
         </el-col>
       </el-row>
-
-
+      <el-row>
+        <el-col>
+          <el-form-item label="当前状态">
+            {{ model.checkNowName }}
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
+          <el-form-item label="下一级审批名称">
+            {{ model.checkNextName }}
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
   </el-dialog>
 </template>

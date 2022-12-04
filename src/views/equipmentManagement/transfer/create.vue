@@ -136,25 +136,6 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
-          <el-form-item label="选择签核流程" prop="flowId">
-            <el-select
-              v-model="model.flowId"
-              class="query-item"
-              style="width: 150px"
-              placeholder="签核流程"
-              clearable
-              @clear="handleQuery"
-            >
-              <el-option
-                v-for="item in workFlows"
-                :key="item.key"
-                :label="item.text"
-                :value="item.key"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -184,7 +165,7 @@ export default {
       ...{
         dialogTitle: '设备报废转移申请',
         model: curModels.create,
-        workFlows: [],
+        // workFlows: [],
         roleTypes: [],
         companies: [],
         roles: [],
@@ -201,7 +182,7 @@ export default {
   created() {
     this.model.applyPersonId = this.user.id // 绑定当前用户
     this.model.applyPersonName = this.user.name // 绑定当前用户
-    // this.model.flowId = '2'
+    this.model.flowId = '2'
   },
   methods: {
     ...crud,
@@ -212,17 +193,8 @@ export default {
       this.zhixis = this.$parent.zhixis
       this.factories = this.$parent.factories
       this.processDepts = this.$parent.processDepts
-      this.getWorkFlows()
       // 页面刷新，丢失数据
       // this.getRoles(this.model.roleType, this.model.companyId)
-    },
-    getWorkFlows() {
-      api.system.workFlow
-        .getSelectlist('3')
-        .then((response) => {
-          this.workFlows = response.data || []
-        })
-        .catch((reject) => {})
     },
     onChangeDepart(val) {
       this.model.applyDeptName = val

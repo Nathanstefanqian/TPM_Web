@@ -55,4 +55,31 @@ export function del(data) {
     data: data
   })
 }
+// 获取结点信息
+export function getFlowData(id) {
+  return request({
+    url: `/eqTransfer/${id}/getFlowData`,
+    method: 'get',
+    data: id
+  })
+}
+// 获取日志信息
+export function getCheckLog(eqTransferId) {
+  return request({
+    url: `/eqTransferCheckLog/list`,
+    method: 'post',
+    data: {
+      eqTransferId
+      // eqTransferId: { eqTransferId }
+    }
+  })
+}
 
+// 更新数据(签核)
+export function updateSign(eqTransferId, result) {
+  return request({
+    url: '/eqTransfer/sign',
+    method: 'put',
+    data:{ eqTransferId, result}
+  })
+}
