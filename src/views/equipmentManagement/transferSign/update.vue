@@ -53,6 +53,15 @@
       <el-button type="danger" @click="submitUpdateBack">驳回</el-button>
       <el-button @click="visible = false">取消</el-button>
     </div>
+    <div style="margin-top: 30px">
+      <el-steps align-center :space="400" :active="active" finish-status="success">
+        <el-step v-for="(item, index) in flowDatas" :key="index" :title="item.name" :description="item.checkPerson">
+          <div slot="description">
+            <div>{{ item.checkPerson }}</div>
+          </div>
+        </el-step>
+      </el-steps>
+    </div>
 
     <el-table
       ref="listTable"
@@ -109,7 +118,6 @@ export default {
         sort: { prop: 'checkTime', order: 'descending' },
         flowNode: {
           id: null,
-          // flowId: null,
           eqTransferId: null,
           checkPerson: null,
           checkInfo: null,
@@ -133,7 +141,10 @@ export default {
       api.equipmentManagement.transfer
         .updateSign(this.eqTransferId,1)
         .then((response) => {
+          this.active++
           console.log('通过')
+          // this.submitUpdate(1)
+          this.getCheckLog(this.eqTransferId)
         })
         .catch((reject) => {
         })
@@ -157,8 +168,6 @@ export default {
     async initUpdateBefore(row) {
       // 流程数据
       this.getFlowData(row.id)
-      // 签核记录数据
-      // this.getCheckLog(row.id)
       this.rules.password[0].required = false
       this.roleTypes = this.$parent.roleTypes
       this.companies = this.$parent.companies
@@ -210,15 +219,12 @@ export default {
           this.eqTransferId=a[0].eqTransferId
           console.log('this.eqTransferId',this.eqTransferId)
           this.getCheckLog(this.eqTransferId)
-          // this.eqTransferId=a[0].eqTransferId
-          // console.log(this.eqTransferId)
-          // console.log('this.appointPersonShow',this.appointPersonShow)
           // 设置界面上流程的激活的序号
-          // for (const flowData of this.flowDatas) {
-          //   if (this.user.userId === flowData.checkId) {
-          //     this.active = flowData.checkOrder - 1
-          //   }
-          // }
+          for (const flowData of this.flowDatas) {
+            if (this.user.userId === flowData.checkId) {
+              this.active = flowData.checkOrder - 1
+            }
+          }
         })
         .catch((reject) => {
         })
