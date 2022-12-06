@@ -39,8 +39,12 @@
               @click="doPreviewImg()"
             >预览
             </el-button>
-            <el-button v-else size="mini" type="primary"
-                       @click="getFileList(scope.row.filePath, scope.row.fileName)">下载
+            <el-button
+              v-else
+              size="mini"
+              type="primary"
+              @click="getFileList(scope.row.filePath, scope.row.fileName)"
+            >下载
             </el-button>
           </template>
         </el-table-column>
@@ -52,7 +56,7 @@
 
 <script>
 export default {
-  name: "CheckFile",
+  name: 'CheckFile',
   props: {
     width: {
       type: Number,
@@ -91,7 +95,7 @@ export default {
     // 获取附件数据
     getEqRepairApplyFile() {
       this.$emit('getEqRepairApplyFile')
-    },
+    }
   }
 }
 </script>
