@@ -21,7 +21,7 @@ const base = {
   personName: null
 }
 
-const queryEmpty = { name: null, state: null }
+const queryEmpty = { name: null, status: null, type: null, parentId: null, personCode: null}
 
 const query = _.cloneDeep(queryEmpty)
 

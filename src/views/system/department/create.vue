@@ -120,8 +120,8 @@ export default {
       //   this.model.roleType = 4
       //   this.model.companyId = this.user.companyId
       // }
-      this.getUsers()
-      this.getParentDeparts()
+      this.departs = this.$parent.departs
+      this.users = this.$parent.users
     },
     // 切换角色类型
     changeRoleTypeHandle() {
@@ -143,18 +143,6 @@ export default {
       // if (this.model.roleType && this.model.companyId) {
       //   this.getRoles(this.model.roleType, this.model.companyId)
       // }
-    },
-    // 获取父级部门列表
-    getParentDeparts() {
-      return api.system.department.getSelectParentList().then(response => {
-        this.departs = response.data || []
-      })
-    },
-    // 获取负责人列表
-    getUsers() {
-      return api.system.department.getSelectUserList().then(response => {
-        this.users = response.data || []
-      })
     },
     // 清空部分数据
     submitCreateAfter() {
