@@ -14,7 +14,7 @@
     </div>
     <el-scrollbar style="height: 90%">
       <div style="display: flex; flex-direction: row; flex-wrap: wrap">
-        <div v-for="o in datas" :key="o.productCode" :span="8">
+        <div v-for="o in datas" :key="o.id" :span="8">
           <el-card :body-style="{ padding: '10px' }">
             <!--            <div style="padding: 14px; background: #20a0ff">-->
             <div style="padding: 14px" :class="o.status === '2' ? 'blue' : 'yellow'">
