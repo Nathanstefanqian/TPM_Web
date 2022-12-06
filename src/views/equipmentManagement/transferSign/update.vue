@@ -48,7 +48,7 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="submitUpdatePass">通过</el-button>
+      <el-button type="primary" @click="submitUpdatePass" :disabled="isDisable">通过</el-button>
       <el-button type="success" @click="sentEmail">发送邮件</el-button>
       <el-button type="danger" @click="submitUpdateBack">驳回</el-button>
       <el-button @click="visible = false">取消</el-button>
@@ -115,6 +115,7 @@ export default {
         roles: [],
         logDatas: [],
         eqTransferId: null,
+        isDisable:false,
         sort: { prop: 'checkTime', order: 'descending' },
         flowNode: {
           id: null,
@@ -138,13 +139,21 @@ export default {
       //   this.model.checkStatus = this.user.roleType + '1'
       // }
       // this.submitUpdate(1)
+      this.isDisable=true
       api.equipmentManagement.transfer
         .updateSign(this.eqTransferId,1)
         .then((response) => {
           this.active++
           console.log('通过')
           // this.submitUpdate(1)
+          this.isDisable=true
           this.getCheckLog(this.eqTransferId)
+          setTimeout(()=>{
+            this.visible = false
+            this.$parent.getDatas()
+            this.loading = false
+            this.isDisable=false
+          },2500)
         })
         .catch((reject) => {
         })
