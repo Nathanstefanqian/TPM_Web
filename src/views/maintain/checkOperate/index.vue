@@ -12,7 +12,7 @@
         </el-radio-group>
       </div>
     </div>
-    <el-scrollbar style="height: 80%">
+    <el-scrollbar style="height: 70%">
       <div style="display: flex; flex-direction: row; flex-wrap: wrap">
         <div v-for="o in datas" :key="o.id" :span="8">
           <el-card :body-style="{ padding: '10px' }">
@@ -27,8 +27,13 @@
         </div>
       </div>
     </el-scrollbar>
-    <pagination :hidden="page.total===0" :total="page.total" :page.sync="page.current" :limit.sync="page.size"
-                @pagination="getDatas" />
+    <pagination
+      :hidden="page.total===0"
+      :total="page.total"
+      :page.sync="page.current"
+      :limit.sync="page.size"
+      @pagination="getDatas"
+    />
     <!--  点检操作弹窗  -->
     <el-dialog
       :custom-class="'dialog-fullscreen dialog-update'"
@@ -52,23 +57,32 @@
           highlight-current-row
           @sort-change="handleSort"
         >
-          <el-table-column type="selection" align="center" width="35"/>
+          <el-table-column type="selection" align="center" width="35" />
           <el-table-column label="序号" type="index" align="center" width="65" fixed>
             <template slot-scope="scope">
               <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="点检内容" prop="content" align="left" show-overflow-tooltip width="350"/>
-          <el-table-column label="状态" prop="result" align="center" :formatter="formatterType" show-overflow-tooltip/>
+          <el-table-column label="点检内容" prop="content" align="left" show-overflow-tooltip width="350" />
+          <el-table-column label="状态" prop="result" align="center" :formatter="formatterType" show-overflow-tooltip />
           <el-table-column label="扫码/填写数据" align="center">
             <template slot-scope="{row}">
-              <el-button v-if="row.isBind === '1' && row.scan !== true" type="primary" style="width: 120px"
-                         @click="handleScan(row)">点击扫码
+              <el-button
+                v-if="row.isBind === '1' && row.scan !== true"
+                type="primary"
+                style="width: 120px"
+                @click="handleScan(row)"
+              >点击扫码
               </el-button>
               <el-input
                 v-if="(row.isDigit === '1' && (row.isBind !== '1' || (row.isBind === '1' && row.scan === true)))"
-                v-model.trim="row.inputData" class="query-item" style="width: 120px" placeholder="请输入数据" clearable
-                @clear="handleQuery"/>
+                v-model.trim="row.inputData"
+                class="query-item"
+                style="width: 120px"
+                placeholder="请输入数据"
+                clearable
+                @clear="handleQuery"
+              />
             </template>
           </el-table-column>
           <el-table-column fixed="right" align="center" label="操作">
@@ -84,34 +98,47 @@
     <!--  点击NG弹窗  -->
     <el-dialog title="确认NG？" :visible.sync="dialogNGVisible">
       <span>请输入情况说明</span>
-      <el-input v-model.trim="beizhu"/>
+      <el-input v-model.trim="beizhu" />
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogNGVisible = false; beizhu= ''">取消</el-button>
         <el-button type="warning" @click="clickRepairing">维修中</el-button>
         <el-button type="danger" @click="clickRepair">报修</el-button>
       </div>
     </el-dialog>
+
+    <!--  QR扫码弹窗  -->
+    <el-dialog title="扫码" :visible.sync="dialogQRVisible">
+      <div>
+        <p className="error">{{ error }}</p>
+
+        <p className="decode-result">Last result: <b>{{ result }}</b></p>
+
+        <qrcode-stream @decode="onDecode" @init="onInit" />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import adaptive from '@/directive/el-table'
 import getDefaultListViewData from '@/utils/viewData/list'
 import models from '@/models'
 import crud from '@/utils/crud'
 import api from '@/api'
+import { QrcodeStream } from 'vue-qrcode-reader'
 
 export default {
   name: 'Role',
   components: {
     Pagination: () => import('@/components/Pagination'),
+    QrcodeStream
     // DialogCreate: () => import('./create'),
     // DialogUpdate: () => import('./update'),
     // DialogDetail: () => import('./detail'),
     // DialogCheckDevice: () => import('./checkDevice')
   },
-  directives: {adaptive},
+  directives: { adaptive },
   data() {
     const curModels = models.maintian.operate
     const curApi = api.maintain.operate
@@ -119,8 +146,8 @@ export default {
     return {
       ...getDefaultListViewData(), ...curModels, curApi, curPermission,
       ...{
-        sort: {prop: 'deviceNo', order: 'ascending'},
-        contentSort: {prop: 'sort', order: 'ascending'},
+        sort: { prop: 'deviceNo', order: 'ascending' },
+        contentSort: { prop: 'sort', order: 'ascending' },
         datas: [],
         contentDatas: [],
         roleTypes: [],
@@ -131,6 +158,7 @@ export default {
         processDepts: [],
         checkDeviceVisible: false,
         dialogNGVisible: false,
+        dialogQRVisible: false,
         dialogTitle: '',
         currentRow: null,
         scan: false,
@@ -151,7 +179,9 @@ export default {
         key: '3',
         text: '设备履历'
       }],
-      queryinfo: ''
+      queryinfo: '',
+      result: '', // 扫码
+      error: '' // 扫码
     }
   },
   computed: {
@@ -191,10 +221,10 @@ export default {
     },
     // 获取点检内容
     getContentDatas(id) {
-      const cpage = {current: 1, size: 100}
+      const cpage = { current: 1, size: 100 }
       const csort = this.contentSort
       // const cquery = { maintianId: id }
-      const cquery = {maintainId: id}
+      const cquery = { maintainId: id }
       api.maintain.operateContent.getList(cquery, cpage, csort).then(res => {
         this.contentDatas = res.data.items
       })
@@ -206,23 +236,24 @@ export default {
     // 点击扫码
     handleScan(row) {
       this.currentRow = row
-      this.$confirm('设备扫码中', '扫码', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(({value}) => {
-        this.currentRow.scan = true
-        row.scan = true
-        this.refreshTable()
-        this.$message({
-          type: 'success',
-          message: '扫码成功'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消'
-        })
-      })
+      this.dialogQRVisible = true
+      // this.$confirm('设备扫码中', '扫码', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消'
+      // }).then(({ value }) => {
+      //   this.currentRow.scan = true
+      //   row.scan = true
+      //   this.refreshTable()
+      //   this.$message({
+      //     type: 'success',
+      //     message: '扫码成功'
+      //   })
+      // }).catch(() => {
+      //   this.$message({
+      //     type: 'info',
+      //     message: '取消'
+      //   })
+      // })
     },
     // 点击OK
     handleOK(row) {
@@ -230,7 +261,7 @@ export default {
       this.$prompt('备注', '确认点检状态正常？', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
-      }).then(({value}) => {
+      }).then(({ value }) => {
         row.memo = value
         const data = {
           maintainId: row.maintainId,
@@ -342,7 +373,37 @@ export default {
         this.processDepts = response.data || []
       }).catch(reject => {
       })
+    },
+    // QR扫码相关
+    onDecode(result) {
+      this.result = result
+    },
+    async onInit(promise) {
+      try {
+        await promise
+      } catch (error) {
+        if (error.name === 'NotAllowedError') {
+          this.error = 'ERROR: you need to grant camera access permission'
+        } else if (error.name === 'NotFoundError') {
+          this.error = 'ERROR: no camera on this device'
+        } else if (error.name === 'NotSupportedError') {
+          this.error = 'ERROR: secure context required (HTTPS, localhost)'
+        } else if (error.name === 'NotReadableError') {
+          this.error = 'ERROR: is the camera already in use?'
+        } else if (error.name === 'OverconstrainedError') {
+          this.error = 'ERROR: installed cameras are not suitable'
+        } else if (error.name === 'StreamApiNotSupportedError') {
+          this.error = 'ERROR: Stream API is not supported in this browser'
+        } else if (error.name === 'InsecureContextError') {
+          this.error = `ERROR: Camera access is only permitted in secure context.
+          Use HTTPS or localhost rather than HTTP.`
+        } else {
+          this.error = `ERROR: Camera error (${error.name})`
+        }
+      }
     }
+    // QR扫码相关
+
   }
 }
 </script>
