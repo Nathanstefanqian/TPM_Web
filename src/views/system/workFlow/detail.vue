@@ -63,7 +63,7 @@ export default {
     // 初始化数据之后 row：行绑定数据；data：接口返回数据
     async initDetailAfter(row, data) {
       this.model = data
-      console.log(this.model.id)
+      // console.log(this.model.id)
       this.getFlowNode(this.model.id)
     },
     getFlowNode(id) {

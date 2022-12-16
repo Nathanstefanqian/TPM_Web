@@ -41,13 +41,13 @@
       <el-table-column label="类型" prop="maintainType" align="center" width="120" show-overflow-tooltip />
       <el-table-column fixed="right" label="操作" align="center" width="180">
         <template slot-scope="{row}">
+          <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="makeQRCode(row)">生成二维码</el-button>
           <el-tooltip transition="false" :hide-after="1000" class="item" content="项目内容" placement="top-end">
             <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>
           </el-tooltip>
           <el-tooltip transition="false" :hide-after="1000" class="item" content="删除" placement="top-end">
             <el-button type="danger" plain class="button-operate button-delete" size="mini" @click="handleDelete(row)"><i class="vue-icon-delete" /></el-button>
           </el-tooltip>
-
         </template>
       </el-table-column>
     </el-table>
@@ -55,6 +55,7 @@
     <dialog-create ref="dialogCreate" />
     <dialog-update ref="dialogUpdate" />
     <dialog-detail ref="dialogDetail" />
+    <dialog-q-r-code ref="dialogQRCode" />
   </div>
 </template>
 
@@ -73,7 +74,8 @@ export default {
     Pagination: () => import('@/components/Pagination'),
     DialogCreate: () => import('./create'),
     DialogUpdate: () => import('./update'),
-    DialogDetail: () => import('./detail')
+    DialogDetail: () => import('./detail'),
+    DialogQRCode: () => import('./makeQRCode'),
   },
   directives: { adaptive },
   data() {
@@ -123,10 +125,13 @@ export default {
     this.getProcessDepts()
     this.getPersons()
     this.headers.token = this.token
-    console.log('token:', this.token)
+    // console.log('token:', this.token)
   },
   methods: {
     ...crud,
+    makeQRCode(row) {
+      this.$refs.dialogQRCode.initDetail(row).then(() => { })
+    },
     // 根据登录用户角色获取角色类型列表
     getRoleTypes() {
       api.system.role.getRoleTypes().then(response => {

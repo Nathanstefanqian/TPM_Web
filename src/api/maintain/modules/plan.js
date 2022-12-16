@@ -82,12 +82,31 @@ export function addPlan(data) {
 }
 
 // 点检项目计划详情界面，获取content
-export function getContentList(maintainId) {
+export function getContentList(maintainId, deptId) {
   return request({
     url: '/eqMaintainPlanContent/list',
     method: 'post',
     data: {
       query: {maintainId}
     }
+  })
+}
+
+// 选择设备名称下拉框
+export function selectEquipment(data) {
+  return request({
+    url: '/eqMaintainPlan/selectEquipment',
+    method: 'post',
+    data
+  })
+}
+
+// 生成二维码
+export function makeQRCode(data) {
+  return request({
+    url: '/eqMaintainPlan/getQrCode',
+    responseType: 'blob',
+    method: 'post',
+    data
   })
 }
