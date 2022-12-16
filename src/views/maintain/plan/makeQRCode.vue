@@ -3,31 +3,34 @@
     <div ref="toolbar" class="toolbar">
       <div class="tool-group">
         <div class="tool-group">
-          <el-select v-model.trim="query.deptId" class="query-item" style="width:150px" placeholder="选择部门" @change="deptChange()" clearable>
+          <el-select v-model.trim="query.deptId" class="query-item" style="width:150px" placeholder="选择部门" clearable @change="deptChange()">
             <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key" />
           </el-select>
-          <el-select v-model.trim="query.type" class="query-item" style="width:150px" placeholder="选择设备" @change="deviceChange()" clearable>
-            <el-option v-for="item in devices" :key="item.key" :label="item.deviceNo" :value="item.productCode" />
+          <el-select v-model.trim="query.productCode" class="query-item" style="width:150px" placeholder="选择设备" clearable>
+            <el-option v-for="item in devices" :key="item.productCode" :label="item.deviceNo" :value="item.productCode" />
           </el-select>
           <el-button @click="resetQRCode">重置</el-button>
+          <el-button type="primary" style="margin: 20px" @click="makeQRCode">生成二维码</el-button>
+
         </div>
       </div>
     </div>
     <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth||'120px'">
       <el-row>
         <el-col>
-          <el-form-item label="点检内容">
-            <el-table ref="codeForm" :data="useList" style="width: 100%">
-              <el-table-column type="selection" align="center" width="35"/>
-              <el-table-column label="序号" type="index" align="center" width="65" fixed />
-              <el-table-column label="点检内容" prop="content" align="center" show-overflow-tooltip />
-            </el-table>
+          <el-form-item>
+            <div style="display: flex; flex-direction: row">
+              <el-table ref="codeForm" :data="useList" style="width: 200px">
+                <el-table-column type="selection" align="center" width="35" />
+                <el-table-column label="序号" type="index" align="center" width="65" fixed />
+                <el-table-column label="点检内容" prop="content" align="center" show-overflow-tooltip />
+              </el-table>
+              <img :src="blobimg" alt="">
+            </div>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
-    <el-button type="primary" @click="makeQRCode" style="margin: 20px">生成二维码</el-button>
-    <img :src="blobimg">
   </el-dialog>
 </template>
 
@@ -37,7 +40,7 @@ import getDefaultDetailViewData from '@/utils/viewData/detail'
 import models from '@/models'
 import crud from '@/utils/crud'
 import api from '@/api'
-import {getContentList, makeQRCode, selectEquipment} from "../../../api/maintain/modules/plan";
+// import { getContentList, makeQRCode, selectEquipment} from "../../../api/maintain/modules/plan";
 
 export default {
   data() {
@@ -51,7 +54,7 @@ export default {
         functions: []
       },
       contentList: [],
-      useList:[],
+      useList: [],
       departs: [],
       devices: [],
       eqType: null,
@@ -63,48 +66,56 @@ export default {
   computed: {
     ...mapGetters(['enums', 'user'])
   },
+  created() {
+    this.resetQRCode()
+  },
   methods: {
     ...crud,
     // 生成二维码
     makeQRCode() {
-      let selectList = []
-      this.$refs.codeForm.selection.forEach((item,index)=>{
+      const selectList = []
+      this.$refs.codeForm.selection.forEach((item, index) => {
         selectList.push(item.id)
       })
-      let qrdata = {
-        productCode: this.productCode,
+      if (this.query.productCode == null) {
+        this.$message({ type: 'warning', message: '请选择设备' })
+        return
+      }
+      const qrdata = {
+        productCode: this.query.productCode,
         contentIdList: selectList,
         eqMaintainPlanId: this.eqMaintainPlainId
       }
       console.log(qrdata)
       api.maintain.plan.makeQRCode(qrdata).then(res => {
         this.blobimg = window.URL.createObjectURL(res)
-        this.$message({ type: 'success', message: '生成二维码成功'})
+        this.$message({ type: 'success', message: '生成二维码成功' })
       })
     },
     // 重置
     resetQRCode() {
       this.query.deptId = null
-      this.query.type = null
-      this.eqType = null
+      this.query.productCode = null
+      // this.query.type = null
+      // this.eqType = null
     },
     // 下拉选择部门发生变化时
     deptChange() {
-      let data = {
-        deptId : this.query.deptId,
+      const data = {
+        deptId: this.query.deptId,
         type: this.eqType
       }
       // 获取设备下拉框
       this.getEquipments(data)
     },
     // 下拉选择设备发生变化时
-    deviceChange() {
-      this.productCode = this.query.type
+    deviceChange(item) {
+      this.productCode = item.productCode
     },
-    initDetailBefore(){
-      this.useList=[]
+    initDetailBefore() {
+      this.useList = []
     },
-    initDetailAfter(row, data){
+    initDetailAfter(row, data) {
       this.getPlanContent(this.model.id)
       this.getDeparts()
       this.eqType = data.deviceType
@@ -115,7 +126,7 @@ export default {
       this.loading = true
       return api.maintain.plan.getContentList(maintainId).then(res => {
         this.useList = res.data.items
-        this.useList.sort((a,b) => (a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0))
+        this.useList.sort((a, b) => (a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0))
         this.loading = false
       }).catch(reject => {
         this.loading = false
