@@ -1,13 +1,17 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
+             :visible.sync="visible" :modal="false" :modal-append-to-body="false">
     <div ref="toolbar" class="toolbar">
       <div class="tool-group">
         <div class="tool-group">
-          <el-select v-model.trim="query.deptId" class="query-item" style="width:150px" placeholder="选择部门" clearable @change="deptChange()">
-            <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key" />
+          <el-select v-model.trim="query.deptId" class="query-item" style="width:150px" placeholder="选择部门" clearable
+                     @change="deptChange()">
+            <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key"/>
           </el-select>
-          <el-select v-model.trim="query.productCode" class="query-item" style="width:150px" placeholder="选择设备" clearable>
-            <el-option v-for="item in devices" :key="item.productCode" :label="item.deviceNo" :value="item.productCode" />
+          <el-select v-model.trim="query.productCode" class="query-item" style="width:150px" placeholder="选择设备"
+                     clearable>
+            <el-option v-for="item in devices" :key="item.productCode" :label="item.deviceNo"
+                       :value="item.productCode"/>
           </el-select>
           <el-button @click="resetQRCode">重置</el-button>
           <el-button type="primary" style="margin: 20px" @click="makeQRCode">生成二维码</el-button>
@@ -21,9 +25,9 @@
           <el-form-item>
             <div style="display: flex; flex-direction: row">
               <el-table ref="codeForm" :data="useList" style="width: 200px">
-                <el-table-column type="selection" align="center" width="35" />
-                <el-table-column label="序号" type="index" align="center" width="65" fixed />
-                <el-table-column label="点检内容" prop="content" align="center" show-overflow-tooltip />
+                <el-table-column type="selection" align="center" width="35"/>
+                <el-table-column label="序号" type="index" align="center" width="65" fixed/>
+                <el-table-column label="点检内容" prop="content" align="center" show-overflow-tooltip/>
               </el-table>
               <img :src="blobimg" alt="">
             </div>
@@ -35,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import getDefaultDetailViewData from '@/utils/viewData/detail'
 import models from '@/models'
 import crud from '@/utils/crud'
@@ -60,7 +64,8 @@ export default {
       eqType: null,
       eqMaintainPlainId: null,
       productCode: null,
-      blobimg: null
+      blobimg: null,
+      fileName: ''
     }
   },
   computed: {
@@ -68,28 +73,43 @@ export default {
   },
   created() {
     this.resetQRCode()
+    this.fileName = ''
   },
   methods: {
     ...crud,
     // 生成二维码
     makeQRCode() {
       const selectList = []
-      this.$refs.codeForm.selection.forEach((item, index) => {
+      const sortedArr = this.$refs.codeForm.selection.sort((a, b) => {
+        return a.sort - b.sort
+      })
+      sortedArr.forEach((item, index) => {
+        if (index === 0) {
+          this.fileName += item.sort
+        } else {
+          this.fileName += '-' + item.sort
+        }
         selectList.push(item.id)
       })
       if (this.query.productCode == null) {
-        this.$message({ type: 'warning', message: '请选择设备' })
+        this.$message({type: 'warning', message: '请选择设备'})
         return
       }
-      const qrdata = {
+      api.maintain.plan.makeQRCode({
         productCode: this.query.productCode,
         contentIdList: selectList,
         eqMaintainPlanId: this.eqMaintainPlainId
-      }
-      console.log(qrdata)
-      api.maintain.plan.makeQRCode(qrdata).then(res => {
-        this.blobimg = window.URL.createObjectURL(res)
-        this.$message({ type: 'success', message: '生成二维码成功' })
+      }).then(res => {
+        let blobObj = new Blob([res], {type: 'image/png'})
+        let url = window.URL.createObjectURL(blobObj);
+        this.blobimg = url
+        let a = document.createElement('a')
+        a.href = url
+        a.download = this.query.productCode + " " + this.model.maintainType.replace('点检', ' ') + this.fileName + '.png'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        this.fileName = ''
       })
     },
     // 重置

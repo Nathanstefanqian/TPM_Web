@@ -68,7 +68,8 @@
         </el-col>
         <el-col :xl="4" :lg="4" :md="10" :sm="12" :xs="24">
           <el-form-item label="附件">
-            <CheckFile :width="400" :file-list="fileList" :src-list="srcList" @getEqRepairApplyFile="getEqRepairApplyFile"/>
+            <CheckFile :width="400" :file-list="fileList" :src-list="srcList"
+                       @getEqRepairApplyFile="getEqRepairApplyFile"/>
           </el-form-item>
 
         </el-col>
@@ -192,7 +193,7 @@ import crud from '@/utils/crud'
 import api from '@/api'
 import {cloneDeep} from 'lodash'
 import adaptive from '@/directive/el-table'
-import CheckFile from "@/components/CheckFile";
+import CheckFile from '@/components/CheckFile'
 
 export default {
   components: {CheckFile},
