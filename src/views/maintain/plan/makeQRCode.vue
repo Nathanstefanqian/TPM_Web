@@ -1,29 +1,33 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <div ref="toolbar" class="toolbar">
+  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
+             :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+    <div ref="toolbar" class="toolbar" style="margin-left: 50px">
       <div class="tool-group">
         <div class="tool-group">
-          <el-select v-model.trim="query.deptId" class="query-item" style="width:150px" placeholder="选择部门" clearable @change="deptChange()">
-            <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key" />
+          <el-select v-model.trim="query.deptId" class="query-item" style="width:150px" placeholder="选择部门" clearable
+                     @change="deptChange()">
+            <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key"/>
           </el-select>
-          <el-select v-model.trim="query.productCode" class="query-item" style="width:150px" placeholder="选择设备" clearable>
-            <el-option v-for="item in devices" :key="item.productCode" :label="item.deviceNo" :value="item.productCode" />
+          <el-select v-model.trim="query.productCode" class="query-item" style="width:150px" placeholder="选择设备"
+                     @change="deviceChange()" clearable>
+            <el-option v-for="item in devices" :key="item.productCode" :label="item.deviceNo"
+                       :value="item.productCode"/>
           </el-select>
           <el-button @click="resetQRCode">重置</el-button>
-          <el-button type="primary" style="margin: 20px" @click="makeQRCode">生成二维码</el-button>
-
+          <el-button type="primary" style="margin-left: 20px" @click="makeQRCode">生成二维码</el-button>
+          <el-button type="primary" style="margin-left: 20px" v-if="bloblink" @click="downloadImg">保存图片</el-button>
         </div>
       </div>
     </div>
-    <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth||'120px'">
+    <el-form ref="form" label-position="right" :model="model" label-width="50px">
       <el-row>
         <el-col>
           <el-form-item>
             <div style="display: flex; flex-direction: row">
               <el-table ref="codeForm" :data="useList" style="width: 200px">
-                <el-table-column type="selection" align="center" width="35" />
-                <el-table-column label="序号" type="index" align="center" width="65" fixed />
-                <el-table-column label="点检内容" prop="content" align="center" show-overflow-tooltip />
+                <el-table-column type="selection" align="center" width="35"/>
+                <el-table-column label="序号" type="index" align="center" width="100" fixed/>
+                <el-table-column label="点检内容" prop="content" align="center" show-overflow-tooltip/>
               </el-table>
               <img :src="blobimg" alt="">
             </div>
@@ -35,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import getDefaultDetailViewData from '@/utils/viewData/detail'
 import models from '@/models'
 import crud from '@/utils/crud'
@@ -60,7 +64,8 @@ export default {
       eqType: null,
       eqMaintainPlainId: null,
       productCode: null,
-      blobimg: null
+      blobimg: null,
+      bloblink: false
     }
   },
   computed: {
@@ -78,7 +83,7 @@ export default {
         selectList.push(item.id)
       })
       if (this.query.productCode == null) {
-        this.$message({ type: 'warning', message: '请选择设备' })
+        this.$message({type: 'warning', message: '请选择设备'})
         return
       }
       const qrdata = {
@@ -86,18 +91,32 @@ export default {
         contentIdList: selectList,
         eqMaintainPlanId: this.eqMaintainPlainId
       }
-      console.log(qrdata)
       api.maintain.plan.makeQRCode(qrdata).then(res => {
-        this.blobimg = window.URL.createObjectURL(res)
-        this.$message({ type: 'success', message: '生成二维码成功' })
+        const blob = new Blob([res], {type: 'application/png;charset=utf-8'})
+        const src = window.URL.createObjectURL(blob)
+        this.blobimg = src
+        this.$message({type: 'success', message: '生成二维码成功'})
+        this.bloblink = true
       })
     },
     // 重置
     resetQRCode() {
       this.query.deptId = null
       this.query.productCode = null
-      // this.query.type = null
-      // this.eqType = null
+      if (this.$refs.codeForm) {
+        this.$refs.codeForm.clearSelection()
+      }
+    },
+    // 保存图片
+    downloadImg() {
+      const link = document.createElement('a')
+      link.style.display = 'none'
+      link.href = this.blobimg
+      link.setAttribute('download', this.productCode + '.png')
+      document.body.appendChild(link)
+      link.click()
+      window.URL.revokeObjectURL(link.href)
+      document.body.removeChild(link)
     },
     // 下拉选择部门发生变化时
     deptChange() {
@@ -109,8 +128,9 @@ export default {
       this.getEquipments(data)
     },
     // 下拉选择设备发生变化时
-    deviceChange(item) {
-      this.productCode = item.productCode
+    deviceChange() {
+      this.productCode = this.query.productCode
+      console.log(this.productCode)
     },
     initDetailBefore() {
       this.useList = []
