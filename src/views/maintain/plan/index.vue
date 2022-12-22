@@ -53,7 +53,6 @@
     </el-table>
     <pagination :hidden="page.total===0" :total="page.total" :page.sync="page.current" :limit.sync="page.size" @pagination="getDatas" />
     <dialog-create ref="dialogCreate" />
-    <dialog-update ref="dialogUpdate" />
     <dialog-detail ref="dialogDetail" />
     <dialog-q-r-code ref="dialogQRCode" />
   </div>

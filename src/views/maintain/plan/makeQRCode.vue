@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth||'120px'">
+    <el-form ref="form" label-position="right" :model="model" >
       <el-row>
         <el-col>
           <el-form-item>
@@ -146,7 +146,7 @@ export default {
       this.loading = true
       return api.maintain.plan.getContentList(maintainId).then(res => {
         this.useList = res.data.items
-        this.useList.sort((a, b) => (a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0))
+        // this.useList.sort((a, b) => (a.content > b.content) ? 1 : ((b.content > a.content) ? -1 : 0))
         this.loading = false
       }).catch(reject => {
         this.loading = false
