@@ -82,7 +82,7 @@ function handleCreate() {
  * 提交添加数据
  */
 function submitCreate() {
-  console.log('submitCreate')
+  // console.log('submitCreate')
   this.$refs.form.validate((valid) => {
     if (!valid) return false
     this.loading = true

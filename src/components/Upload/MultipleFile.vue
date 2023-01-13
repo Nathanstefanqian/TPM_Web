@@ -7,7 +7,7 @@
     :on-remove="handleRemove"
     :before-remove="beforeRemove"
     multiple
-    :limit="5"
+    :limit="limited"
     :on-exceed="handleExceed"
     :on-success="handleUploadSuccess"
   >
@@ -26,11 +26,15 @@ export default {
     fileList: {
       type: Array,
       required: true
+    },
+    limited: {
+      type: Number,
+      required: true
     }
   },
   data() {
     return {
-      uploadUrl: process.env.VUE_APP_BASE_API + '/file/uploadSingleFile'
+      uploadUrl: process.env.VUE_APP_BASE_API + '/file/uploadSingleFile',
     }
   },
   methods: {
@@ -41,7 +45,7 @@ export default {
       console.log(file)
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 5 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+      this.$message.warning(`当前限制选择 ${this.limited} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)

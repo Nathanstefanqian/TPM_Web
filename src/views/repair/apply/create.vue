@@ -154,7 +154,7 @@
         </el-col>
         <el-col :xl="4" :lg="8" :md="10" :sm="12" :xs="24">
           <el-form-item label="附件" prop="opDescription">
-            <MultipleFile file-type="repairApplyFile" :file-list="fileList" />
+            <MultipleFile file-type="repairApplyFile" :file-list="fileList" :limited="5"/>
           </el-form-item>
         </el-col>
       </el-row>

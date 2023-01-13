@@ -1,32 +1,28 @@
 <template>
-  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false" :modal-append-to-body="false">
-    <el-form ref="form" label-position="right" :model="model" :label-width="labelWidth||'120px'">
-      <el-row>
-        <el-col>
-          <el-form-item label="点检内容">
-            <el-table :data="useList" style="width: 100%">
-              <el-table-column label="序号" type="index" align="center" width="65" fixed />
-              <el-table-column label="点检内容" prop="content" align="center" show-overflow-tooltip />
-              <el-table-column label="是否绑定扫码" prop="isBind" align="center" :formatter="formatterBind" show-overflow-tooltip />
-              <el-table-column label="是否输入数据" prop="needInput" align="center" :formatter="formatterInput" show-overflow-tooltip />
-              <el-table-column label="操作" fixed="right" align="center" width="180">
-                <template slot-scope="{row}">
-                  <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">
-                    <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>
-                  </el-tooltip>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+  <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle"
+             :visible.sync="visible" :modal="false" :modal-append-to-body="false">
+    <el-table :data="useList" style="width: 100%">
+      <el-table-column label="序号" type="index" align="center" width="80" fixed/>
+      <el-table-column label="点检内容" prop="content" align="center" width="400" show-overflow-tooltip/>
+      <el-table-column label="是否绑定扫码" prop="isBind" align="center" :formatter="formatterBind"
+                       show-overflow-tooltip/>
+      <el-table-column label="是否输入数据" prop="needInput" align="center" :formatter="formatterInput"
+                       show-overflow-tooltip/>
+      <el-table-column label="操作" fixed="right" align="center">
+        <template slot-scope="{row}">
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">
+            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)">
+              <i class="vue-icon-update"/></el-button>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+    </el-table>
     <dialog-update ref="dialogUpdate" :maintain-id="maintainId" @getContentInfo="getContentInfo"/>
   </el-dialog>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import getDefaultDetailViewData from '@/utils/viewData/detail'
 import models from '@/models'
 import crud from '@/utils/crud'
@@ -47,7 +43,7 @@ export default {
         functions: []
       },
       contentList: [],
-      useList:[],
+      useList: [],
       maintainId: null
     }
   },
@@ -56,7 +52,7 @@ export default {
   },
   methods: {
     ...crud,
-    async initDetailAfter(row, data){
+    async initDetailAfter(row, data) {
       this.model = data
       this.maintainId = this.model.id
       this.getContentInfo(this.model.id)
