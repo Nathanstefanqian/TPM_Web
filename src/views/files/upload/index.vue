@@ -3,7 +3,7 @@
     <div ref="toolbar" class="toolbar">
       <div class="tool-group">
         <!--        <el-input v-model.trim="query.name" class="query-item" style="width: 120px" placeholder="角色名" clearable @clear="handleQuery" />-->
-        <el-select v-model="query.eDeptId" class="query-item" style="width: 150px" placeholder="查询单位" clearable @clear="handleQuery">
+        <el-select v-model="query.deptId" class="query-item" style="width: 150px" placeholder="查询单位" clearable @clear="handleQuery">
           <el-option v-for="item in departs" :key="item.key" :label="item.text" :value="item.key" />
         </el-select>
         <el-input v-model.trim="query.name" class="query-item" style="width: 120px" placeholder="制造编号" clearable @clear="handleQuery" />
@@ -40,19 +40,19 @@
           <span>{{ (page.current - 1) * page.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单位" prop="deptName" align="left" width="200" show-overflow-tooltip />
-      <el-table-column label="机台名称" prop="deviceName" align="center" width="200" show-overflow-tooltip />
+      <el-table-column label="单位" prop="deptName" align="left" width="120" show-overflow-tooltip />
+      <el-table-column label="机台名称" prop="deviceName" align="center" show-overflow-tooltip />
 
-      <el-table-column label="制造编号" prop="productCode" align="center" width="200" show-overflow-tooltip />
-      <el-table-column label="机台型号" prop="deviceType" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="制造编号" prop="productCode" align="center" show-overflow-tooltip />
+      <el-table-column label="机台型号" prop="deviceType" align="center" show-overflow-tooltip />
       <!--      <el-table-column label="品牌型号" prop="ebrand" align="center" width="120" show-overflow-tooltip />-->
       <!--      <el-table-column label="制造日期" prop="eproductdate" align="center" width="120" show-overflow-tooltip />-->
       <!--      <el-table-column label="验收日期" prop="echeckdate" align="center" width="120" show-overflow-tooltip />-->
-      <el-table-column label="上传文件名" prop="fileName" align="center" width="120" show-overflow-tooltip />
+      <el-table-column label="上传文件名" prop="fileName" align="center" width="200" show-overflow-tooltip />
       <el-table-column label="上传人" prop="uploadPersonName" align="left" show-overflow-tooltip />
       <el-table-column label="附件" prop="factory" align="left" show-overflow-tooltip />
       <el-table-column label="上传时间" prop="status" align="center" width="120" show-overflow-tooltip />
-      <el-table-column fixed="right" label="操作" align="center" width="180">
+      <el-table-column fixed="right" label="操作" align="center" width="150">
         <template slot-scope="{row}">
           <!--          <el-tooltip v-if="curPermission.update.allow" transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">-->
           <!--            <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)"><i class="vue-icon-update" /></el-button>-->
@@ -65,6 +65,9 @@
           </el-tooltip>
           <el-tooltip transition="false" :hide-after="1000" class="item" content="详情" placement="top-end">
             <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>
+          </el-tooltip>
+          <el-tooltip transition="false" :hide-after="1000" class="item" content="下载" placement="top-end">
+            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="downloadFile"><i class="el-icon-download" /></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -135,6 +138,11 @@ export default {
   },
   methods: {
     ...crud,
+    // 下载文件
+    downloadFile() {
+
+    },
+
     // 根据登录用户角色获取角色类型列表
     getRoleTypes() {
       api.system.role.getRoleTypes().then(response => {
