@@ -140,11 +140,8 @@ export default {
         // 拷贝数据提交
         const data = _.pick(this.model, Object.keys(this.createReal))
         data.deptName = this.$refs.selectDept.selected.label
-        console.log(this.fileList[0].url)
         var fileNameList = this.fileList[0].url.split("/")
         data.fileName = fileNameList[3]
-        console.log(fileNameList)
-        console.log(data)
         this.curApi
           .create(data)
           .then(() => {

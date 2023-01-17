@@ -67,7 +67,7 @@
             <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="handleDetail(row)"><i class="vue-icon-detail" /></el-button>
           </el-tooltip>
           <el-tooltip transition="false" :hide-after="1000" class="item" content="下载" placement="top-end">
-            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="downloadFile"><i class="el-icon-download" /></el-button>
+            <el-button type="primary" plain class="button-operate button-detail" size="mini" @click="downloadFile(row)"><i class="el-icon-download" /></el-button>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -139,8 +139,8 @@ export default {
   methods: {
     ...crud,
     // 下载文件
-    downloadFile() {
-
+    downloadFile(row) {
+      window.location.href = "http://localhost:8889/api/v1/static/deviceFile/" + row.fileName;
     },
 
     // 根据登录用户角色获取角色类型列表
