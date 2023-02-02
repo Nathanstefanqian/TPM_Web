@@ -61,18 +61,18 @@ export default {
         overflow: hidden;
       }
 
-      /deep/ .scrollbar-wrapper {
+      ::deep .scrollbar-wrapper {
         overflow-x: hidden !important;
       }
 
-      /deep/ .el-scrollbar__bar.is-vertical {
+      ::deep .el-scrollbar__bar.is-vertical {
         right: 0px;
         .el-scrollbar__thumb{
           background-color: $scrollbarColor;
         }
       }
 
-      /deep/ .is-horizontal {
+      ::deep .is-horizontal {
         display: none;
       }
 
@@ -82,8 +82,8 @@ export default {
         width: 100% !important;
 
         /* 一级菜单 */
-        /deep/ .el-menu-item.submenu-title-noDropdown,
-        /deep/ .el-submenu__title {
+        ::deep .el-menu-item.submenu-title-noDropdown,
+        ::deep .el-submenu__title {
           background-color: $sidebarMenuBgColor !important;
           color: $sidebarMenuTextColor !important;
           height: 44px;
@@ -108,7 +108,7 @@ export default {
         }
 
         // 子菜单
-        /deep/ .el-submenu .el-menu-item {
+        ::deep .el-submenu .el-menu-item {
           background-color: $sidebarSubMenuBgColor !important;
           color: $sidebarSubMenuTextColor !important;
           height: 44px;
@@ -126,7 +126,7 @@ export default {
         }
 
         // 当前菜单
-        /deep/ .el-menu-item.is-active {
+        ::deep .el-menu-item.is-active {
           background-color: $sidebarMenuActiveBgColor !important;
           color: $sidebarMenuTextActiveColor !important;
 
@@ -137,13 +137,13 @@ export default {
         }
       }
 
-      /deep/ a {
+      ::deep a {
         display: inline-block;
         width: 100%;
         overflow: hidden;
       }
 
-      /deep/ .svg-icon {
+      ::deep .svg-icon {
         margin-right: 16px;
       }
     }
@@ -151,7 +151,7 @@ export default {
     // 折叠菜单
     .fold-sidebar {
       .el-menu {
-        /deep/ .el-submenu {
+        ::deep .el-submenu {
           & > .el-submenu__title {
             & > span {
               height: 0;
@@ -164,7 +164,7 @@ export default {
 
         }
 
-        /deep/ .el-submenu.is-active {
+        ::deep .el-submenu.is-active {
           .el-submenu__title {
             background-color: $sidebarMenuActiveBgColor !important;
             color: $sidebarMenuTextActiveColor !important;

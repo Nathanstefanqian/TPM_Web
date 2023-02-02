@@ -227,7 +227,7 @@ $cursor: #fff;
         width: 85%;
         margin-left: 35px;
 
-        /deep/ input {
+        ::deep input {
           background: transparent;
           border: 0;
           -webkit-appearance: none;

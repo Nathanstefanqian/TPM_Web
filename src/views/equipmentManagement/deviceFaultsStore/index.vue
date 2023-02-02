@@ -269,11 +269,11 @@ export default {
   }
 }
 
-/deep/ .disabled-checkbox {
+::deep .disabled-checkbox {
   cursor: not-allowed !important;
 }
 
-/deep/
+::deep
   .disabled-checkbox
   .el-checkbox__input.is-disabled.is-checked
   .el-checkbox__inner {
@@ -286,14 +286,14 @@ export default {
   }
 }
 
-/deep/
+::deep
   .disabled-checkbox
   .el-checkbox__input.is-disabled.is-checked
   + span.el-checkbox__label {
   color: #409eff !important;
 }
 
-/deep/
+::deep
   .disabled-checkbox
   .el-checkbox__input.is-disabled.is-indeterminate
   .el-checkbox__inner::before {

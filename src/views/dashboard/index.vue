@@ -113,23 +113,23 @@ export default {
   width: 460px !important;
 }
 
-.el-dialog__wrapper /deep/ .el-drawer__header {
+.el-dialog__wrapper ::deep .el-drawer__header {
   padding: 15px 20px;
   margin-bottom: 0;
   color: black;
 }
 
-/deep/ .el-drawer.setting {
+::deep .el-drawer.setting {
   position: absolute;
   z-index: 200;
   background-color: rgba(255, 255, 255, 0.8);
 }
 
-/deep/ .el-drawer.setting .el-drawer__body {
+::deep .el-drawer.setting .el-drawer__body {
   overflow-y: auto;
 }
 
-/deep/ .el-drawer.setting .setting-content {
+::deep .el-drawer.setting .setting-content {
   padding: 0 20px 20px;
   color: #222;
   font-size: 14px;
@@ -183,11 +183,11 @@ export default {
   line-height: 34px;
 }
 
-.setting-content .setting-buoy .control-item /deep/ .el-input__inner {
+.setting-content .setting-buoy .control-item ::deep .el-input__inner {
   text-align: center;
 }
 
-.setting-content .setting-buoy .control-item /deep/ .el-badge__content.is-dot {
+.setting-content .setting-buoy .control-item ::deep .el-badge__content.is-dot {
   height: 10px;
   width: 10px;
   right: 13px;

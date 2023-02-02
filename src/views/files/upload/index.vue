@@ -208,11 +208,11 @@ export default {
   }
 }
 
-/deep/ .disabled-checkbox {
+::deep .disabled-checkbox {
   cursor: not-allowed !important;
 }
 
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+::deep .disabled-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
   background-color: #409EFF !important;
   border-color: #409EFF !important;
   cursor: not-allowed !important;
@@ -222,11 +222,11 @@ export default {
   }
 }
 
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-checked + span.el-checkbox__label {
+::deep .disabled-checkbox .el-checkbox__input.is-disabled.is-checked + span.el-checkbox__label {
   color: #409EFF !important;
 }
 
-/deep/ .disabled-checkbox .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner::before {
+::deep .disabled-checkbox .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner::before {
   background-color: #FFF;
 }
 </style>
