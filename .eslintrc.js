@@ -14,6 +14,7 @@ module.exports = {
   // add your custom rules here
   //it is base on https://github.com/vuejs/eslint-config-vue
   rules: {
+    'printWidth': 200,
     "vue/max-attributes-per-line": ['warn', {
       "singleline": 10,
       "multiline": {

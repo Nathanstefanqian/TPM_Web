@@ -72,9 +72,9 @@ export default {
   components: {
     Pagination: () => import('@/components/Pagination'),
     DialogCreate: () => import('./create'),
-    DialogUpdate: () => import('./update'),
+    // DialogUpdate: () => import('./update'),
     DialogDetail: () => import('./detail'),
-    DialogQRCode: () => import('./makeQRCode'),
+    DialogQRCode: () => import('./makeQRCode')
   },
   directives: { adaptive },
   data() {
