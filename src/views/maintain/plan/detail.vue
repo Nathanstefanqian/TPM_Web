@@ -95,6 +95,7 @@ export default {
   methods: {
     ...crud,
     async initDetailAfter(row, data) {
+      this.getRef()
       this.model = data
       this.maintainId = this.model.id
       this.getContentInfo(this.model.id)
