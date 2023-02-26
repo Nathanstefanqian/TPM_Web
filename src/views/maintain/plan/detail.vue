@@ -1,39 +1,25 @@
 <template>
   <el-dialog v-loading="loading" :custom-class="'dialog-fullscreen dialog-'+dialogClass" :title="dialogTitle" :visible.sync="visible" :modal="false">
-    <!--
-    <el-table
-    :data="useList"
-    style="width: 100%"
-  >
+    <el-table :data="useList" style="width: 100%" :row-class-name="tableRowClassName">
     <el-table-column label="序号" type="index" align="center" width="80" fixed />
     <el-table-column label="点检内容" prop="content" align="center" width="400" show-overflow-tooltip />
-    <el-table-column
-      label="是否绑定扫码"
-      prop="isBind"
-      align="center"
-      :formatter="formatterBind"
-      show-overflow-tooltip
-    />
-    <el-table-column
-      label="是否输入数据"
-      prop="needInput"
-      align="center"
-      :formatter="formatterInput"
-      show-overflow-tooltip
-    />
+    <el-table-column label="是否绑定扫码" prop="isBind" align="center" :formatter="formatterBind" show-overflow-tooltip/>
+    <el-table-column label="是否输入数据" prop="needInput" align="center" :formatter="formatterInput" show-overflow-tooltip />
     <el-table-column label="操作" fixed="right" align="center">
       <template slot-scope="{row}">
         <el-tooltip transition="false" :hide-after="1000" class="item" content="编辑" placement="top-end">
-          <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" plain class="button-operate button-update" size="mini" @click="handleRow(row)">
             <i class="vue-icon-update" /></el-button>
         </el-tooltip>
       </template>
     </el-table-column>
-    </el-table> -->
-    <canvas ref="c" @click="onMouseClick" />
-    <button @click="getRef">获取ref</button>
+    </el-table>
+    <canvas ref="c" @dblclick="onMouseClick" />
+    <!-- <button @click="getRef">获取ref</button> -->
     <button @click="getDefault">点我还原</button>
+    <button @click="changeColor">改变颜色</button>
     <dialog-update ref="dialogUpdate" :maintain-id="maintainId" @getContentInfo="getContentInfo" />
+    <dialog-bind ref="dialogBind" />
   </el-dialog>
 </template>
 
@@ -46,10 +32,10 @@ import api from '@/api'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-
 export default {
   components: {
-    DialogUpdate: () => import('./updateContent')
+    DialogUpdate: () => import('./updateContent'),
+    DialogBind: () => import('./bindContent')
   },
   data() {
     const curModels = models.maintian.plan
@@ -61,9 +47,11 @@ export default {
         model: curModels.detail,
         functions: []
       },
+      currentRow: [],
       contentList: [],
       useList: [],
       maintainId: null,
+      map: [{ name: null, index: [] }],
       scene: null,
       camera: null,
       ambientLight: null,
@@ -80,18 +68,6 @@ export default {
   computed: {
     ...mapGetters(['enums', 'user'])
   },
-  // Todo
-  // mounted() {
-  //   this.canvas = this.$refs.c
-  //   this.mywindow = document.getElementsByClassName('el-dialog__body')[0]
-  //   this.initScene()
-  //   this.initCamera()
-  //   this.initLight()
-  //   this.initRenderer()
-  //   this.initControls()
-  //   this.loadGltf()
-  //   this.animate()
-  // },
   methods: {
     ...crud,
     async initDetailAfter(row, data) {
@@ -99,10 +75,9 @@ export default {
       this.model = data
       this.maintainId = this.model.id
       this.getContentInfo(this.model.id)
+      console.log('我的数据', this.useList)
     },
     getContentInfo(id) {
-      const iddd = 1
-      console.log(iddd)
       this.loading = true
       return api.maintain.plan.getContentList(id).then(res => {
         this.useList = res.data.items
@@ -119,6 +94,14 @@ export default {
     formatterInput(rows, column) {
       return rows.needInput === null || rows.needInput === '0' ? '-' : '✔'
     },
+    tableRowClassName({ row, rowIndex }) {
+    if( rowIndex === this.currentRow)
+    return 'warning-row'
+    return ''
+    },
+    handleRow(row) {
+      console.log(row)
+    },
     // 临时btn运行threejs
     getRef() {
       this.canvas = this.$refs.c
@@ -129,6 +112,9 @@ export default {
       this.initControls()
       this.loadGltf()
       this.animate()
+    },
+    changeColor() {
+      this.currentRow = 2
     },
     // threejs代码
     initScene() {
@@ -158,6 +144,7 @@ export default {
     initControls() {
       this.control = new OrbitControls(this.camera, this.renderer.domElement)
       this.control.maxDistance = 50
+      this.control.minDistance = 20
     },
     loadGltf() {
       // 创建stl模型加载器对象
@@ -186,11 +173,11 @@ export default {
       requestAnimationFrame(this.animate.bind(this))
     },
     onMouseClick(event) {
-      console.log(event)
       const intersects = this.getIntersects(event)
-      console.log(intersects)
       if (intersects.length !== 0 && intersects[0].object.type === 'Mesh') {
         this.mesh = intersects[0].object
+        console.log(this.mesh)
+        this.handleUpdate(2)
         this.gltf.traverse(obj => {
           if (obj.isMesh) {
             obj.material = new THREE.MeshPhysicalMaterial({
@@ -248,5 +235,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.el-table /deep/ .warning-row{
+  background: red;
+}
+
+.el-table /deep/ .success-row{
+    background: #f0f9eb;
+}
 </style>
